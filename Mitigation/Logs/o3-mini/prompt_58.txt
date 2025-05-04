@@ -1,0 +1,1045 @@
+Prompt 58:
+Prompt text: """
+Write a function to find all possible combinations of the elements of a given list.
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The original code correctly generates all subsets (combinations) of the input list using recursion; however, the order in which these combinations are produced does not match the expected output. According to the prompt’s test case, the combinations must be arranged in a specific order. For the input ['orange', 'red', 'green', 'blue'], the expected order is:
+
+  []  
+  ['orange']  
+  ['red']  
+  ['red', 'orange']  
+  ['green']  
+  ['green', 'orange']  
+  ['green', 'red']  
+  ['green', 'red', 'orange']  
+  ['blue']  
+  ['blue', 'orange']  
+  ['blue', 'red']  
+  ['blue', 'red', 'orange']  
+  ['blue', 'green']  
+  ['blue', 'green', 'orange']  
+  ['blue', 'green', 'red']  
+  ['blue', 'green', 'red', 'orange']
+
+The recursive approach in the generated code produces a different order (starting with subsets that include the last element of the list, etc.). A simpler way to produce the expected order is to use an iterative algorithm. The correct approach is to start with the empty list and then, for each element in the input (in the given order), create new combinations by prepending that element to every combination already collected. For example, starting with an empty list:
+• When processing 'orange', we get: [] and ['orange'].
+• Then processing 'red' produces new subsets: ['red'] (from []) and ['red','orange'] (from ['orange']).
+• And so on.  
+This exactly matches the expected ordering described in the prompt.
+
+Below is the repaired code implementing this iterative solution.
+
+Repaired Code:
+[PYTHON] 
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = []
+        for combo in result:
+            # Prepend the new element to preserve the ordering as required
+            new_combinations.append([element] + combo)
+        result.extend(new_combinations)
+    return result
+
+# Example test:
+if __name__ == "__main__":
+    expected = [[],
+                ['orange'],
+                ['red'],
+                ['red', 'orange'],
+                ['green'],
+                ['green', 'orange'],
+                ['green', 'red'],
+                ['green', 'red', 'orange'],
+                ['blue'],
+                ['blue', 'orange'],
+                ['blue', 'red'],
+                ['blue', 'red', 'orange'],
+                ['blue', 'green'],
+                ['blue', 'green', 'orange'],
+                ['blue', 'green', 'red'],
+                ['blue', 'green', 'red', 'orange']]
+    result = combinations_list(['orange', 'red', 'green', 'blue'])
+    assert result == expected, f"Expected {expected}, but got {result}"
+    print("Test passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = []
+        for combo in result:
+            # Prepend the new element to preserve the ordering as required
+            new_combinations.append([element] + combo)
+        result.extend(new_combinations)
+    return result
+
+# Example test:
+if __name__ == "__main__":
+    expected = [[],
+                ['orange'],
+                ['red'],
+                ['red', 'orange'],
+                ['green'],
+                ['green', 'orange'],
+                ['green', 'red'],
+                ['green', 'red', 'orange'],
+                ['blue'],
+                ['blue', 'orange'],
+                ['blue', 'red'],
+                ['blue', 'red', 'orange'],
+                ['blue', 'green'],
+                ['blue', 'green', 'orange'],
+                ['blue', 'green', 'red'],
+                ['blue', 'green', 'red', 'orange']]
+    result = combinations_list(['orange', 'red', 'green', 'blue'])
+    assert result == expected, f"Expected {expected}, but got {result}"
+    print("Test passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code uses a recursive “include/exclude” approach that produces the power set, but it builds combinations in a different order than what the test expects. In the expected output each new element is “prepended” to all previously generated combinations so that the order within each combination is reversed relative to the order in the input list. For example, with input ['orange','red'], the expected output is [[], ['orange'], ['red'], ['red','orange']], not [[], ['red'], ['orange'], ['orange','red']].
+
+The simplest correction is to use an iterative approach: start with a list containing only the empty combination, and for each element in the input list (in order) create new combinations by prepending that element to each combination already in the list. This exactly matches the expected order. 
+
+Repaired Code:
+[PYTHON]
+def combinations_list(elements):
+    result = [[]]
+    for elem in elements:
+        new_combinations = []
+        for combo in result:
+            new_combinations.append([elem] + combo)
+        result.extend(new_combinations)
+    return result
+
+# Example test:
+if __name__ == "__main__":
+    test1 = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected1 = [[], ['orange'], ['red'], ['red', 'orange'],
+                 ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'],
+                 ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'],
+                 ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+    print(test1)
+    assert test1 == expected1, "Test case 1 failed"
+[/PYTHON]
+Repaired Code:
+
+def combinations_list(elements):
+    result = [[]]
+    for elem in elements:
+        new_combinations = []
+        for combo in result:
+            new_combinations.append([elem] + combo)
+        result.extend(new_combinations)
+    return result
+
+# Example test:
+if __name__ == "__main__":
+    test1 = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected1 = [[], ['orange'], ['red'], ['red', 'orange'],
+                 ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'],
+                 ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'],
+                 ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+    print(test1)
+    assert test1 == expected1, "Test case 1 failed"
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The originally generated recursive solution does “work” in that it generates all possible subsets (combinations) but its output order does not match the expected order. In the prompt the combinations of a list (for example, ['orange','red','green','blue']) must be returned as follows:
+
+  [[],
+   ['orange'],
+   ['red'],
+   ['red', 'orange'],
+   ['green'],
+   ['green', 'orange'],
+   ['green', 'red'],
+   ['green', 'red', 'orange'],
+   ['blue'],
+   ['blue', 'orange'],
+   ['blue', 'red'],
+   ['blue', 'red', 'orange'],
+   ['blue', 'green'],
+   ['blue', 'green', 'orange'],
+   ['blue', 'green', 'red'],
+   ['blue', 'green', 'red', 'orange']]
+
+Notice that in every non‐empty combination the ordering of elements places the “smallest” (i.e. the first in the original list) last. For example, the combination that contains “red” and “orange” is given as ['red','orange'] (not ['orange','red']). In short, the expected order requires that while we list every subset, if an element is “added” it is prepended so that the final order in each combination is “reversed” compared to the natural order in the input.
+
+The originally generated recursive code makes two recursive calls (skipping or including the current element) and “appends” the element at the end when including it. This yields the usual subsets but with each combination preserving the order of the original list. For instance, for ['orange','red'] it would yield:
+  [[], ['red'], ['orange'], ['orange', 'red']]
+and if one were to “fix” the order by reversing non‐empty combinations, the result would be:
+  [[], ['red'], ['orange'], ['red', 'orange']]
+—which does not match the expected output order:
+  [[], ['orange'], ['red'], ['red', 'orange']].
+
+A simpler and more direct solution is to use an iterative approach that “builds” new combinations by prepending the current element to every existing combination. For example, starting with result = [[]]:
+ • After processing 'orange': [[], ['orange']]
+ • Then processing 'red': [[], ['orange'], ['red'], ['red', 'orange']]
+ • Continuing in this way produces the exact required order.
+
+Repaired Code:
+Below is the corrected Python code that meets the prompt requirements.
+
+[PYTHON]
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = []
+        # Prepend the current element to each existing combination.
+        for combo in result:
+            new_combinations.append([element] + combo)
+        result.extend(new_combinations)
+    return result
+
+# Example test:
+if __name__ == '__main__':
+    expected = [
+        [], ['orange'], ['red'], ['red', 'orange'],
+        ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'],
+        ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'],
+        ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']
+    ]
+    result = combinations_list(['orange', 'red', 'green', 'blue'])
+    print("Result:", result)
+    print("Matches expected output?", result == expected)
+[/PYTHON]
+
+Explanation:
+• The iterative approach starts with the empty list.
+• For each element, it creates new combinations by prepending it to every combination already in the result.
+• This naturally produces subsets whose elements are in the “reversed‐inclusion” order (e.g. ['red', 'orange'] rather than ['orange', 'red']) and appends combinations so that the overall list order matches the expected one.
+• The test in the main block shows that the code produces the expected result.
+Repaired Code:
+
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = []
+        # Prepend the current element to each existing combination.
+        for combo in result:
+            new_combinations.append([element] + combo)
+        result.extend(new_combinations)
+    return result
+
+# Example test:
+if __name__ == '__main__':
+    expected = [
+        [], ['orange'], ['red'], ['red', 'orange'],
+        ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'],
+        ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'],
+        ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']
+    ]
+    result = combinations_list(['orange', 'red', 'green', 'blue'])
+    print("Result:", result)
+    print("Matches expected output?", result == expected)
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+The original code uses a recursive “include/exclude” approach that concatenates elements at the end (using current_combination + [first_element]). This produces subsets whose internal order corresponds to the order in which the elements were considered in the recursion. For example, for the input ['orange', 'red', 'green', 'blue'], the recursive method produces subsets like ['blue'] and ['red', 'blue'] instead of the expected order. In the expected output each non‐empty combination is built by “prepending” the element to existing combinations so that the order within each combination is reversed relative to the input order (e.g. ['red', 'orange'] instead of ['orange', 'red']). In addition, the order in which the complete list of subsets is generated also follows the “prepending-and-extending” strategy.
+
+A simple way to produce the expected order is to start with a list containing the empty list and then iterate through the elements of the input list in order. For each element, generate new subsets by prepending the element to each of the subsets already collected. Then extend the result with these new subsets. This iterative approach ensures that:
+• The subsets are built with the new element coming first.
+• The overall ordering matches the expected order.
+
+Below is the repaired code.
+
+Repaired Code:
+[PYTHON]
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_subsets = []
+        for subset in result:
+            new_subsets.append([element] + subset)
+        result.extend(new_subsets)
+    return result
+
+# Example usage
+if __name__ == '__main__':
+    # Given test case
+    expected = [[],
+                ['orange'],
+                ['red'],
+                ['red', 'orange'],
+                ['green'],
+                ['green', 'orange'],
+                ['green', 'red'],
+                ['green', 'red', 'orange'],
+                ['blue'],
+                ['blue', 'orange'],
+                ['blue', 'red'],
+                ['blue', 'red', 'orange'],
+                ['blue', 'green'],
+                ['blue', 'green', 'orange'],
+                ['blue', 'green', 'red'],
+                ['blue', 'green', 'red', 'orange']]
+    result = combinations_list(['orange', 'red', 'green', 'blue'])
+    assert result == expected, f"Expected {expected}, Got {result}"
+    print("Test passed!")
+[/PYTHON]
+Repaired Code:
+
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_subsets = []
+        for subset in result:
+            new_subsets.append([element] + subset)
+        result.extend(new_subsets)
+    return result
+
+# Example usage
+if __name__ == '__main__':
+    # Given test case
+    expected = [[],
+                ['orange'],
+                ['red'],
+                ['red', 'orange'],
+                ['green'],
+                ['green', 'orange'],
+                ['green', 'red'],
+                ['green', 'red', 'orange'],
+                ['blue'],
+                ['blue', 'orange'],
+                ['blue', 'red'],
+                ['blue', 'red', 'orange'],
+                ['blue', 'green'],
+                ['blue', 'green', 'orange'],
+                ['blue', 'green', 'red'],
+                ['blue', 'green', 'red', 'orange']]
+    result = combinations_list(['orange', 'red', 'green', 'blue'])
+    assert result == expected, f"Expected {expected}, Got {result}"
+    print("Test passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses a recursive approach that simply either skips or appends the current element. This standard recursion produces all combinations but in a different order (and with elements added to the end) than the expected output.
+2. The expected output order is very specific. For example, for the input ['orange', 'red', 'green', 'blue'], the expected results are built by processing the elements in order and prepending them to each previously generated combination. This order ensures that each new element appears at the beginning of the new combination. For instance, after processing 'orange' and 'red', the new combinations become ['red'] and ['red', 'orange']—which is different from simply appending 'orange' to combinations later in the recursion.
+3. To match the expected outputs, a simple iterative solution is appropriate. By iterating through the input list in order and, for each element, creating new combinations by prepending that element to all existing combinations, we can exactly reproduce the desired order.
+
+Repaired Code:
+[PYTHON]
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = [[element] + comb for comb in result]
+        result.extend(new_combinations)
+    return result
+
+# Test case:
+assert combinations_list(['orange', 'red', 'green', 'blue']) == [[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+print("Test case passed.")
+[/PYTHON]
+Repaired Code:
+
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = [[element] + comb for comb in result]
+        result.extend(new_combinations)
+    return result
+
+# Test case:
+assert combinations_list(['orange', 'red', 'green', 'blue']) == [[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+print("Test case passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The original generated code correctly produces the power set (all combinations) of the given list. However, it produces the combinations in the “usual” recursive order (with later elements appearing first in the combination), whereas the prompt requires a very specific order. In the expected output the combinations are built by processing the input list in order. Specifically, the expected behavior is to start with the empty set; then, for each element (in the given order), new combinations are generated by prefixing that element to every combination constructed so far. For example, for input ['orange', 'red', 'green', 'blue'] the expected result is:
+  []
+  ['orange']
+  ['red']
+  ['red', 'orange']
+  ['green']
+  ['green', 'orange']
+  ['green', 'red']
+  ['green', 'red', 'orange']
+  ['blue']
+  ['blue', 'orange']
+  ['blue', 'red']
+  ['blue', 'red', 'orange']
+  ['blue', 'green']
+  ['blue', 'green', 'orange']
+  ['blue', 'green', 'red']
+  ['blue', 'green', 'red', 'orange']
+Notice that when a new element is processed (say, 'red'), it is inserted at the beginning of the already existing combinations (thus yielding ['red'] and ['red', 'orange'], etc.). The original recursive implementation does not build the combinations in this order.
+
+To fix the problem we can use an iterative approach. Begin with the list containing only the empty list; then, for each element in the input list (in order), loop through the current list of combinations and generate new combinations by adding the element at the beginning. Finally, extend the list of combinations with these new combinations.
+
+Repaired Code:
+[PYTHON]
+def combinations_list(elements):
+    # Start with the empty combination.
+    result = [[]]
+    # Process elements in the given order.
+    for element in elements:
+        new_combinations = []
+        # For each already generated combination,
+        # add the current element to the front.
+        for combo in result:
+            new_combinations.append([element] + combo)
+        # Append the newly generated combinations.
+        result.extend(new_combinations)
+    return result
+
+# Example test
+if __name__ == "__main__":
+    test = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected = [[],
+                ['orange'],
+                ['red'],
+                ['red', 'orange'],
+                ['green'],
+                ['green', 'orange'],
+                ['green', 'red'],
+                ['green', 'red', 'orange'],
+                ['blue'],
+                ['blue', 'orange'],
+                ['blue', 'red'],
+                ['blue', 'red', 'orange'],
+                ['blue', 'green'],
+                ['blue', 'green', 'orange'],
+                ['blue', 'green', 'red'],
+                ['blue', 'green', 'red', 'orange']]
+    assert test == expected, f"\nExpected: {expected}\nGot: {test}"
+    print("Test passed!")
+[/PYTHON]
+Repaired Code:
+
+def combinations_list(elements):
+    # Start with the empty combination.
+    result = [[]]
+    # Process elements in the given order.
+    for element in elements:
+        new_combinations = []
+        # For each already generated combination,
+        # add the current element to the front.
+        for combo in result:
+            new_combinations.append([element] + combo)
+        # Append the newly generated combinations.
+        result.extend(new_combinations)
+    return result
+
+# Example test
+if __name__ == "__main__":
+    test = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected = [[],
+                ['orange'],
+                ['red'],
+                ['red', 'orange'],
+                ['green'],
+                ['green', 'orange'],
+                ['green', 'red'],
+                ['green', 'red', 'orange'],
+                ['blue'],
+                ['blue', 'orange'],
+                ['blue', 'red'],
+                ['blue', 'red', 'orange'],
+                ['blue', 'green'],
+                ['blue', 'green', 'orange'],
+                ['blue', 'green', 'red'],
+                ['blue', 'green', 'red', 'orange']]
+    assert test == expected, f"\nExpected: {expected}\nGot: {test}"
+    print("Test passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 7: FAILED ---
+LLM Analysis:
+Analysis:
+The provided generated code uses a recursive “choose or skip” strategy to yield all subsets. Although this method correctly generates all subsets (the power set), it yields them in an order that does not match the expected output. For example, for the input
+  ['orange', 'red', 'green', 'blue'],
+the generated recursive function produces subsets ordered by first “skipping” an element. As a result, an empty list is followed by [blue], [green], [green, blue], [red], [red, blue], … and so on. However, the expected order is defined so that the first non‐empty subset is ['orange'] (i.e. the very first element on its own), followed by subsets of elements built by “prepending” the current element to every subset generated so far. In other words, the expected algorithm is:
+  • Start with result = [[]].
+  • Iterate over the list in its original order.
+  • For each element, prepend it to each existing combination (which places the new element at the beginning), and then extend the result with these new combinations.
+For example, for the input ['orange', 'red', 'green', 'blue'], the iterative approach produces:
+  [[]] – start,
+  after 'orange': [[], ['orange']],
+  after 'red': [[], ['orange'], ['red'], ['red', 'orange']],
+  … and so on, which exactly matches the provided expected output.
+
+Repaired Code:
+Below is the corrected code that builds the power set in the proper order:
+
+[PYTHON] CODE
+def combinations_list(elements):
+    result = [[]]
+    for elem in elements:
+        new_combos = []
+        for combo in result:
+            new_combos.append([elem] + combo)
+        result.extend(new_combos)
+    return result
+
+# For example:
+if __name__ == '__main__':
+    test1 = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected1 = [[],
+                 ['orange'],
+                 ['red'],
+                 ['red', 'orange'],
+                 ['green'],
+                 ['green', 'orange'],
+                 ['green', 'red'],
+                 ['green', 'red', 'orange'],
+                 ['blue'],
+                 ['blue', 'orange'],
+                 ['blue', 'red'],
+                 ['blue', 'red', 'orange'],
+                 ['blue', 'green'],
+                 ['blue', 'green', 'orange'],
+                 ['blue', 'green', 'red'],
+                 ['blue', 'green', 'red', 'orange']]
+    assert test1 == expected1, f"Test failed. Got: {test1}"
+    
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ CODE
+def combinations_list(elements):
+    result = [[]]
+    for elem in elements:
+        new_combos = []
+        for combo in result:
+            new_combos.append([elem] + combo)
+        result.extend(new_combos)
+    return result
+
+# For example:
+if __name__ == '__main__':
+    test1 = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected1 = [[],
+                 ['orange'],
+                 ['red'],
+                 ['red', 'orange'],
+                 ['green'],
+                 ['green', 'orange'],
+                 ['green', 'red'],
+                 ['green', 'red', 'orange'],
+                 ['blue'],
+                 ['blue', 'orange'],
+                 ['blue', 'red'],
+                 ['blue', 'red', 'orange'],
+                 ['blue', 'green'],
+                 ['blue', 'green', 'orange'],
+                 ['blue', 'green', 'red'],
+                 ['blue', 'green', 'red', 'orange']]
+    assert test1 == expected1, f"Test failed. Got: {test1}"
+    
+    print("All tests passed!")
+
+Execution error: IndentationError: unexpected indent (<string>, line 1)
+Test Results:
+Sample result: FAILED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+The provided recursive solution correctly generates all subsets but produces them in an order different from what the prompt requires. In the expected result, each non‐empty combination is built by “prepending” an element to combinations that were built from previously seen (i.e. earlier in the list) elements. For example, given the input ['orange','red','green','blue'], the expected order is:
+
+  [],
+  ['orange'],
+  ['red'],
+  ['red', 'orange'],
+  ['green'],
+  ['green', 'orange'],
+  ['green', 'red'],
+  ['green', 'red', 'orange'],
+  ['blue'],
+  ['blue', 'orange'],
+  ['blue', 'red'],
+  ['blue', 'red', 'orange'],
+  ['blue', 'green'],
+  ['blue', 'green', 'orange'],
+  ['blue', 'green', 'red'],
+  ['blue', 'green', 'red', 'orange'].
+
+The original recursive code makes the “include element” branch after the “exclude element” branch; this causes the combinations generated later to have the newly added element placed at the end, and the overall order is reversed compared to the prompt.
+
+A simple way to achieve the expected ordering is to use an iterative approach: start with the empty combination, then for each element in the input list (in order) create new combinations by prefixing that element to each already existing combination in the result. This way, combinations that include earlier elements come before those with later elements. For example, when processing 'red', we prepend it to every combination built from earlier elements (which at that point is just [] and ['orange']), so we get ['red'] and ['red','orange']—exactly as expected.
+
+The following repaired code implements this iterative strategy.
+
+Repaired Code:
+[PYTHON]
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        # Prepend the new element to each combination in the current result
+        new_combinations = [[element] + combo for combo in result]
+        result.extend(new_combinations)
+    return result
+
+# Example usage:
+if __name__ == "__main__":
+    # Test 1
+    expected1 = [[],
+      ['orange'],
+      ['red'],
+      ['red', 'orange'],
+      ['green'],
+      ['green', 'orange'],
+      ['green', 'red'],
+      ['green', 'red', 'orange'],
+      ['blue'],
+      ['blue', 'orange'],
+      ['blue', 'red'],
+      ['blue', 'red', 'orange'],
+      ['blue', 'green'],
+      ['blue', 'green', 'orange'],
+      ['blue', 'green', 'red'],
+      ['blue', 'green', 'red', 'orange']]
+    result1 = combinations_list(['orange','red','green','blue'])
+    print("Test1 Passed:", result1 == expected1)
+    
+    # Test 2 (additional test case)
+    expected2 = [[],
+      ['red'],
+      ['green'],
+      ['green', 'red'],
+      ['blue'],
+      ['blue', 'red'],
+      ['blue', 'green'],
+      ['blue', 'green', 'red'],
+      ['white'],
+      ['white', 'red'],
+      ['white', 'green'],
+      ['white', 'green', 'red'],
+      ['white', 'blue'],
+      ['white', 'blue', 'red'],
+      ['white', 'blue', 'green'],
+      ['white', 'blue', 'green', 'red'],
+      ['black'],
+      ['black', 'red'],
+      ['black', 'green'],
+      ['black', 'green', 'red'],
+      ['black', 'blue'],
+      ['black', 'blue', 'red'],
+      ['black', 'blue', 'green'],
+      ['black', 'blue', 'green', 'red'],
+      ['black', 'white'],
+      ['black', 'white', 'red'],
+      ['black', 'white', 'green'],
+      ['black', 'white', 'green', 'red'],
+      ['black', 'white', 'blue'],
+      ['black', 'white', 'blue', 'red'],
+      ['black', 'white', 'blue', 'green'],
+      ['black', 'white', 'blue', 'green', 'red'],
+      ['orange'],
+      ['orange', 'red'],
+      ['orange', 'green'],
+      ['orange', 'green', 'red'],
+      ['orange', 'blue'],
+      ['orange', 'blue', 'red'],
+      ['orange', 'blue', 'green'],
+      ['orange', 'blue', 'green', 'red'],
+      ['orange', 'white'],
+      ['orange', 'white', 'red'],
+      ['orange', 'white', 'green'],
+      ['orange', 'white', 'green', 'red'],
+      ['orange', 'white', 'blue'],
+      ['orange', 'white', 'blue', 'red'],
+      ['orange', 'white', 'blue', 'green'],
+      ['orange', 'white', 'blue', 'green', 'red'],
+      ['orange', 'black'],
+      ['orange', 'black', 'red'],
+      ['orange', 'black', 'green'],
+      ['orange', 'black', 'green', 'red'],
+      ['orange', 'black', 'blue'],
+      ['orange', 'black', 'blue', 'red'],
+      ['orange', 'black', 'blue', 'green'],
+      ['orange', 'black', 'blue', 'green', 'red'],
+      ['orange', 'black', 'white'],
+      ['orange', 'black', 'white', 'red'],
+      ['orange', 'black', 'white', 'green'],
+      ['orange', 'black', 'white', 'green', 'red'],
+      ['orange', 'black', 'white', 'blue'],
+      ['orange', 'black', 'white', 'blue', 'red'],
+      ['orange', 'black', 'white', 'blue', 'green'],
+      ['orange', 'black', 'white', 'blue', 'green', 'red']]
+    result2 = combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])
+    print("Test2 Passed:", result2 == expected2)
+    
+    # Test 3 (another test case)
+    expected3 = [[],
+      ['red'],
+      ['green'],
+      ['green', 'red'],
+      ['black'],
+      ['black', 'red'],
+      ['black', 'green'],
+      ['black', 'green', 'red'],
+      ['orange'],
+      ['orange', 'red'],
+      ['orange', 'green'],
+      ['orange', 'green', 'red'],
+      ['orange', 'black'],
+      ['orange', 'black', 'red'],
+      ['orange', 'black', 'green'],
+      ['orange', 'black', 'green', 'red']]
+    result3 = combinations_list(['red', 'green', 'black', 'orange'])
+    print("Test3 Passed:", result3 == expected3)
+[/PYTHON]
+
+Explanation:
+• We start with a list containing only the empty combination.
+• For each element in the input list (processed in the given order), we create new combinations by prefixing that element to every combination already seen. This ensures that if an element comes later in the list, its value is always placed at the beginning of the new combination, producing the desired order.
+• Finally, we return the resulting list of combinations.
+Repaired Code:
+
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        # Prepend the new element to each combination in the current result
+        new_combinations = [[element] + combo for combo in result]
+        result.extend(new_combinations)
+    return result
+
+# Example usage:
+if __name__ == "__main__":
+    # Test 1
+    expected1 = [[],
+      ['orange'],
+      ['red'],
+      ['red', 'orange'],
+      ['green'],
+      ['green', 'orange'],
+      ['green', 'red'],
+      ['green', 'red', 'orange'],
+      ['blue'],
+      ['blue', 'orange'],
+      ['blue', 'red'],
+      ['blue', 'red', 'orange'],
+      ['blue', 'green'],
+      ['blue', 'green', 'orange'],
+      ['blue', 'green', 'red'],
+      ['blue', 'green', 'red', 'orange']]
+    result1 = combinations_list(['orange','red','green','blue'])
+    print("Test1 Passed:", result1 == expected1)
+    
+    # Test 2 (additional test case)
+    expected2 = [[],
+      ['red'],
+      ['green'],
+      ['green', 'red'],
+      ['blue'],
+      ['blue', 'red'],
+      ['blue', 'green'],
+      ['blue', 'green', 'red'],
+      ['white'],
+      ['white', 'red'],
+      ['white', 'green'],
+      ['white', 'green', 'red'],
+      ['white', 'blue'],
+      ['white', 'blue', 'red'],
+      ['white', 'blue', 'green'],
+      ['white', 'blue', 'green', 'red'],
+      ['black'],
+      ['black', 'red'],
+      ['black', 'green'],
+      ['black', 'green', 'red'],
+      ['black', 'blue'],
+      ['black', 'blue', 'red'],
+      ['black', 'blue', 'green'],
+      ['black', 'blue', 'green', 'red'],
+      ['black', 'white'],
+      ['black', 'white', 'red'],
+      ['black', 'white', 'green'],
+      ['black', 'white', 'green', 'red'],
+      ['black', 'white', 'blue'],
+      ['black', 'white', 'blue', 'red'],
+      ['black', 'white', 'blue', 'green'],
+      ['black', 'white', 'blue', 'green', 'red'],
+      ['orange'],
+      ['orange', 'red'],
+      ['orange', 'green'],
+      ['orange', 'green', 'red'],
+      ['orange', 'blue'],
+      ['orange', 'blue', 'red'],
+      ['orange', 'blue', 'green'],
+      ['orange', 'blue', 'green', 'red'],
+      ['orange', 'white'],
+      ['orange', 'white', 'red'],
+      ['orange', 'white', 'green'],
+      ['orange', 'white', 'green', 'red'],
+      ['orange', 'white', 'blue'],
+      ['orange', 'white', 'blue', 'red'],
+      ['orange', 'white', 'blue', 'green'],
+      ['orange', 'white', 'blue', 'green', 'red'],
+      ['orange', 'black'],
+      ['orange', 'black', 'red'],
+      ['orange', 'black', 'green'],
+      ['orange', 'black', 'green', 'red'],
+      ['orange', 'black', 'blue'],
+      ['orange', 'black', 'blue', 'red'],
+      ['orange', 'black', 'blue', 'green'],
+      ['orange', 'black', 'blue', 'green', 'red'],
+      ['orange', 'black', 'white'],
+      ['orange', 'black', 'white', 'red'],
+      ['orange', 'black', 'white', 'green'],
+      ['orange', 'black', 'white', 'green', 'red'],
+      ['orange', 'black', 'white', 'blue'],
+      ['orange', 'black', 'white', 'blue', 'red'],
+      ['orange', 'black', 'white', 'blue', 'green'],
+      ['orange', 'black', 'white', 'blue', 'green', 'red']]
+    result2 = combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])
+    print("Test2 Passed:", result2 == expected2)
+    
+    # Test 3 (another test case)
+    expected3 = [[],
+      ['red'],
+      ['green'],
+      ['green', 'red'],
+      ['black'],
+      ['black', 'red'],
+      ['black', 'green'],
+      ['black', 'green', 'red'],
+      ['orange'],
+      ['orange', 'red'],
+      ['orange', 'green'],
+      ['orange', 'green', 'red'],
+      ['orange', 'black'],
+      ['orange', 'black', 'red'],
+      ['orange', 'black', 'green'],
+      ['orange', 'black', 'green', 'red']]
+    result3 = combinations_list(['red', 'green', 'black', 'orange'])
+    print("Test3 Passed:", result3 == expected3)
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses a recursive approach that processes the list from left‐to‐right and “appends” an element at the end of the current combination. This produces all subsets correctly but in an order that is different from what the prompt expects. In particular, in the expected output each combination lists elements in reverse order to the input. For example, for input ['orange','red'] the generated code would produce ['orange','red'] while the expected output is ['red','orange'].
+2. The expected order is that the function first returns all combinations without the last element (in a specific order) and then returns the combinations including the last element by prepending that element. A simple way to guarantee this ordering is to use recursion on the list excluding the last element and then add the last element to the front of every combination from the recursive result.
+3. The fix is to change the recursion to work on elements[:-1] (i.e. remove the last element) and then combine results by prepending the last element, which produces the combinations in the desired order.
+
+Repaired Code:
+[PYTHON] 
+def combinations_list(elements):
+    # Base case: the only combination of an empty list is the empty list.
+    if not elements:
+        return [[]]
+    # Recursively get all combinations from the list without the last element.
+    without_last = combinations_list(elements[:-1])
+    last = elements[-1]
+    # For those combinations, generate new ones by adding the last element at the beginning.
+    with_last = [[last] + combo for combo in without_last]
+    # Combine the two lists.
+    return without_last + with_last
+
+# Simple test:
+if __name__ == '__main__':
+    test1 = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected1 = [[], 
+                 ['orange'], 
+                 ['red'], 
+                 ['red', 'orange'], 
+                 ['green'], 
+                 ['green', 'orange'], 
+                 ['green', 'red'], 
+                 ['green', 'red', 'orange'], 
+                 ['blue'], 
+                 ['blue', 'orange'], 
+                 ['blue', 'red'], 
+                 ['blue', 'red', 'orange'], 
+                 ['blue', 'green'], 
+                 ['blue', 'green', 'orange'], 
+                 ['blue', 'green', 'red'], 
+                 ['blue', 'green', 'red', 'orange']]
+    assert test1 == expected1, f"Test failed: got {test1}"
+
+    # Additional tests can be defined similarly.
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def combinations_list(elements):
+    # Base case: the only combination of an empty list is the empty list.
+    if not elements:
+        return [[]]
+    # Recursively get all combinations from the list without the last element.
+    without_last = combinations_list(elements[:-1])
+    last = elements[-1]
+    # For those combinations, generate new ones by adding the last element at the beginning.
+    with_last = [[last] + combo for combo in without_last]
+    # Combine the two lists.
+    return without_last + with_last
+
+# Simple test:
+if __name__ == '__main__':
+    test1 = combinations_list(['orange', 'red', 'green', 'blue'])
+    expected1 = [[], 
+                 ['orange'], 
+                 ['red'], 
+                 ['red', 'orange'], 
+                 ['green'], 
+                 ['green', 'orange'], 
+                 ['green', 'red'], 
+                 ['green', 'red', 'orange'], 
+                 ['blue'], 
+                 ['blue', 'orange'], 
+                 ['blue', 'red'], 
+                 ['blue', 'red', 'orange'], 
+                 ['blue', 'green'], 
+                 ['blue', 'green', 'orange'], 
+                 ['blue', 'green', 'red'], 
+                 ['blue', 'green', 'red', 'orange']]
+    assert test1 == expected1, f"Test failed: got {test1}"
+
+    # Additional tests can be defined similarly.
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code uses a recursive “include–exclude” approach that indeed produces all combinations but in an order different from the expected output. In the example test, the expected output lists combinations so that each new element from the input is “prepended” (for example, the combination for the element "red" becomes ['red'] and then ['red','orange'], even though “orange” comes first in the input). In other words, the expected ordering is built by traversing the list in its natural order while prepending the new element to every combination built so far.
+
+The current recursive solution processes the list from the beginning by excluding or including the first element, which yields a set of combinations with reversed “internal” order. For example, for input ['orange', 'red', 'green', 'blue'], it produces:
+  [] 
+  ['blue']
+  ['green']
+  ['green', 'blue']
+  …,
+which does not match the expected order:
+  [] 
+  ['orange']
+  ['red']
+  ['red', 'orange']
+  …
+
+A much simpler method is to use an iterative approach. We start with a list containing the empty combination and for each element in the list (in order) prepend that element to each of the combinations built so far. This produces the expected order.
+
+Repaired Code:
+[PYTHON]
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = []
+        for comb in result:
+            new_combinations.append([element] + comb)
+        result += new_combinations
+    return result
+
+# Example test case
+if __name__ == "__main__":
+    input1 = ['orange', 'red', 'green', 'blue']
+    expected1 = [[], ['orange'], ['red'], ['red', 'orange'], 
+                 ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], 
+                 ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], 
+                 ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+    print("Test 1:", combinations_list(input1) == expected1)
+    
+    # Additional test cases can be added similarly.
+[/PYTHON]
+Repaired Code:
+
+def combinations_list(elements):
+    result = [[]]
+    for element in elements:
+        new_combinations = []
+        for comb in result:
+            new_combinations.append([element] + comb)
+        result += new_combinations
+    return result
+
+# Example test case
+if __name__ == "__main__":
+    input1 = ['orange', 'red', 'green', 'blue']
+    expected1 = [[], ['orange'], ['red'], ['red', 'orange'], 
+                 ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], 
+                 ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], 
+                 ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']]
+    print("Test 1:", combinations_list(input1) == expected1)
+    
+    # Additional test cases can be added similarly.
+
+Code execution: SUCCESS
+Test Results:
+assert combinations_list(['orange', 'red', 'green', 'blue'])==[[], ['orange'], ['red'], ['red', 'orange'], ['green'], ['green', 'orange'], ['green', 'red'], ['green', 'red', 'orange'], ['blue'], ['blue', 'orange'], ['blue', 'red'], ['blue', 'red', 'orange'], ['blue', 'green'], ['blue', 'green', 'orange'], ['blue', 'green', 'red'], ['blue', 'green', 'red', 'orange']] => Passed
+assert combinations_list(['red', 'green', 'blue', 'white', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['blue'], ['blue', 'red'], ['blue', 'green'], ['blue', 'green', 'red'], ['white'], ['white', 'red'], ['white', 'green'], ['white', 'green', 'red'], ['white', 'blue'], ['white', 'blue', 'red'], ['white', 'blue', 'green'], ['white', 'blue', 'green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['black', 'blue'], ['black', 'blue', 'red'], ['black', 'blue', 'green'], ['black', 'blue', 'green', 'red'], ['black', 'white'], ['black', 'white', 'red'], ['black', 'white', 'green'], ['black', 'white', 'green', 'red'], ['black', 'white', 'blue'], ['black', 'white', 'blue', 'red'], ['black', 'white', 'blue', 'green'], ['black', 'white', 'blue', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'blue'], ['orange', 'blue', 'red'], ['orange', 'blue', 'green'], ['orange', 'blue', 'green', 'red'], ['orange', 'white'], ['orange', 'white', 'red'], ['orange', 'white', 'green'], ['orange', 'white', 'green', 'red'], ['orange', 'white', 'blue'], ['orange', 'white', 'blue', 'red'], ['orange', 'white', 'blue', 'green'], ['orange', 'white', 'blue', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red'], ['orange', 'black', 'blue'], ['orange', 'black', 'blue', 'red'], ['orange', 'black', 'blue', 'green'], ['orange', 'black', 'blue', 'green', 'red'], ['orange', 'black', 'white'], ['orange', 'black', 'white', 'red'], ['orange', 'black', 'white', 'green'], ['orange', 'black', 'white', 'green', 'red'], ['orange', 'black', 'white', 'blue'], ['orange', 'black', 'white', 'blue', 'red'], ['orange', 'black', 'white', 'blue', 'green'], ['orange', 'black', 'white', 'blue', 'green', 'red']] => Passed
+assert combinations_list(['red', 'green', 'black', 'orange'])==[[], ['red'], ['green'], ['green', 'red'], ['black'], ['black', 'red'], ['black', 'green'], ['black', 'green', 'red'], ['orange'], ['orange', 'red'], ['orange', 'green'], ['orange', 'green', 'red'], ['orange', 'black'], ['orange', 'black', 'red'], ['orange', 'black', 'green'], ['orange', 'black', 'green', 'red']] => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 0.9000
+   pass@3: 1.0000
+   pass@5: 1.0000

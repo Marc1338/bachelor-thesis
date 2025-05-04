@@ -1,0 +1,540 @@
+Prompt 17:
+Prompt text: """
+Write a python function to find the sum of common divisors of two given numbers.
+assert sum(10,15) == 6
+"""
+
+
+Results of 10 samples:
+--- Sample 1: FAILED ---
+LLM Analysis:
+Analysis:
+1. The main issue stems from using the function name "sum", which shadows Python's built-in sum() function. In the function body, when calling sum(common_divisors), it recursively calls the same function (which expects two arguments) instead of the built-in sum. This produces the error "sum() missing 1 required positional argument: 'b'". 
+
+2. To fix this, we can either rename our function (recommended) or reference the built-in sum via the __builtins__ module. Renaming is clearer.
+
+3. After renaming the function (e.g., to sum_common_divisors), the inner call to the built-in sum() will work as expected, and the code will correctly compute the sum of common divisors.
+
+Repaired Code:
+[PYTHON]
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+    
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    # Find common divisors using set intersection
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+    
+    # Use the built-in sum function to calculate the total
+    return sum(common_divisors)
+
+# Test cases:
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+    
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    # Find common divisors using set intersection
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+    
+    # Use the built-in sum function to calculate the total
+    return sum(common_divisors)
+
+# Test cases:
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. The function was named “sum”, which collides with Python’s built‐in function sum. This results in an unintended recursion or calls to the wrong function when trying to sum a list. In our implementation, when we call sum(common_divisors) inside our function, Python attempts to call our own “sum” function instead of the built-in, causing the error “missing 1 required positional argument: 'b'”.
+2. To fix this, we can either rename our function or explicitly refer to the built-in sum. Since the prompt and test cases use sum(10,15) we must keep that name, so we should call the built-in sum explicitly via the builtins module.
+
+Repaired Code:
+[PYTHON]
+def sum(a, b):
+    import builtins  # Import the builtins module to access the built-in sum
+    
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    # Use the built-in sum function from the builtins module explicitly
+    return builtins.sum(common_divisors)
+
+# Test assertions
+assert sum(10,15) == 6
+assert sum(100,150) == 93
+assert sum(4,6) == 3
+[/PYTHON]
+Repaired Code:
+
+def sum(a, b):
+    import builtins  # Import the builtins module to access the built-in sum
+    
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    # Use the built-in sum function from the builtins module explicitly
+    return builtins.sum(common_divisors)
+
+# Test assertions
+assert sum(10,15) == 6
+assert sum(100,150) == 93
+assert sum(4,6) == 3
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Passed
+assert sum(100,150) == 93 => Passed
+assert sum(4,6) == 3 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: FAILED ---
+LLM Analysis:
+Analysis:
+1. The function is named sum, which conflicts with Python’s built-in sum() function. When the code tries to use sum(common_divisors) to compute the sum of the list, it actually calls the user-defined function recursively instead of the built-in sum, resulting in an error.
+2. To fix the issue, we should rename the function to something like sum_common_divisors (or any other non-conflicting name).
+
+Repaired Code:
+[PYTHON]
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+    
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    common_divisors = set(divisors_a) & set(divisors_b)
+    return sum(common_divisors)
+
+# Example tests
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+    
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    common_divisors = set(divisors_a) & set(divisors_b)
+    return sum(common_divisors)
+
+# Example tests
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+--- Sample 4: FAILED ---
+LLM Analysis:
+Analysis:
+The primary error in the generated code is that the function name "sum" shadows Python’s built-in sum() function. This creates a conflict because inside our function we call sum(common_divisors) expecting the built-in behavior, but it ends up recursively calling the user-defined function “sum” with a single argument. This results in the missing required positional argument "b" error. To fix this, we can either rename the function to something other than “sum” (e.g., sum_common_divisors) or explicitly reference the built-in sum (e.g., using __builtins__.sum). The more straightforward approach is to rename the function so that it does not conflict with the built-in.
+
+Repaired Code:
+[PYTHON]
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+        
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    # Find common elements and sum them up
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    return sum(common_divisors)
+
+# Example test cases:
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+        
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    # Find common elements and sum them up
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    return sum(common_divisors)
+
+# Example test cases:
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+--- Sample 5: FAILED ---
+LLM Analysis:
+Analysis:
+1. The function is named "sum", which conflicts with Python's built‐in sum() function. Due to this naming conflict, when the function attempts to call sum(common_divisors), it recursively calls itself instead of the built‐in, resulting in the error "missing 1 required positional argument: 'b'".
+2. To fix the issue, we need to rename the function to something that doesn’t override the built‐in sum (e.g., sum_common_divisors).
+3. With that change, the function will correctly sum up the common divisors of the two given numbers.
+
+Repaired Code:
+[PYTHON]
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = set(divisors_a) & set(divisors_b)
+    return sum(common_divisors)
+
+# Example test case:
+assert sum_common_divisors(10, 15) == 6
+print("Test passed!")
+[/PYTHON]
+Repaired Code:
+
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = set(divisors_a) & set(divisors_b)
+    return sum(common_divisors)
+
+# Example test case:
+assert sum_common_divisors(10, 15) == 6
+print("Test passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The error arises because the function is named "sum", which conflicts with Python’s built-in sum() function. When we call sum(common_divisors) inside the function, Python recursively ends up calling the same function instead of the built-in one. This results in an argument mismatch error ("missing 1 required positional argument: 'b'") since the recursive call doesn’t receive both arguments. 
+
+To fix this, we have two main options:
+1. Rename the function to avoid shadowing the built-in.
+2. Keep the name but explicitly refer to the built-in sum function (e.g., via the builtins module).
+
+In our repaired code, we'll import the builtins module and use builtins.sum(common_divisors) to correctly call the built-in function while keeping the required function name "sum".
+
+Repaired Code:
+[PYTHON]
+import builtins
+
+def sum(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+
+    return builtins.sum(common_divisors)
+[/PYTHON]
+Repaired Code:
+
+import builtins
+
+def sum(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+
+    return builtins.sum(common_divisors)
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Passed
+assert sum(100,150) == 93 => Passed
+assert sum(4,6) == 3 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: FAILED ---
+LLM Analysis:
+Analysis:
+1. The main issue in the generated code is that the function is named sum, which conflicts with Python’s built-in function sum. Within the function, when trying to sum the common divisors using sum(common_divisors), it ends up recursively calling itself rather than using the built-in sum. This leads to a recursion error (i.e. missing arguments) when running the test cases.
+2. To fix the error, we must rename the function to something other than sum (for example, common_divisors_sum) so that the built-in sum function is accessible within the function.
+
+Repaired Code:
+[PYTHON]
+def common_divisors_sum(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    return sum(common_divisors)
+
+# Test cases
+assert common_divisors_sum(10, 15) == 6
+assert common_divisors_sum(100, 150) == 93
+assert common_divisors_sum(4, 6) == 3
+
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def common_divisors_sum(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    return sum(common_divisors)
+
+# Test cases
+assert common_divisors_sum(10, 15) == 6
+assert common_divisors_sum(100, 150) == 93
+assert common_divisors_sum(4, 6) == 3
+
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code defines a function named sum, which shadows Python’s built‐in sum. This leads to a problem when calling sum(common_divisors) inside the function; it recursively calls the same user‐defined function instead of the built‑in one. This results in a TypeError since the recursive call is missing a required argument.
+2. To correct this, we must ensure that the built‑in sum is used when adding up the common divisors. One approach is to alias the built‑in sum (via __import__('builtins').sum) or simply rename our function so it doesn’t conflict with the built‑in.
+3. Since the prompt test case expects the user function to be called sum(10,15) – we cannot change its name – the best solution is to keep the function name sum but explicitly use the built‑in sum inside the function.
+
+Repaired Code:
+[PYTHON]
+def sum(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+    
+    # Use the built-in sum function from the builtins module
+    return __import__('builtins').sum(common_divisors)
+
+
+# For testing purposes:
+if __name__ == "__main__":
+    assert sum(10, 15) == 6
+    assert sum(100, 150) == 93
+    assert sum(4, 6) == 3
+    print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def sum(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+    
+    # Use the built-in sum function from the builtins module
+    return __import__('builtins').sum(common_divisors)
+
+
+# For testing purposes:
+if __name__ == "__main__":
+    assert sum(10, 15) == 6
+    assert sum(100, 150) == 93
+    assert sum(4, 6) == 3
+    print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Passed
+assert sum(100,150) == 93 => Passed
+assert sum(4,6) == 3 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: FAILED ---
+LLM Analysis:
+Analysis:
+1. The function was named sum, which shadows the built-in sum function. Because of this, when the code calls sum(common_divisors), Python tries to call the current function recursively with a single argument, leading to the error.
+2. To fix this issue, the function should be renamed to avoid conflict with the built-in function (or the built-in function should be explicitly accessed). Renaming the function to something like sum_common_divisors is a straightforward solution.
+
+Repaired Code:
+[PYTHON]
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+    return sum(common_divisors)
+
+# Example test
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+
+    common_divisors = list(set(divisors_a) & set(divisors_b))
+    return sum(common_divisors)
+
+# Example test
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+--- Sample 10: FAILED ---
+LLM Analysis:
+Analysis:
+1. The function is defined as sum(a, b), which overrides the built-in Python function sum. Inside the function, when we call sum(common_divisors), Python instead calls our own function recursively instead of the built-in aggregate sum. This results in the error "sum() missing 1 required positional argument: 'b'" because our function expects two arguments. To fix this, we need to rename our function so that it doesn’t mask the built-in function.
+
+2. With the renaming, the logic for computing the divisors and then summing the common ones is correct, meeting the prompt requirements.
+
+Repaired Code:
+[PYTHON]
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+      
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    return sum(common_divisors)
+
+# Example test cases:
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def sum_common_divisors(a, b):
+    def get_divisors(n):
+        return [i for i in range(1, n + 1) if n % i == 0]
+      
+    divisors_a = get_divisors(a)
+    divisors_b = get_divisors(b)
+    
+    common_divisors = set(divisors_a) & set(divisors_b)
+    
+    return sum(common_divisors)
+
+# Example test cases:
+assert sum_common_divisors(10, 15) == 6
+assert sum_common_divisors(100, 150) == 93
+assert sum_common_divisors(4, 6) == 3
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert sum(10,15) == 6 => Error: 'int' object is not iterable
+assert sum(100,150) == 93 => Error: 'int' object is not iterable
+assert sum(4,6) == 3 => Error: 'int' object is not iterable
+Sample result: FAILED
+
+
+Pass@k results for this prompt:
+   pass@1: 0.3000
+   pass@3: 0.7083
+   pass@5: 0.9167

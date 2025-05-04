@@ -1,0 +1,675 @@
+Prompt 43:
+Prompt text: """
+Write a python function to set the left most unset bit.
+assert set_left_most_unset_bit(10) == 14
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly determines the bit position to set. It computes the most significant bit (msb) using x.bit_length() - 1, but then mistakenly uses that value to either set the next bit (msb + 1) or the msb itself, which is inconsistent with the requirement.
+2. The condition ((n & (1 << msb)) == n and n != 0) is logically flawed. In a typical binary representation of a nonzero number, the msb is always set, so this condition does not identify the leftmost unset bit.
+3. The requirement is to set the leftmost (i.e., highest order) bit among the existing bits that is unset (0). For example, for 10 (binary 1010), the highest-order 0 bit is at position 2 (counting from 0), and setting it yields 1110 (i.e., 14).
+4. A straightforward approach is to iterate over the bit positions (below the msb) in descending order and check for the first bit that is not set. If such a bit is found, set it and return the new value. If no such bit exists (i.e., all bits are already 1, as in 15 which is 1111), simply return the original number.
+5. The code should also handle the case where n == 0 separately since n.bit_length() will be 0 in that case.
+
+Repaired Code:
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # Handle the special case for 0
+    if n == 0:
+        return 1
+
+    # Get the number of bits in the binary representation of n
+    bits = n.bit_length()
+    
+    # Iterate from the bit immediately below the msb down to bit 0
+    # The msb at position (bits-1) is guaranteed to be set for nonzero n.
+    for i in range(bits - 2, -1, -1):
+        if (n & (1 << i)) == 0:
+            return n | (1 << i)
+    return n
+
+# Example tests:
+assert set_left_most_unset_bit(10) == 14  # 10 (1010) -> 14 (1110)
+assert set_left_most_unset_bit(12) == 14  # 12 (1100) -> 14 (1110)
+assert set_left_most_unset_bit(15) == 15  # 15 (1111) -> 15 remains unchanged
+
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # Handle the special case for 0
+    if n == 0:
+        return 1
+
+    # Get the number of bits in the binary representation of n
+    bits = n.bit_length()
+    
+    # Iterate from the bit immediately below the msb down to bit 0
+    # The msb at position (bits-1) is guaranteed to be set for nonzero n.
+    for i in range(bits - 2, -1, -1):
+        if (n & (1 << i)) == 0:
+            return n | (1 << i)
+    return n
+
+# Example tests:
+assert set_left_most_unset_bit(10) == 14  # 10 (1010) -> 14 (1110)
+assert set_left_most_unset_bit(12) == 14  # 12 (1100) -> 14 (1110)
+assert set_left_most_unset_bit(15) == 15  # 15 (1111) -> 15 remains unchanged
+
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly determines which bit to set. It defines a helper function get_msb(x) that computes the index of the most significant bit (msb) in n, but then it uses a conditional expression that does not align with the requirement. For example, for n=10 (binary 1010), the msb is at index 3. The code’s condition is false and it falls back to setting the bit at msb (i.e. index 3), which is already set. Thus, it returns 10 instead of the expected 14.
+
+2. The intended behavior is to scan from the left (most significant) bit downwards within the current binary representation to find the first 0 bit, then set that bit and return the resulting number. If all bits in n are already set (like 15 which is 1111 in binary), return n unchanged.
+
+3. The current code does not iterate through the bits to find the leftmost 0. Instead, it only checks a condition based on msb which is not correct.
+
+4. Additionally, handling the case when n is 0 needs consideration since n.bit_length() returns 0 for 0. We can treat 0 as having a single bit (0) and set it to obtain 1.
+
+Repaired Code:
+Below is the corrected version of the function, which iterates over the bit positions from the most significant to the least significant bit, sets the leftmost unset bit (if any), and returns the updated number.
+
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # Ensure at least one bit is considered if n is 0.
+    length = n.bit_length() if n > 0 else 1
+    # Iterate from the most significant bit to the least.
+    for i in range(length - 1, -1, -1):
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14
+assert set_left_most_unset_bit(12) == 14
+assert set_left_most_unset_bit(15) == 15
+
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # Ensure at least one bit is considered if n is 0.
+    length = n.bit_length() if n > 0 else 1
+    # Iterate from the most significant bit to the least.
+    for i in range(length - 1, -1, -1):
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14
+assert set_left_most_unset_bit(12) == 14
+assert set_left_most_unset_bit(15) == 15
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code does not perform the task correctly. It attempts to use a helper function (get_msb) to determine the most significant bit, then uses a conditional expression to decide how to turn on a bit. However, the logic contains several errors:
+1. The condition “if ((n & (1 << msb)) == n and n != 0)” is incorrect. For a number like 10 (binary 1010), the msb is 3 (bit representing 8). Since that bit is set, the condition fails, and the else branch returns n | (1 << msb), which is still 10. This does not set the leftmost unset bit.
+2. The proper approach is to examine all bits (from the current bit-length minus one down to zero) and find the leftmost (most significant) bit that is unset (i.e. equals 0). 
+3. For numbers where all bits are set (like 15, binary 1111), the function should simply return the original number.
+
+A correct solution should:
+• Determine the bit-length using n.bit_length(). (If n is 0 then handle it appropriately.)
+• Iterate from the most significant bit (excluding the highest one which is always set by definition) down to the least significant bit.
+• When the first zero bit is encountered (from left to right), set it (using bitwise OR) and return the new number.
+• If no such bit is found, return the original number.
+
+The repaired code below adheres to these requirements.
+
+Repaired Code:
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # Handle n==0 separately; we define the leftmost unset bit 
+    # (in a representation of at least 1 bit) as bit 0.
+    if n == 0:
+        return 1
+
+    length = n.bit_length()
+    
+    # iterate from the highest bit (bit at index length-1) to the lowest bit 0.
+    # Since the highest bit must be set (by definition of bit_length) we start from length-2.
+    for i in range(length - 2, -1, -1):
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    
+    # If no unset bit is found among the existing bits, return n unchanged.
+    return n
+
+# Test Cases:
+assert set_left_most_unset_bit(10) == 14, f"Expected 14, got {set_left_most_unset_bit(10)}"
+assert set_left_most_unset_bit(12) == 14, f"Expected 14, got {set_left_most_unset_bit(12)}"
+assert set_left_most_unset_bit(15) == 15, f"Expected 15, got {set_left_most_unset_bit(15)}"
+
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # Handle n==0 separately; we define the leftmost unset bit 
+    # (in a representation of at least 1 bit) as bit 0.
+    if n == 0:
+        return 1
+
+    length = n.bit_length()
+    
+    # iterate from the highest bit (bit at index length-1) to the lowest bit 0.
+    # Since the highest bit must be set (by definition of bit_length) we start from length-2.
+    for i in range(length - 2, -1, -1):
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    
+    # If no unset bit is found among the existing bits, return n unchanged.
+    return n
+
+# Test Cases:
+assert set_left_most_unset_bit(10) == 14, f"Expected 14, got {set_left_most_unset_bit(10)}"
+assert set_left_most_unset_bit(12) == 14, f"Expected 14, got {set_left_most_unset_bit(12)}"
+assert set_left_most_unset_bit(15) == 15, f"Expected 15, got {set_left_most_unset_bit(15)}"
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly computes the bit position to set. Instead of iterating over the binary representation to locate the first (most significant encountered from the left) unset bit (i.e. the first 0), it incorrectly uses a conditional that checks a bit at an index derived from the bit length. This causes a logical error because in cases such as 10 (binary 1010) the msb is 3 and the code ends up either setting bit 3 (which is already set) or bit 4.
+2. The condition ((n & (1 << msb)) == n and n != 0) is not a correct way to determine whether the leftmost unset bit lies within the current range of bits: it seems to check whether n equals a power of 2, which is not the intended requirement.
+3. The algorithm should instead scan the bit positions from the highest (i.e., msb, from n.bit_length()-1) to the lowest (0) and find the first bit that is unset (0). Once found, it should set that bit and return the modified number.
+4. As an additional note, if n==0 the bit_length() is 0 so you may want to handle that edge case, returning 1 since 0 with its leftmost unset bit set becomes 1.
+
+Repaired Code:
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # Handle the edge case where n == 0.
+    if n == 0:
+        return 1
+
+    # Iterate from the most significant bit (msb) to 0
+    for i in reversed(range(n.bit_length())):
+        # If the bit at position i is not set, set it and return the result.
+        if not (n & (1 << i)):
+            return n | (1 << i)
+            
+    # If all bits in the current bit_length are set, return n unchanged.
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14   # 10 in binary: 1010 -> 1110 (14)
+assert set_left_most_unset_bit(12) == 14   # 12 in binary: 1100 -> 1110 (14)
+assert set_left_most_unset_bit(15) == 15   # 15 in binary: 1111 remains 1111 since there is no unset bit
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # Handle the edge case where n == 0.
+    if n == 0:
+        return 1
+
+    # Iterate from the most significant bit (msb) to 0
+    for i in reversed(range(n.bit_length())):
+        # If the bit at position i is not set, set it and return the result.
+        if not (n & (1 << i)):
+            return n | (1 << i)
+            
+    # If all bits in the current bit_length are set, return n unchanged.
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14   # 10 in binary: 1010 -> 1110 (14)
+assert set_left_most_unset_bit(12) == 14   # 12 in binary: 1100 -> 1110 (14)
+assert set_left_most_unset_bit(15) == 15   # 15 in binary: 1111 remains 1111 since there is no unset bit
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code does not implement the proper algorithm for “setting the left most unset bit.” The intended approach is to scan the bits of the number (excluding the most-significant bit) from left (i.e., from the bit just below MSB) to right, and when the first 0 is encountered, set that bit and return the new number.
+2. The generated code incorrectly uses an inline conditional with a faulty condition. It checks ((n & (1 << msb)) == n and n != 0), which is both logically incorrect and does not iterate over the lower bits.
+3. There is an operator precedence issue in the expression (1 << msb + 1); it should be (1 << (msb + 1)).
+4. The code does not iterate over the bit positions from the MSB minus one down to the least-significant bit to locate the left most unset bit. Instead, it tries to decide based solely on the MSB, which does not work for cases like 10 or 12.
+5. The expected behavior is:
+   - For n = 10 (binary 1010), the first unset bit from the left (excluding the MSB at position 3) is at position 2. Setting it gives 1110, i.e., 14.
+   - For n = 12 (binary 1100), the first unset bit from the left (scanning positions 2,1,0) is at position 1, giving 1110 or 14.
+   - For n = 15 (binary 1111), all bits are set, so the number should remain unchanged.
+   
+To repair the code, we should:
+• Check for the special case of n == 0.
+• Use n.bit_length() to determine the number of bits.
+• Iterate from bit position (bit_length - 2) down to 0 (since the MSB should not be modified) and check for the first 0 bit.
+• Set the identified bit using bitwise OR and return the result.
+• If no unset bit is found, return n.
+
+Repaired Code:
+[PYTHON] 
+def set_left_most_unset_bit(n):
+    # Handle the special case where n is 0
+    if n == 0:
+        return 1
+
+    bit_len = n.bit_length()
+    # Iterate from the second highest bit (bit_len - 2) down to 0
+    for pos in range(bit_len - 2, -1, -1):
+        if not (n >> pos) & 1:
+            return n | (1 << pos)
+            
+    # If no unset bit is found in the lower bits, then n is already in form of consecutive 1's.
+    return n
+
+# Test Cases
+if __name__ == "__main__":
+    assert set_left_most_unset_bit(10) == 14, f"Expected 14 but got {set_left_most_unset_bit(10)}"
+    assert set_left_most_unset_bit(12) == 14, f"Expected 14 but got {set_left_most_unset_bit(12)}"
+    assert set_left_most_unset_bit(15) == 15, f"Expected 15 but got {set_left_most_unset_bit(15)}"
+    print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def set_left_most_unset_bit(n):
+    # Handle the special case where n is 0
+    if n == 0:
+        return 1
+
+    bit_len = n.bit_length()
+    # Iterate from the second highest bit (bit_len - 2) down to 0
+    for pos in range(bit_len - 2, -1, -1):
+        if not (n >> pos) & 1:
+            return n | (1 << pos)
+            
+    # If no unset bit is found in the lower bits, then n is already in form of consecutive 1's.
+    return n
+
+# Test Cases
+if __name__ == "__main__":
+    assert set_left_most_unset_bit(10) == 14, f"Expected 14 but got {set_left_most_unset_bit(10)}"
+    assert set_left_most_unset_bit(12) == 14, f"Expected 14 but got {set_left_most_unset_bit(12)}"
+    assert set_left_most_unset_bit(15) == 15, f"Expected 15 but got {set_left_most_unset_bit(15)}"
+    print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The provided code incorrectly attempts to determine which bit to set by computing the most significant bit (msb) and then using a conditional expression. This logic is flawed because it doesn’t correctly inspect the binary representation for the leftmost unset bit. For example, when n=10 (binary 1010), the msb is at position 3, but the leftmost zero is actually at position 2. In the else branch the code does “n | (1 << msb)”, meaning it sets a bit that is already set rather than the first 0-bit.
+2. The conditional expression “if ((n & (1 << msb)) == n and n != 0)” is conceptually incorrect. The check “(n & (1 << msb)) == n” does not serve to determine if only the msb is set.
+3. There is also an operator precedence issue in “1 << msb + 1”. Without parentheses it evaluates as “(1 << msb) + 1” instead of “1 << (msb + 1)”.
+
+To repair the code, we need to iterate over the bit positions from the most significant bit (using bit_length) down to 0 to find the first bit that is not set (i.e. equals 0). Once found, we set that bit and return the new number. If all bits in the current binary representation are set, then we simply return n (leaving it unchanged).
+
+Repaired Code:
+[PYTHON] 
+def set_left_most_unset_bit(n):
+    # Determine the bit length: for n==0, consider at least one bit.
+    bit_length = n.bit_length() if n != 0 else 1
+
+    # Iterate from the most significant bit (bit_length-1) down to 0.
+    for i in range(bit_length - 1, -1, -1):
+        if (n & (1 << i)) == 0:
+            return n | (1 << i)
+    
+    # If no unset bit is found, return n unchanged.
+    return n
+
+# Test cases:
+assert set_left_most_unset_bit(10) == 14
+assert set_left_most_unset_bit(12) == 14
+assert set_left_most_unset_bit(15) == 15
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def set_left_most_unset_bit(n):
+    # Determine the bit length: for n==0, consider at least one bit.
+    bit_length = n.bit_length() if n != 0 else 1
+
+    # Iterate from the most significant bit (bit_length-1) down to 0.
+    for i in range(bit_length - 1, -1, -1):
+        if (n & (1 << i)) == 0:
+            return n | (1 << i)
+    
+    # If no unset bit is found, return n unchanged.
+    return n
+
+# Test cases:
+assert set_left_most_unset_bit(10) == 14
+assert set_left_most_unset_bit(12) == 14
+assert set_left_most_unset_bit(15) == 15
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly calculates the bit position to set. It uses a helper function get_msb(x) to compute the most significant bit (msb) and then tries to set a new bit based on a mistaken condition. For input 10 (binary 1010), the expected leftmost unset bit is at position 2 (starting count at 0 from the least significant bit), so setting that bit should produce 1110 (i.e. 14). However, the generated code’s logic (using a ternary operator with a condition on n & (1 << msb)) does not correctly identify the leftmost unset bit.
+
+2. The correct approach is to:
+   - First, handle the n==0 case separately (since its bit_length() is 0).
+   - Determine the bit length of n (using n.bit_length()).
+   - Iterate from the most significant bit (msb) down to the least significant bit (0) and check which bit is unset.
+   - As soon as an unset bit is found, set that bit (using bitwise OR) and return the result.
+   - If all bits in the current bit-length are already set (e.g. n==15, binary 1111), then return n as is.
+
+3. The test case for n==12 (binary 1100) should set the bit at position 1 which results in 1110 (i.e. 14).
+
+Below is the repaired code.
+
+Repaired Code:
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # Handle the edge case where n is zero.
+    if n == 0:
+        return 1  # binary 0 -> 1 (setting the 0th bit)
+    
+    # Get the number of bits required to represent n.
+    msb = n.bit_length() - 1
+    
+    # Iterate from the msb down to the 0th bit.
+    for i in range(msb, -1, -1):
+        # Check if the bit at position i is not set.
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    
+    # If all bits are set, return n unchanged.
+    return n
+
+# Test examples
+if __name__ == "__main__":
+    assert set_left_most_unset_bit(10) == 14, f"Expected 14, got {set_left_most_unset_bit(10)}"
+    assert set_left_most_unset_bit(12) == 14, f"Expected 14, got {set_left_most_unset_bit(12)}"
+    assert set_left_most_unset_bit(15) == 15, f"Expected 15, got {set_left_most_unset_bit(15)}"
+    print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # Handle the edge case where n is zero.
+    if n == 0:
+        return 1  # binary 0 -> 1 (setting the 0th bit)
+    
+    # Get the number of bits required to represent n.
+    msb = n.bit_length() - 1
+    
+    # Iterate from the msb down to the 0th bit.
+    for i in range(msb, -1, -1):
+        # Check if the bit at position i is not set.
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    
+    # If all bits are set, return n unchanged.
+    return n
+
+# Test examples
+if __name__ == "__main__":
+    assert set_left_most_unset_bit(10) == 14, f"Expected 14, got {set_left_most_unset_bit(10)}"
+    assert set_left_most_unset_bit(12) == 14, f"Expected 14, got {set_left_most_unset_bit(12)}"
+    assert set_left_most_unset_bit(15) == 15, f"Expected 15, got {set_left_most_unset_bit(15)}"
+    print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly attempts to determine which bit to set using an internal helper “get_msb” and a ternary expression. Its logic does not iterate over the bit positions to locate the left most (i.e. most significant) unset bit.
+2. The condition ((n & (1 << msb)) == n and n != 0) is incorrect. For example, with n = 10 (binary 1010), msb is computed as 3 (since 10.bit_length() is 4). However, 10 & (1 << 3) equals 8, which is not equal to 10. Thus the intended branch of setting the bit at msb + 1 is never used and the else branch (n | (1 << msb)) incorrectly sets a bit that is already set.
+3. Moreover, the logic does not scan the bit positions from most significant to least significant to find the first unset bit. In the prompt examples, with n = 10 (binary 1010) the left most unset bit (from the MSB side) is at position 2, not at position 3.
+4. The correct approach is to iterate from the most significant bit (n.bit_length() - 1) down to 0, check if the bit is unset, and if so, set it. If all bits are set (e.g. for n = 15, binary 1111), then the function should return n unchanged.
+5. Additionally, one edge-case consideration is when n is 0. While not specified in the prompt, our loop will not run if n.bit_length() is 0. In that case, returning n (i.e. 0) or setting a bit (like 1) might be acceptable; however, given the prompt we assume no test case for 0.
+
+Repaired Code:
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # Iterate from the most significant bit (msb) down to 0.
+    msb = n.bit_length() - 1  # Most significant bit index, if n > 0
+    # If n == 0, then bit_length == 0, so we can simply return 1
+    if n == 0:
+        return 1
+        
+    # Iterate from msb down to 0 to find the left most unset bit.
+    for i in range(msb, -1, -1):
+        if (n >> i) & 1 == 0:
+            return n | (1 << i)
+    # If all bits in current range are set, return n unchanged.
+    return n
+
+# test cases
+assert set_left_most_unset_bit(10) == 14  # 10 (1010) -> 14 (1110)
+assert set_left_most_unset_bit(12) == 14  # 12 (1100) -> 14 (1110)
+assert set_left_most_unset_bit(15) == 15  # 15 (1111) -> 15
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # Iterate from the most significant bit (msb) down to 0.
+    msb = n.bit_length() - 1  # Most significant bit index, if n > 0
+    # If n == 0, then bit_length == 0, so we can simply return 1
+    if n == 0:
+        return 1
+        
+    # Iterate from msb down to 0 to find the left most unset bit.
+    for i in range(msb, -1, -1):
+        if (n >> i) & 1 == 0:
+            return n | (1 << i)
+    # If all bits in current range are set, return n unchanged.
+    return n
+
+# test cases
+assert set_left_most_unset_bit(10) == 14  # 10 (1010) -> 14 (1110)
+assert set_left_most_unset_bit(12) == 14  # 12 (1100) -> 14 (1110)
+assert set_left_most_unset_bit(15) == 15  # 15 (1111) -> 15
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses an internal helper get_msb and then tries to decide whether to set a bit based on a condition that doesn’t correctly find the left-most unset bit in the binary representation. In particular, the condition “if ((n & (1 << msb)) == n and n != 0)” is logically wrong. For example, when n is 10 (1010₂) the most significant bit index is 3 so (1 << 3) is 8. However, n & 8 equals 8 (since bit3 is set) and 8 != 10, so the condition is false and it ends up setting bit3 again, returning 10 unchanged instead of 14.
+2. The intent is to scan the binary representation (based on n.bit_length()) from the left most position (highest index) toward the right until the first unset (0) bit is found and then set that bit. If no bit in the representation is unset (i.e. n is all ones), then n should be returned as is.
+3. In the prompt, set_left_most_unset_bit(10) should return 14, and set_left_most_unset_bit(12) should also return 14. The generated code fails these tests.
+4. To correct the code, one may iterate from the highest bit (n.bit_length()-1) down to 0, checking each bit. If an unset bit is found in n, we set it and return the new value. If the loop finishes without finding any unset bit, then we return n.
+
+Below is the repaired code:
+
+Repaired Code:
+[PYTHON]
+def set_left_most_unset_bit(n):
+    length = n.bit_length()
+    # If n is 0, we can consider its binary representation as "0"
+    if length == 0:
+        return 1  # Setting the only bit available
+    
+    # Iterate from the most significant bit index down to 0.
+    for i in range(length - 1, -1, -1):
+        # If the bit is not set, set that bit and return the new number.
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    # If all bits in the current representation are 1, return n unchanged.
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14  # 10 -> 1010₂ becomes 1110₂ (14)
+assert set_left_most_unset_bit(12) == 14  # 12 -> 1100₂ becomes 1110₂ (14)
+assert set_left_most_unset_bit(15) == 15  # 15 -> 1111₂ remains 1111₂ (15)
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    length = n.bit_length()
+    # If n is 0, we can consider its binary representation as "0"
+    if length == 0:
+        return 1  # Setting the only bit available
+    
+    # Iterate from the most significant bit index down to 0.
+    for i in range(length - 1, -1, -1):
+        # If the bit is not set, set that bit and return the new number.
+        if not (n & (1 << i)):
+            return n | (1 << i)
+    # If all bits in the current representation are 1, return n unchanged.
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14  # 10 -> 1010₂ becomes 1110₂ (14)
+assert set_left_most_unset_bit(12) == 14  # 12 -> 1100₂ becomes 1110₂ (14)
+assert set_left_most_unset_bit(15) == 15  # 15 -> 1111₂ remains 1111₂ (15)
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code computes the most‐significant bit (msb) correctly using n.bit_length() but then uses an incorrect condition to decide which bit to set. In the prompt, the requirement is to “set the left most unset bit” among the bits in the binary representation (using the msb as the leftmost bit). For example, 10 in binary is 1010 so the leftmost unset bit (excluding the msb which is already “set”) is bit position 2; setting that bit should change 1010 to 1110 (14). The provided code’s condition and bit selection are wrong: for n = 10, msb returns 3, and the code incorrectly ends in the branch that uses 1 << msb (i.e. 1<<3) which is already set, causing the function to return 10 unchanged.
+
+2. The design in the generated code doesn’t iterate through the bits below the msb to find the first (from left/high bit to right/low bit) unset bit.
+
+3. The correct approach is:
+   - Determine the bit length (and if n is 0, handle appropriately, e.g. by considering a width of 1).
+   - Loop over bit positions from msb-1 down to 0.
+   - For each bit position, check if that bit is unset.
+   - When the first unset bit is found, set it (using bitwise OR) and return the result.
+   - If no unset bit is found (i.e. if n is already all ones), simply return n.
+
+Repaired Code:
+Below is the corrected version of the function following the required logic.
+
+[PYTHON]
+def set_left_most_unset_bit(n):
+    # if n is 0, we define its bit length to be 1.
+    width = n.bit_length() if n > 0 else 1
+    
+    # If n is 0, its binary representation is "0", left most (and only) bit not set
+    # Setting that bit is equivalent to setting bit position 0:
+    if n == 0:
+        return n | 1
+    
+    # The most significant bit is always set; check the bits to its right.
+    # Loop from the bit just below the msb down to bit position 0.
+    for pos in range(width - 2, -1, -1):
+        if not (n & (1 << pos)):
+            return n | (1 << pos)
+    
+    # If all bits (within the current bit-length) are set, return n unchanged.
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14
+assert set_left_most_unset_bit(12) == 14
+assert set_left_most_unset_bit(15) == 15
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def set_left_most_unset_bit(n):
+    # if n is 0, we define its bit length to be 1.
+    width = n.bit_length() if n > 0 else 1
+    
+    # If n is 0, its binary representation is "0", left most (and only) bit not set
+    # Setting that bit is equivalent to setting bit position 0:
+    if n == 0:
+        return n | 1
+    
+    # The most significant bit is always set; check the bits to its right.
+    # Loop from the bit just below the msb down to bit position 0.
+    for pos in range(width - 2, -1, -1):
+        if not (n & (1 << pos)):
+            return n | (1 << pos)
+    
+    # If all bits (within the current bit-length) are set, return n unchanged.
+    return n
+
+# Test cases
+assert set_left_most_unset_bit(10) == 14
+assert set_left_most_unset_bit(12) == 14
+assert set_left_most_unset_bit(15) == 15
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert set_left_most_unset_bit(10) == 14 => Passed
+assert set_left_most_unset_bit(12) == 14 => Passed
+assert set_left_most_unset_bit(15) == 15 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

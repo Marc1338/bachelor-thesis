@@ -1,0 +1,1414 @@
+
+Prompt 1, Sample Number: 1:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 2:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 3:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(seq1, seq2):
+    return list(set(seq1) & set(seq2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 4:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return [item for item in list1 if item in list2]
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 5:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(a, b):
+    return tuple(set(a) & set(b))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 6:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return tuple(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 7:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 8:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 9:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 10:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 1:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+import math
+
+def is_not_prime(n):
+    if n < 2:
+        return True
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return True
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 2:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return True
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 3:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return True
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 4:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+import math
+
+def is_not_prime(n):
+    if n < 2:
+        return True
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return True
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 5:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    if n == 2:
+        return False
+    if n % 2 == 0:
+        return True
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return True
+        i += 2
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 6:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    if n == 2:
+        return False
+    if n % 2 == 0:
+        return True
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return True
+        i += 2
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 7:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    if n == 2:
+        return False
+    if n % 2 == 0:
+        return True
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return True
+        i += 2
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 8:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return True
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 9:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n < 2:
+        return True
+    if n == 2:
+        return False
+    if n % 2 == 0:
+        return True
+    for i in range(3, int(n**0.5) + 1, 2):
+        if n % i == 0:
+            return True
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 2, Sample Number: 10:
+Model input: """
+Write a python function to identify non-prime numbers.
+assert is_not_prime(2) == False
+"""
+Response:
+ [PYTHON]
+def is_not_prime(n):
+    if n <= 1:
+        return True
+    if n == 2:
+        return False
+    if n % 2 == 0:
+        return True
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return True
+        i += 2
+    return False
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 1:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+def heap_queue_largest(numbers, n):
+    import heapq
+    return heapq.nlargest(n, numbers)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 2:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(numbers, n):
+    return heapq.nlargest(n, numbers)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 3:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(numbers, n):
+    return heapq.nlargest(n, numbers)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 4:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(nums, n):
+    return heapq.nlargest(n, nums)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 5:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(lst, n):
+    return heapq.nlargest(n, lst)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 6:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(numbers, n):
+    return heapq.nlargest(n, numbers)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 7:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+def heap_queue_largest(nums, n):
+    import heapq
+    return heapq.nlargest(n, nums)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 8:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+def heap_queue_largest(lst, n):
+    import heapq
+    return heapq.nlargest(n, lst)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 9:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(numbers, n):
+    return sorted(heapq.nlargest(n, numbers), reverse=True)
+[/PYTHON]
+================================================================================
+
+Prompt 3, Sample Number: 10:
+Model input: """
+Write a function to find the n largest integers from a given list of numbers, returned in descending order.
+assert heap_queue_largest( [25, 35, 22, 85, 14, 65, 75, 22, 58],3)==[85, 75, 65]
+"""
+Response:
+ [PYTHON]
+import heapq
+
+def heap_queue_largest(lst, n):
+    return heapq.nlargest(n, lst)
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 1:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    x = a ^ b
+    return x and (x & (x - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 2:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    x = a ^ b
+    return x != 0 and (x & (x - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 3:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    diff = a ^ b
+    return diff != 0 and (diff & (diff - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 4:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    diff = a ^ b
+    return diff != 0 and (diff & (diff - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 5:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    diff = a ^ b
+    return diff != 0 and (diff & (diff - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 6:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    diff = a ^ b
+    return diff != 0 and (diff & (diff - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 7:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    diff = a ^ b
+    return diff != 0 and (diff & (diff - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 8:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    xor_result = a ^ b
+    return xor_result != 0 and (xor_result & (xor_result - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 9:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(x, y):
+    diff = x ^ y
+    return diff != 0 and (diff & (diff - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 4, Sample Number: 10:
+Model input: """
+Write a python function to check whether the two numbers differ at one bit position only or not.
+assert differ_At_One_Bit_Pos(13,9) == True
+"""
+Response:
+ [PYTHON]
+def differ_At_One_Bit_Pos(a, b):
+    x = a ^ b
+    return x != 0 and (x & (x - 1)) == 0
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 1:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 2:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 3:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 4:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 5:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 6:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 7:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 8:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 9:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 5, Sample Number: 10:
+Model input: """
+Write a function to find all words which are at least 4 characters long in a string.
+assert set(find_char_long('Please move back to stream')) == set(['Please', 'move', 'back', 'stream'])
+"""
+Response:
+ [PYTHON]
+def find_char_long(s):
+    return [word for word in s.split() if len(word) >= 4]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 1:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(nums):
+    return [num ** 2 for num in nums]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 2:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(nums):
+    return [num ** 2 for num in nums]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 3:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(lst):
+    return [x**2 for x in lst]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 4:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(lst):
+    return [x * x for x in lst]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 5:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(lst):
+    return [x**2 for x in lst]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 6:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(nums):
+    return [n * n for n in nums]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 7:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(lst):
+    return [x * x for x in lst]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 8:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(lst):
+    return [x ** 2 for x in lst]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 9:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(lst):
+    return [x**2 for x in lst]
+[/PYTHON]
+================================================================================
+
+Prompt 6, Sample Number: 10:
+Model input: """
+Write a function to find squares of individual elements in a list.
+assert square_nums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+"""
+Response:
+ [PYTHON]
+def square_nums(nums):
+    return [x ** 2 for x in nums]
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 1:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for i in range(1, n+1):
+        if s[i:] + s[:i] == s:
+            return i
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 2:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s: str) -> int:
+    n = len(s)
+    for i in range(1, n + 1):
+        if s[i:] + s[:i] == s:
+            return i
+    return n
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 3:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for k in range(1, n + 1):
+        if s[k:] + s[:k] == s:
+            return k
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 4:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for k in range(1, n+1):
+        if s == s[k:] + s[:k]:
+            return k
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 5:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for i in range(1, n + 1):
+        if s[i:] + s[:i] == s:
+            return i
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 6:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for i in range(1, n + 1):
+        if s[i:] + s[:i] == s:
+            return i
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 7:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for r in range(1, n + 1):
+        if s == s[r:] + s[:r]:
+            return r
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 8:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for i in range(1, n + 1):
+        if s[i:] + s[:i] == s:
+            return i
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 9:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for k in range(1, n + 1):
+        if s == s[k:] + s[:k]:
+            return k
+[/PYTHON]
+================================================================================
+
+Prompt 7, Sample Number: 10:
+Model input: """
+Write a python function to find the minimum number of rotations (greater than 0) required to get the same string.
+assert find_Rotations("aaaa") == 1
+"""
+Response:
+ [PYTHON]
+def find_Rotations(s):
+    n = len(s)
+    for k in range(1, n + 1):
+        if s == s[k:] + s[:k]:
+            return k
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 1:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, ch):
+    first = s.find(ch)
+    if first == -1:
+        return s
+    last = s.rfind(ch)
+    # If both indices are same, remove only one occurrence.
+    if first == last:
+        return s[:first] + s[first+1:]
+    return s[:first] + s[first+1:last] + s[last+1:]
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 2:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, char):
+    first = s.find(char)
+    last = s.rfind(char)
+    if first == -1:
+        return s
+    if first == last:
+        return s[:first] + s[first+1:]
+    # remove the character at the 'last' index first to avoid shifting the 'first' index.
+    s = s[:last] + s[last+1:]
+    s = s[:first] + s[first+1:]
+    return s
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 3:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, ch):
+    first_index = s.find(ch)
+    if first_index == -1:
+        return s
+    last_index = s.rfind(ch)
+    if first_index == last_index:
+        return s[:first_index] + s[first_index+1:]
+    # Remove the last occurrence first to avoid index shift
+    s = s[:last_index] + s[last_index+1:]
+    s = s[:first_index] + s[first_index+1:]
+    return s
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 4:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, char):
+    first = s.find(char)
+    if first == -1:
+        return s
+    last = s.rfind(char)
+    if first == last:
+        return s[:first] + s[first+1:]
+    return s[:first] + s[first+1:last] + s[last+1:]
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 5:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, ch):
+    first = s.find(ch)
+    if first == -1:
+        return s
+    last = s.rfind(ch)
+    if first == last:
+        return s[:first] + s[first+1:]
+    s = s[:first] + s[first+1:]
+    # Adjust last occurrence index after first removal
+    last = s.rfind(ch)
+    if last != -1:
+        s = s[:last] + s[last+1:]
+    return s
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 6:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, ch):
+    first = s.find(ch)
+    if first == -1:
+        return s
+    last = s.rfind(ch)
+    if first == last:
+        return s[:first] + s[first+1:]
+    return s[:first] + s[first+1:last] + s[last+1:]
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 7:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, ch):
+    first = s.find(ch)
+    if first == -1:
+        return s
+    last = s.rfind(ch)
+    if first == last:
+        return s[:first] + s[first+1:]
+    return s[:first] + s[first+1:last] + s[last+1:]
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 8:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, char):
+    first = s.find(char)
+    last = s.rfind(char)
+    if first == -1:
+        return s
+    if first == last:
+        return s[:first] + s[first+1:]
+    return s[:first] + s[first+1:last] + s[last+1:]
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 9:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, char):
+    first_index = s.find(char)
+    if first_index == -1:
+        return s
+    # Remove first occurrence
+    s = s[:first_index] + s[first_index+1:]
+    last_index = s.rfind(char)
+    if last_index != -1:
+        s = s[:last_index] + s[last_index+1:]
+    return s
+[/PYTHON]
+================================================================================
+
+Prompt 8, Sample Number: 10:
+Model input: """
+Write a python function to remove first and last occurrence of a given character from the string.
+assert remove_Occ("hello","l") == "heo"
+"""
+Response:
+ [PYTHON]
+def remove_Occ(s, char):
+    first = s.find(char)
+    if first == -1:
+        return s
+    last = s.rfind(char)
+    if first == last:
+        return s[:first] + s[first+1:]
+    return s[:first] + s[first+1:last] + s[last+1:]
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 1:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 2:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 3:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 4:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 5:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 6:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 7:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 8:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 9:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 9, Sample Number: 10:
+Model input: """
+Write a function to sort a given matrix in ascending order according to the sum of its rows.
+assert sort_matrix([[1, 2, 3], [2, 4, 5], [1, 1, 1]])==[[1, 1, 1], [1, 2, 3], [2, 4, 5]]
+"""
+Response:
+ [PYTHON]
+def sort_matrix(matrix):
+    return sorted(matrix, key=sum)
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 1:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(base, height, length):
+    return (base * height / 2) * length
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 2:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(base, height, length):
+    return (base * height * length) / 2
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 3:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(base, height, length):
+    return (base * height * length) / 2
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 4:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(b, h, l):
+    return 0.5 * b * h * l
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 5:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(length, base, height):
+    return (base * height / 2) * length
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 6:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(base, height, length):
+    return 0.5 * base * height * length
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 7:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(b, h, l):
+    return (b * h * l) / 2
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 8:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(base, height, length):
+    return (base * height / 2) * length
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 9:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(base, height, length):
+    return (base * height * length) / 2
+[/PYTHON]
+================================================================================
+
+Prompt 10, Sample Number: 10:
+Model input: """
+Write a python function to find the volume of a triangular prism.
+assert find_Volume(10,8,6) == 240
+"""
+Response:
+ [PYTHON]
+def find_Volume(length, base, height):
+    return length * (base * height / 2)
+[/PYTHON]
+================================================================================

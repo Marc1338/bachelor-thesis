@@ -1,0 +1,7 @@
+{
+    "total_samples": 3780,
+    "total_correct": 3603,
+    "global_pass@1": 0.953174603174603,
+    "global_pass@3": 0.9661596119929454,
+    "global_pass@5": 0.9689783320735702
+}

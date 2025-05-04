@@ -1,0 +1,482 @@
+Prompt 75:
+Prompt text: """
+Write a function to find the median of two sorted lists of same size.
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. The function is designed to compute the median of two sorted lists of the same size, so the total number of elements is always 2*size, which is even. Therefore, calculating the median based on whether the list size is odd or even (using size % 2) is incorrect.
+2. Instead of checking size % 2, since the total combined length is always even, the median should be computed as the average of the (combined total_length/2 - 1)th and (combined total_length/2)th elements.
+3. For two lists of size "size", the total length is 2*size. The two middle indices will be (2*size // 2 - 1) and (2*size // 2) i.e., indices size-1 and size. For example, if size is 5, then the indices become 4 and 5, which correctly give the median (average of the 5th and 6th smallest numbers).
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    # Combine and sort the two lists
+    combined = sorted(sorted_list1 + sorted_list2)
+    # Total number of elements in combined list is 2*size (always even)
+    mid1 = combined[size - 1]
+    mid2 = combined[size]
+    return (mid1 + mid2) / 2
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    # Combine and sort the two lists
+    combined = sorted(sorted_list1 + sorted_list2)
+    # Total number of elements in combined list is 2*size (always even)
+    mid1 = combined[size - 1]
+    mid2 = combined[size]
+    return (mid1 + mid2) / 2
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The provided code makes the following mistakes:
+1. It computes the median using the size of one list (n) instead of the total combined list length (2n). For example, with two lists of size 5, the combined list length is 10. Therefore, the median should be computed using the (10//2-1)th and (10//2)th elements, not based solely on n.
+2. The condition to check for even/odd should be based on the total number of elements (2*size), not size. In our case, since both lists are the same size, the combined list always has an even number of elements (if n > 0), and the median should be the average of the two middle numbers.
+3. The generated code mistakenly uses "if size % 2 == 0" to decide which indexing to use.
+
+To correct these errors, we need to compute total = 2 * size. Then, if total is even, the median is (combined[total//2 - 1] + combined[total//2]) / 2. Otherwise (if total were odd), it would be combined[total//2].
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    # Merge the two sorted lists and sort the combined list
+    combined = sorted(sorted_list1 + sorted_list2)
+    total = 2 * size  # Total number of elements after merging
+    
+    # Check if total elements is even or odd
+    if total % 2 == 0:
+        return (combined[total // 2 - 1] + combined[total // 2]) / 2
+    else:
+        return combined[total // 2]
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    # Merge the two sorted lists and sort the combined list
+    combined = sorted(sorted_list1 + sorted_list2)
+    total = 2 * size  # Total number of elements after merging
+    
+    # Check if total elements is even or odd
+    if total % 2 == 0:
+        return (combined[total // 2 - 1] + combined[total // 2]) / 2
+    else:
+        return combined[total // 2]
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+1. The function computes the median using the parameter "size" as if it were the total number of elements. However, since each list has "size" elements, the merged list actually has 2 * size elements.
+2. The current code checks if "size" is even or odd. This is incorrect: it should check the parity of the total length of the combined list.
+3. For an even total number of elements (which it always will be for two lists of equal size), the indices used to compute the median are wrong. The correct indices should be (n//2 - 1) and (n//2), where n is the total number of merged elements.
+4. There is no need to use the input parameter "size" when the combined list already provides all the required information through its length.
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    n = len(combined)
+    if n % 2 == 0:
+        return (combined[n // 2 - 1] + combined[n // 2]) / 2
+    else:
+        return combined[n // 2]
+        
+# Example tests
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    n = len(combined)
+    if n % 2 == 0:
+        return (combined[n // 2 - 1] + combined[n // 2]) / 2
+    else:
+        return combined[n // 2]
+        
+# Example tests
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly uses the passed parameter "size" to index the combined list. Since each list has "size" elements, the total number of elements is 2 * size. Therefore, the median calculation should use the combined list’s total length rather than the single list’s size.
+2. In the case of an even total number of elements (which is always the situation when both lists are of equal size and size is an integer), the median should be the average of the elements at indices (total_length//2 - 1) and (total_length//2). The generated code incorrectly uses (size // 2 - 1) and (size // 2).
+3. Although the prompt only provides an example with two lists having an odd number of elements (resulting in an even total count), the fixed code can also handle an odd total count if needed.
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total_length = size * 2
+    if total_length % 2 == 0:
+        mid1 = combined[total_length // 2 - 1]
+        mid2 = combined[total_length // 2]
+        return (mid1 + mid2) / 2
+    else:
+        return combined[total_length // 2]
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All test cases passed.")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total_length = size * 2
+    if total_length % 2 == 0:
+        mid1 = combined[total_length // 2 - 1]
+        mid2 = combined[total_length // 2]
+        return (mid1 + mid2) / 2
+    else:
+        return combined[total_length // 2]
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All test cases passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. Incorrect Median Calculation: Since both input lists have the same size, the combined list always has an even number of elements (2 * size). The code erroneously checks if “size” is even or odd, rather than checking if the total number of elements (2 * size) is even. In our case, it always will be even. This led to using an incorrect median index when “size” is odd.
+2. Wrong Indexing: For a combined sorted list of length 2 * size, the median should be the average of the elements at indices (size - 1) and size. The current implementation uses "size // 2" or "size // 2 - 1", which does not correctly identify the middle two elements.
+3. No Handling of the Even Total Count: Since the total count is always even, we need to always average the two middle values; the check if size % 2 == 0 is not applicable here.
+
+To fix this, we can simply merge the two lists, sort the combined list, and then calculate the median using:
+  median = (combined[size-1] + combined[size]) / 2
+
+Repaired Code:
+[PYTHON] 
+def get_median(sorted_list1, sorted_list2, size):
+    # Combine the two sorted lists and sort the resulting list
+    combined = sorted(sorted_list1 + sorted_list2)
+    # For two lists of same size, the total number of elements is even (2 * size)
+    # The median is the average of the elements at indices size-1 and size
+    return (combined[size - 1] + combined[size]) / 2
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def get_median(sorted_list1, sorted_list2, size):
+    # Combine the two sorted lists and sort the resulting list
+    combined = sorted(sorted_list1 + sorted_list2)
+    # For two lists of same size, the total number of elements is even (2 * size)
+    # The median is the average of the elements at indices size-1 and size
+    return (combined[size - 1] + combined[size]) / 2
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The function merges the two sorted lists and sorts the combined list, which is fine. However, because the two lists are of the same size, the total number of elements will always be even (2*size), so the median should always be computed as the average of the two middle values.
+2. The generated code incorrectly uses the parameter "size" to decide whether to compute the median as a single middle element (if size is odd) or as the average of two elements (if size is even). Since each input list is of length “size”, the merged list’s length is 2*size, which is always even.
+3. The correct indices for the merged list should be "size - 1" and "size". For example, given the test case, the merged list is [1, 2, 12, 13, 15, 17, 26, 30, 38, 45] and the two middle values are combined[4] (15) and combined[5] (17) but note that since 0-indexing is used, these are at indices size - 1 = 5-1 = 4 and size = 5. Their average is (15 + 17) / 2 = 16.
+4. The conditional based on size % 2 is not needed because the merged array length is always even.
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    # Since each list is of length "size", the merged list has 2*size elements, which is always even.
+    # The median is the average of the two center elements: indices size - 1 and size.
+    return (combined[size - 1] + combined[size]) / 2
+
+# Testing the function with the provided test case
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    # Since each list is of length "size", the merged list has 2*size elements, which is always even.
+    # The median is the average of the two center elements: indices size - 1 and size.
+    return (combined[size - 1] + combined[size]) / 2
+
+# Testing the function with the provided test case
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code incorrectly calculates the median index by using the provided "size" parameter directly. Since each list has "size" elements, the combined list actually has 2×size elements. In the merged list, for an even number of elements (which is always the case here), the median should be computed as the average of the elements at positions (total_length/2 - 1) and (total_length/2) (using zero-based indexing). The original code incorrectly uses "size" instead of 2×size when calculating these indices.
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total_length = 2 * size
+    # For an even total number of elements, median is the average of the two middle numbers.
+    return (combined[total_length // 2 - 1] + combined[total_length // 2]) / 2.0
+
+# Example test cases:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total_length = 2 * size
+    # For an even total number of elements, median is the average of the two middle numbers.
+    return (combined[total_length // 2 - 1] + combined[total_length // 2]) / 2.0
+
+# Example test cases:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code incorrectly determines which indices to use when computing the median for the combined list. Since both input lists have the same size, the merged list will always contain an even number of elements (2 × size). In an even-length sorted list, the median should be the average of the two middle elements. For two lists of size n, the middle two elements in the zero‐indexed sorted combined list are at positions n – 1 and n. However, the generated code mistakenly checks if the provided size is even and then calculates indices based solely on the size parameter (using size // 2 – 1 and size // 2 for even sizes, and size // 2 for odd), which is not appropriate given that the total number of elements is 2 × size. This causes the wrong indices to be used and leads to incorrect median results.
+
+To fix the code, we can simply merge and sort the two lists, and then return the average of the elements at indices size − 1 and size.
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    # For two lists of equal size, the merged list has 2*size elements.
+    # The median is the average of the elements at indices size - 1 and size.
+    return (combined[size - 1] + combined[size]) / 2
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    # For two lists of equal size, the merged list has 2*size elements.
+    # The median is the average of the elements at indices size - 1 and size.
+    return (combined[size - 1] + combined[size]) / 2
+
+# Test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly uses the parameter "size" as if it represents the total number of elements in the merged list. In fact, each list contains "size" elements so the merged list has 2*size elements.
+2. The code conditionally checks for odd/even cases based on "size". However, since the two lists are of the same size, the merged list always has an even number of elements, and the median should be computed as the average of the two middle numbers.
+3. The indices used in the median computation are wrong. For a merged list of length N=2*size, the two middle indices are (N//2 – 1) and (N//2).
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total_length = 2 * size
+    return (combined[total_length // 2 - 1] + combined[total_length // 2]) / 2.0
+
+# Test Cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total_length = 2 * size
+    return (combined[total_length // 2 - 1] + combined[total_length // 2]) / 2.0
+
+# Test Cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The original code concatenates the two sorted lists and sorts them. However, it incorrectly uses the "size" variable directly instead of the total number of elements to compute the median. Since there are 2*size elements in the combined list, the correct median for an even-length list should be computed using indices (total_length//2 - 1) and (total_length//2).
+
+2. In the provided prompt, both lists have the same size, so the total number of elements is always even. Therefore, the function should always compute the median as the average of the two middle values.
+
+3. In the generated code, the check "if size % 2 == 0:" is incorrect because it is checking the size of one list rather than the total number of elements. For example, when size equals 5 (an odd number), the code incorrectly returns a single middle element from a list of 10 elements.
+
+To fix these issues:
+- Compute the total number of elements as len(combined).
+- Use this total length to determine the correct middle indices (total//2 - 1 and total//2) and compute the median as their average.
+
+Repaired Code:
+[PYTHON]
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total = len(combined)
+    # Since both lists have the same size, total is always even
+    return (combined[total // 2 - 1] + combined[total // 2]) / 2
+
+# Provided test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_median(sorted_list1, sorted_list2, size):
+    combined = sorted(sorted_list1 + sorted_list2)
+    total = len(combined)
+    # Since both lists have the same size, total is always even
+    return (combined[total // 2 - 1] + combined[total // 2]) / 2
+
+# Provided test cases
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_median([1, 12, 15, 26, 38], [2, 13, 17, 30, 45], 5) == 16.0 => Passed
+assert get_median([2, 4, 8, 9], [7, 13, 19, 28], 4) == 8.5 => Passed
+assert get_median([3, 6, 14, 23, 36, 42], [2, 18, 27, 39, 49, 55], 6) == 25.0 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

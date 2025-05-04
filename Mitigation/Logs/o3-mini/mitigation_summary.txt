@@ -1,0 +1,8 @@
+=== Pass@k results across all prompts ===
+Number of prompts: 92
+Samples per prompt: 10
+Total samples: 920
+Total successful samples: 883
+Average pass@1: 0.9598
+Average pass@3: 0.9928
+Average pass@5: 0.9987

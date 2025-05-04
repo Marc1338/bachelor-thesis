@@ -1,0 +1,5 @@
+global_samples: 3780
+correct_samples: 3608
+global_pass@1: 0.9545
+global_pass@3: 0.9687
+global_pass@5: 0.9719

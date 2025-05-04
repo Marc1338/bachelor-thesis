@@ -1,0 +1,615 @@
+Prompt 24:
+Prompt text: """
+Write a python function to set all even bits of a given number.
+assert even_bit_set_number(10) == 10
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code always uses a fixed mask (0b01010101, equal to 85) and “sets” (i.e. ORs) those bit positions regardless of the size of n. In addition, the naming “even_bit_set_number” seems to be interpreted (via the tests) as “set all even‐position bits” – where bit positions are counted starting at 1 rather than 0. In a 1‑indexed system, the even positions are 2, 4, 6, … which correspond to bit indices 1, 3, 5, … (0‑indexed). For example, n=10 is 1010 in binary (4 bits). Its even bits (positions 2 and 4 in 1‑indexing, which correspond to bits with value 2 and 8) are already set, so the output is 10. In contrast, n=20 (binary 10100 in 5 bits) is missing the bit in position 2 (1‑indexed, i.e. the bit of value 2) – setting that bit produces 11110 (30). The generated code did not compute the mask dynamically (depending on the bit‐length of n) and it used a mask that sets the incorrect bit positions for larger numbers.
+
+To correct the code we need to:
+• Compute the bit-length of n (defaulting to 1 for n=0).
+• Then construct a mask that has 1’s at all positions that are even when counting positions starting at 1. (That is, for each even number i from 1 to bit_length, set bit at index (i–1).)
+• Finally, return n OR mask.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # For n=0, ensure we consider at least one bit.
+    bit_length = n.bit_length() if n != 0 else 1
+    mask = 0
+    # Using 1-indexed bit positions, even positions are 2, 4, 6, ...
+    for i in range(2, bit_length + 1, 2):
+        mask |= (1 << (i - 1))
+    return n | mask
+
+# Test cases:
+assert even_bit_set_number(10) == 10  # 10 in binary: 1010, even positions (bit2 and bit4) are already set.
+assert even_bit_set_number(20) == 30  # 20 in binary: 10100, setting even positions yields 11110 which is 30.
+assert even_bit_set_number(30) == 30  # 30 remains 30.
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # For n=0, ensure we consider at least one bit.
+    bit_length = n.bit_length() if n != 0 else 1
+    mask = 0
+    # Using 1-indexed bit positions, even positions are 2, 4, 6, ...
+    for i in range(2, bit_length + 1, 2):
+        mask |= (1 << (i - 1))
+    return n | mask
+
+# Test cases:
+assert even_bit_set_number(10) == 10  # 10 in binary: 1010, even positions (bit2 and bit4) are already set.
+assert even_bit_set_number(20) == 30  # 20 in binary: 10100, setting even positions yields 11110 which is 30.
+assert even_bit_set_number(30) == 30  # 30 remains 30.
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code uses a hard‐coded mask (0b01010101) which sets bits at positions 0, 2, 4, etc. (using 0-indexing with the least-significant bit as position 0). However, based on the provided test cases the intended behavior is to “set all even bits” when counting bit positions starting at 1 (i.e. positions 2, 4, 6, … in 1-indexed notation, which correspond to positions 1, 3, 5, … in 0-indexing). For example:
+• For n = 10: 10 in binary is 1010. The even positions (1-indexed) are bit2 and bit4, and since they are already set, the result should remain 10.
+• For n = 20: 20 in binary is 10100. Setting bit positions 2 and 4 (0-indexed: positions 1 and 3) turns 10100 into 11110, which is 30.
+
+Additional issues:
+1. The mask is hard-coded without any consideration of the bit-width of n.
+2. The generated mask sets the wrong bit positions (0, 2, 4, … instead of 1, 3, 5, … in 0-indexed notation).
+
+To correct the code, we need to dynamically generate a mask that sets only the “even” bits in 1-indexed notation (i.e. bit positions 1, 3, 5, … in 0-indexing) up to the bit-length of n. We can compute the bit length of n, iterate over those positions, and if the (position index +1) is even, set that bit in the mask. Finally, we return n OR mask.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Determine the number of bits in the binary representation of n.
+    # If n is 0, we can return 0 since there are no bits to modify.
+    if n == 0:
+        return 0
+
+    bit_len = n.bit_length()
+    mask = 0
+    # For 0-indexing, bits where (index+1) is even are our target (i.e. indices 1,3,5,...).
+    for i in range(bit_len):
+        if (i + 1) % 2 == 0:
+            mask |= (1 << i)
+    return n | mask
+
+# Test cases
+assert even_bit_set_number(10) == 10  # 10 -> 1010 (even bits already set)
+assert even_bit_set_number(20) == 30  # 20 -> 10100 becomes 11110 (30)
+assert even_bit_set_number(30) == 30  # 30 -> 11110 remains unchanged
+
+print("All test cases passed.")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Determine the number of bits in the binary representation of n.
+    # If n is 0, we can return 0 since there are no bits to modify.
+    if n == 0:
+        return 0
+
+    bit_len = n.bit_length()
+    mask = 0
+    # For 0-indexing, bits where (index+1) is even are our target (i.e. indices 1,3,5,...).
+    for i in range(bit_len):
+        if (i + 1) % 2 == 0:
+            mask |= (1 << i)
+    return n | mask
+
+# Test cases
+assert even_bit_set_number(10) == 10  # 10 -> 1010 (even bits already set)
+assert even_bit_set_number(20) == 30  # 20 -> 10100 becomes 11110 (30)
+assert even_bit_set_number(30) == 30  # 30 -> 11110 remains unchanged
+
+print("All test cases passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code always uses a fixed mask (0b01010101 or 85) to “set even bits.” However, the prompt and test cases indicate that we must set the even-numbered positions in the binary representation of the number—but only for the bits that are part of the number’s binary representation. In this context, “even bits” means bits in even-numbered positions when counting from 1 (i.e. positions 2, 4, 6, …), which correspond to the 0-indexed positions 1, 3, 5, ….
+
+For example, for n = 10:
+• n in binary is 1010 (4 bits). The even positions (positions 2 and 4) correspond to bit indices 1 and 3 respectively.
+• The appropriate mask for a 4‐bit number is then 1010 (binary) which is 10 in decimal.
+• 10 | 10 = 10, which is what the test expects.
+
+However, using a static mask of 0b01010101 (8 bits, equal to 85 in decimal) fails for numbers having fewer than 8 bits, because it sets bits beyond the bit-length of n. To correct this, we must determine the bit-length of n and then dynamically construct a mask that has bits set only at even positions (when counting from 1) among those bits.
+
+One approach is:
+1. Get the bit length of n (using n.bit_length()). If n is 0, we can treat it as having a single bit.
+2. Construct the mask by iterating over each bit position (0-indexed) and setting that bit if its human count (i+1) is even.
+3. OR n with the constructed mask and return the result.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Handle n==0 as a special case: 0 has no even positions to set (or consider one-bit representation)
+    if n == 0:
+        return n
+    
+    bits = n.bit_length()
+    mask = 0
+    for i in range(bits):
+        # (i+1) corresponds to human numbering (starting at 1)
+        if (i + 1) % 2 == 0:
+            mask |= (1 << i)
+    return n | mask
+
+# Sample assertions:
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Handle n==0 as a special case: 0 has no even positions to set (or consider one-bit representation)
+    if n == 0:
+        return n
+    
+    bits = n.bit_length()
+    mask = 0
+    for i in range(bits):
+        # (i+1) corresponds to human numbering (starting at 1)
+        if (i + 1) % 2 == 0:
+            mask |= (1 << i)
+    return n | mask
+
+# Sample assertions:
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses a fixed mask (0b01010101, i.e. 85 decimal) that sets bits at positions 0, 2, 4, … (using 0‐indexing). However, the test cases indicate that “even bits” are defined in a 1‐indexed manner. That is, the “even bits” of the number are the bits in positions 2, 4, 6, … (which correspond to odd indices when using 0-indexing). For example, for n = 10, the binary representation (using 0-indexing) is 1010. The odd-index bits (positions 1 and 3) are already 1 so the result should remain 10. In contrast, OR’ing 10 with 85 (which sets bits 0,2,4,…) would produce an incorrect value (95).
+
+2. In addition, using a fixed mask (0b01010101) does not adapt to the number of bits actually present in the input number. Instead, we need a dynamic mask that only covers the bit positions present in n. For instance, for n = 20 (binary 10100, bit_length 5) we want to set only the even “numbered” bits (positions 2 and 4 as 1-indexed, i.e. 0-indexed positions 1 and 3) so that 
+   • mask = (1<<1) | (1<<3) = 2 + 8 = 10
+   • Then, 20 OR 10 = 10100 OR 01010 = 11110 = 30 (matching the expected result).
+
+Correction Steps:
+• Generate the mask dynamically for the bits within the bit-length of n.
+• Since “even bits” are bits 2, 4, 6, … in 1-indexing, in 0-indexing this corresponds to bits 1, 3, 5, … (i.e. indices that are odd).
+• Iterate through the range 0 to n.bit_length() (not adding extra bits) and for every bit position that is odd, include that bit in the mask.
+• Return n OR mask.
+
+Repaired Code:
+Below is the corrected Python code:
+
+[PYTHON] 
+def even_bit_set_number(n):
+    # Build a mask that sets all bits at odd indices (i.e. 1-indexed even positions)
+    mask = 0
+    # Only consider the bits within the current number's bit-length.
+    for i in range(n.bit_length()):
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Sample tests
+if __name__ == '__main__':
+    assert even_bit_set_number(10) == 10  # 10 in binary: 1010 (bits at positions 1 and 3 are set)
+    assert even_bit_set_number(20) == 30  # 20 in binary: 10100, setting bits 1 and 3 results in 11110 (30)
+    assert even_bit_set_number(30) == 30  # 30 in binary: 11110 is unchanged
+    print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+ 
+def even_bit_set_number(n):
+    # Build a mask that sets all bits at odd indices (i.e. 1-indexed even positions)
+    mask = 0
+    # Only consider the bits within the current number's bit-length.
+    for i in range(n.bit_length()):
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Sample tests
+if __name__ == '__main__':
+    assert even_bit_set_number(10) == 10  # 10 in binary: 1010 (bits at positions 1 and 3 are set)
+    assert even_bit_set_number(20) == 30  # 20 in binary: 10100, setting bits 1 and 3 results in 11110 (30)
+    assert even_bit_set_number(30) == 30  # 30 in binary: 11110 is unchanged
+    print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt requires that we “set all even bits of a given number.” However, the test cases show that the expected behavior is to force the bits in even-numbered positions (when counting positions starting at 1 from the least-significant bit) to 1. In other words, if we label the bit positions as 1 (LSB), 2, 3, 4, … then the function should ensure that the bits in positions 2, 4, 6, … are 1. For example:
+• For n = 10, its binary representation (with positions labeled from LSB as 1,2,3,4) is:
+  Position: 4  3  2  1
+  Bits:     1  0  1  0
+The even positions (positions 2 and 4) are already 1 so the result remains 10.
+• For n = 20 (binary 10100 → positions 5 to 1: 1,0,1,0,0), the even positions (positions 2 and 4) are 0. When forced to 1, the number becomes 11110 (binary) which is 30.
+• For n = 30 the number already has its even positions set.
+
+Errors in the generated code:
+1. The mask is defined as a constant 0b01010101 (binary 85). In zero-indexed bit positions, that mask has bits set at positions 0, 2, 4, and 6. However, the requirement (as interpreted from the test cases) is to set bits from positions 2, 4, 6, etc. (which correspond to odd positions in 0-indexing).
+2. The constant mask only works for an 8-bit number and does not adapt based on the number of bits in the input.
+3. The code does not follow the dynamic approach needed to guarantee that all even (1-indexed) bit positions are set for any given input.
+
+Correction:
+We need to compute the mask dynamically by iterating over the bit positions that correspond to even positions (i.e., positions 2, 4, 6, … which are bit indices 1, 3, 5, … in 0-indexed terms) up to (or beyond) the highest set bit in n. We then return n OR mask.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Ensure we process at least one bit if n==0.
+    bit_count = n.bit_length() if n > 0 else 1
+    mask = 0
+    # In 1-indexed notation, even positions are 2, 4, 6, ...
+    # In 0-indexed bit positions, these correspond to indices 1, 3, 5, ...
+    for i in range(1, bit_count, 2):
+        mask |= (1 << i)
+    return n | mask
+
+# For quick testing:
+if __name__ == "__main__":
+    assert even_bit_set_number(10) == 10, f"Test failed for input 10, got {even_bit_set_number(10)}"
+    assert even_bit_set_number(20) == 30, f"Test failed for input 20, got {even_bit_set_number(20)}"
+    assert even_bit_set_number(30) == 30, f"Test failed for input 30, got {even_bit_set_number(30)}"
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Ensure we process at least one bit if n==0.
+    bit_count = n.bit_length() if n > 0 else 1
+    mask = 0
+    # In 1-indexed notation, even positions are 2, 4, 6, ...
+    # In 0-indexed bit positions, these correspond to indices 1, 3, 5, ...
+    for i in range(1, bit_count, 2):
+        mask |= (1 << i)
+    return n | mask
+
+# For quick testing:
+if __name__ == "__main__":
+    assert even_bit_set_number(10) == 10, f"Test failed for input 10, got {even_bit_set_number(10)}"
+    assert even_bit_set_number(20) == 30, f"Test failed for input 20, got {even_bit_set_number(20)}"
+    assert even_bit_set_number(30) == 30, f"Test failed for input 30, got {even_bit_set_number(30)}"
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The prompt’s expected behavior (as inferred from the tests) is not to “set all even‐indexed bits” in the usual 0-indexed sense but rather to “set all even bits” based on 1-indexing. In other words, if we number bits starting at 1 from the right, the even-numbered bit positions (positions 2, 4, 6, …) should be set (bit = 1). For example, for n = 10 (binary “1010” where bit1 = 0, bit2 = 1, bit3 = 0, bit4 = 1 in 1‐indexed order), the even bits (positions 2 and 4) are already 1, so the result stays 10.
+2. The generated code incorrectly creates a fixed mask (0b01010101, i.e. 85) and applies it with OR (n | mask). First, 0b01010101 corresponds to setting bit positions 0, 2, 4, … in 0-indexed order (or “odd bits” when counting 1-indexed) whereas the prompt requires setting even positions (which in 0-index are bits 1, 3, 5, …). In 8 bits the correct fixed mask would be 0b10101010 (i.e. 170). Yet even that fixed mask would be problematic for numbers that require more than 8 bits.
+3. To fix the code, we must generate a mask dynamically that covers all bit positions up to the bit-length of the input number and sets the even 1-indexed positions – that is, every bit position i such that i (0-indexed) is odd.
+4. The solution is to compute the bit length of n and then build the mask by iterating through positions from 0 to n.bit_length()-1. For every index i, if i % 2 == 1 (i.e. the bit is in an even 1-indexed position) we set that bit in the mask. Finally, return n OR mask.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Handle the case when n is 0.
+    if n == 0:
+        return 0
+    
+    # Determine how many bits are needed to represent n.
+    num_bits = n.bit_length()
+    
+    # Create a mask that sets every even bit (by 1-index, i.e. 0-indexed positions 1, 3, 5, ...)
+    mask = 0
+    for i in range(num_bits):
+        if i % 2 == 1:  # i=1 corresponds to the 2nd bit (even position in 1-index)
+            mask |= (1 << i)
+    
+    return n | mask
+
+# Basic tests
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Handle the case when n is 0.
+    if n == 0:
+        return 0
+    
+    # Determine how many bits are needed to represent n.
+    num_bits = n.bit_length()
+    
+    # Create a mask that sets every even bit (by 1-index, i.e. 0-indexed positions 1, 3, 5, ...)
+    mask = 0
+    for i in range(num_bits):
+        if i % 2 == 1:  # i=1 corresponds to the 2nd bit (even position in 1-index)
+            mask |= (1 << i)
+    
+    return n | mask
+
+# Basic tests
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses a fixed mask (0b01010101) that sets bits at even indices (positions 0, 2, 4, …) in an 8‐bit representation. However, based on the provided test results the intended behavior is to “set” (i.e. force to 1) the odd-indexed bits (positions 1, 3, …). For example, 10 in binary is 1010 – its odd bits (bit1 and bit3) are already 1, so the result should remain 10. In contrast, 20 in binary (10100) has odd bits 0, and setting them produces 11110 (30).
+2. The mask is not computed dynamically over only the relevant bit positions. In order not to inadvertently affect bits beyond the bit-length of n, the mask should be constructed with respect to n.bit_length().
+3. To correct the errors, compute the proper mask that covers only the odd bit positions up to n.bit_length() (or 1 if n is 0), and then return the bitwise OR of n with this mask.
+
+Below is the repaired code.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Determine the bit length; for n==0, use length 1
+    bit_len = n.bit_length() if n > 0 else 1
+    mask = 0
+    # Set the odd-indexed bits (i.e. positions 1, 3, 5, ...)
+    for i in range(bit_len):
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# For testing
+if __name__ == "__main__":
+    assert even_bit_set_number(10) == 10, f"Test failed: even_bit_set_number(10) should be 10, got {even_bit_set_number(10)}"
+    assert even_bit_set_number(20) == 30, f"Test failed: even_bit_set_number(20) should be 30, got {even_bit_set_number(20)}"
+    assert even_bit_set_number(30) == 30, f"Test failed: even_bit_set_number(30) should be 30, got {even_bit_set_number(30)}"
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Determine the bit length; for n==0, use length 1
+    bit_len = n.bit_length() if n > 0 else 1
+    mask = 0
+    # Set the odd-indexed bits (i.e. positions 1, 3, 5, ...)
+    for i in range(bit_len):
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# For testing
+if __name__ == "__main__":
+    assert even_bit_set_number(10) == 10, f"Test failed: even_bit_set_number(10) should be 10, got {even_bit_set_number(10)}"
+    assert even_bit_set_number(20) == 30, f"Test failed: even_bit_set_number(20) should be 30, got {even_bit_set_number(20)}"
+    assert even_bit_set_number(30) == 30, f"Test failed: even_bit_set_number(30) should be 30, got {even_bit_set_number(30)}"
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+The original code uses a fixed mask of 0b01010101 (i.e. 85) and applies n | mask. This creates two issues:
+1. Mask Misinterpretation – The prompt intends "set all even bits" but based on the test cases, it means “set all bits at even positions when counted starting from 1”. In typical 0-indexed binary (where the least‐significant bit is index 0), the even positions according to 1-indexing are at odd indices (i.e. 1, 3, 5, …). For example, for n = 10 (binary 1010) the bits at positions 1 and 3 (0-indexed) are already 1, so the result should remain 10; whereas a mask of 0b01010101 forces bits at positions 0,2,4,… which changes the number.
+2. Fixed Width Mask – Using a constant mask (0b01010101) only works for an 8-bit number. Instead, the mask should be generated dynamically to cover all the bits in the input number.
+
+To fix the code, we need to:
+• Determine the number of bits needed to represent n (using n.bit_length(), defaulting to 1 for n = 0).
+• Build a mask that has ones in every position corresponding to even number positions (i.e. positions 2,4,6... in 1-indexed terms or indices 1,3,5... in 0-indexed terms).
+• Return the bitwise OR between n and the computed mask.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Determine the bit length for n; account for n=0.
+    bit_length = n.bit_length() or 1
+    mask = 0
+    # Create mask: set bits at positions that are even in 1-indexed notation (i.e. odd indices in 0-indexed).
+    for i in range(bit_length):
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Example assertions:
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Determine the bit length for n; account for n=0.
+    bit_length = n.bit_length() or 1
+    mask = 0
+    # Create mask: set bits at positions that are even in 1-indexed notation (i.e. odd indices in 0-indexed).
+    for i in range(bit_length):
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Example assertions:
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt “set all even bits” actually means “set the bits at even positions when numbering the bits starting from 1”. In typical 0‐indexed bit counting, these positions correspond to the odd indices (i.e. bit positions 1, 3, 5, …). For example, consider the provided tests:
+ • For 10: When written in a 4‑bit representation (bits positions 1–4), 10 is 1010. The even positions (i.e. positions 2 and 4, which are bits at indices 1 and 3 in 0‑indexed form) are already 1, so the function should return 10.
+ • For 20: 20 in binary is 10100 (5 bits). Its even positions (positions 2 and 4) are currently 0 and should be set to 1, turning 10100 into 11110 (which is 30).
+ • For 30: 30 is already 11110, so no change is needed.
+
+The generated code erroneously uses a fixed mask (0b01010101) computed with 0‑indexed even positions instead of odd positions (which correspond to even positions when numbering from 1). This fixed mask also does not adjust for the proper bit‐length of n. To fix the code, we should:
+ 1. Dynamically calculate the mask based on n’s bit length.
+ 2. Set bits at positions i where i % 2 == 1 (i.e. odd indices in 0‑indexed notation).
+
+Repaired Code:
+Below is the corrected Python code.
+
+[PYTHON]
+def even_bit_set_number(n):
+    # Ensure we consider at least one bit
+    length = max(1, n.bit_length())
+    mask = 0
+    for i in range(length):
+        # In 0-indexed bits, positions with i % 2 == 1 correspond to "even" bits when counting from 1.
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Test cases
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Ensure we consider at least one bit
+    length = max(1, n.bit_length())
+    mask = 0
+    for i in range(length):
+        # In 0-indexed bits, positions with i % 2 == 1 correspond to "even" bits when counting from 1.
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Test cases
+assert even_bit_set_number(10) == 10
+assert even_bit_set_number(20) == 30
+assert even_bit_set_number(30) == 30
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code uses a hard‐coded mask (0b01010101) which sets bits 0, 2, 4, … (when counting from the LSB as bit 0). However, based on the test cases the intended behavior is different. In the prompt “set all even bits” the interpretation is that the even‐numbered bits refer to the even positions when counting bits starting at 1 (i.e. positions 2, 4, 6, …). In zero‐indexed notation these are the bits at odd indices (1, 3, 5, …). For example, consider n = 20: its 5-bit binary representation is 10100 (with bit positions 4,3,2,1,0). To “set the even bits” (i.e. bits at positions 2 and 4 when counting from 1, or indices 1 and 3) we need to force these bits to 1. In a 5‑bit number the mask should only set bits at indices 1 and 3, that is, mask = (1<<1) | (1<<3) = 2 + 8 = 10. So 20 OR 10 gives 10100 OR 01010 = 11110, which is 30 – matching the expected output.
+
+The error(s) in the generated code are:
+• Using a fixed mask (0b01010101) that is independent of the number’s bit width and that sets bits at the wrong positions (i.e. even indices instead of the required odd indices).
+• Not computing a mask that depends on the bit-length of the given integer n.
+
+To repair it:
+• Compute the bit length of n (using, for example, n.bit_length() or treat 0 as having length 1).
+• Build a mask by iterating through bit positions and setting those bits (via bitwise OR) for which (i+1) is even (i.e. i is odd).
+• Return n OR mask.
+
+Repaired Code:
+[PYTHON]
+def even_bit_set_number(n):
+    # Treat 0 as having at least one bit.
+    bits = n.bit_length() or 1
+    mask = 0
+    for i in range(bits):
+        # i is zero-indexed; if (i+1) is even then set the bit.
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Test cases
+if __name__ == "__main__":
+    assert even_bit_set_number(10) == 10
+    assert even_bit_set_number(20) == 30
+    assert even_bit_set_number(30) == 30
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def even_bit_set_number(n):
+    # Treat 0 as having at least one bit.
+    bits = n.bit_length() or 1
+    mask = 0
+    for i in range(bits):
+        # i is zero-indexed; if (i+1) is even then set the bit.
+        if i % 2 == 1:
+            mask |= (1 << i)
+    return n | mask
+
+# Test cases
+if __name__ == "__main__":
+    assert even_bit_set_number(10) == 10
+    assert even_bit_set_number(20) == 30
+    assert even_bit_set_number(30) == 30
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert even_bit_set_number(10) == 10 => Passed
+assert even_bit_set_number(20) == 30 => Passed
+assert even_bit_set_number(30) == 30 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

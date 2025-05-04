@@ -1,0 +1,429 @@
+Prompt 84:
+Prompt text: """
+Write a function to find numbers within a given range from startnum ti endnum where every number is divisible by every digit it contains. 
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code’s issue is with the order in which it checks for a zero digit. The expression
+
+  if n % int(digit) != 0 or int(digit) == 0:
+
+attempts to perform modulo operations even when the digit is '0'. In Python, this results in an error ("integer modulo by zero"). Instead, we must first check if the digit is zero (and immediately return False since division by zero is not allowed), and only then check if n is divisible by that digit.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            digit = int(digit)
+            if digit == 0 or n % digit != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            digit = int(digit)
+            if digit == 0 or n % digit != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The error “integer modulo by zero” occurs because the function attempts to compute n % int(digit) for digits with a value of 0. In the original code, the condition “if n % int(digit) != 0 or int(digit) == 0:” evaluates the modulo expression before checking if the digit is 0, which leads to a runtime error when a zero is encountered. To fix it, the code should first check if the digit is 0 and immediately return False if so, and only then perform the modulo check.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d_int = int(digit)
+            if d_int == 0:  # Prevent division by zero
+                return False
+            if n % d_int != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d_int = int(digit)
+            if d_int == 0:  # Prevent division by zero
+                return False
+            if n % d_int != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code attempts to determine whether a number is divisible by every digit it contains. However, it encounters a runtime error when a number contains the digit zero. The problem is that within the loop the code evaluates n % int(digit) before checking if int(digit) is zero. This leads to a "integer modulo by zero" error when a 0 is encountered. To fix this, you need to first check whether the digit is zero before performing the modulo operation. If the digit is zero, the function should immediately return False without attempting any division.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            if int(digit) == 0:   # Avoid division by zero
+                return False
+            if n % int(digit) != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            if int(digit) == 0:   # Avoid division by zero
+                return False
+            if n % int(digit) != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:  
+The issue in the generated code is the order of the operations in the inner function is_divisible. In the loop, the code attempts to calculate n % int(digit) before checking whether the digit is zero. When digit '0' is encountered, n % 0 triggers a division by zero error. The correct approach is to first check if the digit is '0', and if so, immediately return False. Only then should the code proceed to check divisibility (n % int(digit) == 0).  
+
+Repaired Code:  
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+        
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+    
+# Example test cases
+if __name__ == "__main__":
+    assert divisible_by_digits(1, 22) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+    assert divisible_by_digits(1, 15) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]
+    assert divisible_by_digits(20, 25) == [22, 24]
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+        
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+    
+# Example test cases
+if __name__ == "__main__":
+    assert divisible_by_digits(1, 22) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+    assert divisible_by_digits(1, 15) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15]
+    assert divisible_by_digits(20, 25) == [22, 24]
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The current implementation has a logic error in the inner function is_divisible. It checks if n % int(digit) != 0 before checking if the digit is 0. This causes a modulo by zero error when a number contains a 0 digit. The check for digit being 0 must be done before performing the modulo operation.
+2. To fix the error, we need to rearrange the conditions so that we first check whether the digit is '0'. If it is, we immediately return False; only then do we perform the modulo check.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum+1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum+1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The error in the generated code arises from the order in which conditions are checked inside the helper function is_divisible(n). The code attempts to perform n % int(digit) without first ensuring that int(digit) is not zero. This results in a “modulo by zero” error when the number contains the digit 0. In order to fix the problem, the code must check whether the digit is zero before attempting a modulo operation. Once the digit is verified to be non-zero, the divisibility check should be performed.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The error in the generated code arises from the order of conditions in the if statement inside the is_divisible(n) function. The code attempts to perform n % int(digit) without first ensuring that the digit is not zero, which leads to a “modulo by zero” error.
+2. To correct this, we should first check if the digit is zero. If a digit is zero, we return False immediately. Otherwise, we can safely perform the modulo operation.
+3. The corrected approach involves converting the digit to an integer, checking if it is zero, and then proceeding with the divisibility check.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+    
+# Example usage/test:
+assert divisible_by_digits(1,22) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+    
+# Example usage/test:
+assert divisible_by_digits(1,22) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+The error in the generated code is that it attempts to perform the modulo operation on the digit before checking whether the digit is zero. As a result, for any number containing a 0 (e.g., 10, 20, etc.), the code attempts to calculate n % 0, which raises a ZeroDivisionError. This issue occurs because the condition in the if statement is written as “if n % int(digit) != 0 or int(digit) == 0:” where the modulo operation is evaluated before checking if the digit is zero.
+
+To fix the issue, the code should first check if the digit is zero. If it is, then the function should immediately return False (because a number with a zero digit cannot be divided by 0). Only after confirming the digit is non-zero should the modulo operation be performed.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:  # first check if digit is zero
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:  # first check if digit is zero
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code fails because it checks whether n % int(digit) != 0 before verifying that the digit is not zero. Although the intent is to skip numbers containing 0 (or return False for such numbers), performing the modulo operation when the digit is 0 causes a ZeroDivisionError. To fix this, the code should first check if the digit is 0 and immediately return False, before calculating n % int(digit).
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+# Example test
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+print("Tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            d = int(digit)
+            if d == 0 or n % d != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+# Example test
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+print("Tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The error occurs because the code attempts to execute "n % int(digit)" even when digit is "0", which causes a ZeroDivisionError. 
+2. The order of checks in the helper function is wrong. The code should first check if the digit is '0' (or its integer equivalent is 0) before performing the modulo operation.
+3. Once the zero check is fixed, the function will only perform modulo when it is safe, thus adhering to the prompt and test cases.
+
+Repaired Code:
+[PYTHON]
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            if digit == '0':  # check for zero digit before modulo.
+                return False
+            if n % int(digit) != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+[/PYTHON]
+Repaired Code:
+
+def divisible_by_digits(startnum, endnum):
+    def is_divisible(n):
+        for digit in str(n):
+            if digit == '0':  # check for zero digit before modulo.
+                return False
+            if n % int(digit) != 0:
+                return False
+        return True
+
+    return [n for n in range(startnum, endnum + 1) if is_divisible(n)]
+
+Code execution: SUCCESS
+Test Results:
+assert divisible_by_digits(1,22)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] => Passed
+assert divisible_by_digits(1,15)==[1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15] => Passed
+assert divisible_by_digits(20,25)==[22, 24] => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

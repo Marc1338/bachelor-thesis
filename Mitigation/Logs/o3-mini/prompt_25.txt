@@ -1,0 +1,655 @@
+Prompt 25:
+Prompt text: """
+Write a function that takes in positive integers m and n and finds the number of possible sequences of length n, such that each element is a positive integer and is greater than or equal to twice the previous element but less than or equal to m.
+assert get_total_number_of_sequences(10, 4) == 4
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly initializes the recursion by using prev = None and then immediately performing a floor division (prev // 2) which causes the error.
+2. The logic for determining the valid next values is incorrect. According to the prompt, for any subsequent element (after the first), the allowed range is from (previous element * 2) to m (inclusive). For the first element, since there is no previous element, the valid numbers are from 1 to m.
+3. The generated code unnecessarily passes an index (i) and uses an extra parameter (seq_len) when it is simpler and clearer to only use the current sequence length and the previous value.
+
+To fix these issues:
+- Start the recursion without a previous value. If no previous value exists (i.e. when selecting the first element), iterate over the range 1 to m.
+- For subsequent choices, iterate over the numbers starting from prev * 2 up to m (inclusive).
+
+Repaired Code:
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        if prev is None:
+            # For the first element, any number between 1 and m is allowed.
+            for num in range(1, m + 1):
+                count += dfs(seq_len + 1, num)
+        else:
+            # For subsequent elements, choose numbers from prev * 2 to m.
+            for num in range(prev * 2, m + 1):
+                count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+# Testing the examples
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        if prev is None:
+            # For the first element, any number between 1 and m is allowed.
+            for num in range(1, m + 1):
+                count += dfs(seq_len + 1, num)
+        else:
+            # For subsequent elements, choose numbers from prev * 2 to m.
+            for num in range(prev * 2, m + 1):
+                count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+# Testing the examples
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. The initial call of the recursive function passes prev as None. Then, inside the dfs function, the code immediately attempts the operation prev // 2, which fails when prev is None. We need a proper base value for the first element. Given the expected output, the sequence must begin with 1.
+2. The logic for computing the valid range for the next element is incorrect. According to the prompt, if the last element is x, the next element must be at least 2*x (not “prev // 2 + 1”) and at most m. Thus the allowed candidate numbers should be for num in range(2 * prev, m + 1) when prev is defined, and for the very first element, we should force it to be 1.
+3. The extra variable “i” is unused, and the recursion is controlled by “seq_len”. We can simplify the recursive helper by tracking only the current length and the last element chosen.
+
+Repaired Code:
+Below is the corrected code that follows these requirements.
+
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, last):
+        # if we have a complete sequence of length n, count it as one valid sequence
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, enforce it to be 1.
+        if last is None:
+            start = 1
+        else:
+            start = 2 * last
+        for num in range(start, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Example test cases
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, last):
+        # if we have a complete sequence of length n, count it as one valid sequence
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, enforce it to be 1.
+        if last is None:
+            start = 1
+        else:
+            start = 2 * last
+        for num in range(start, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Example test cases
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+1. The code initializes the recursion with prev set to None. However, within the dfs function, the code immediately attempts to perform integer division (prev // 2) on prev without first checking if it is None. This causes the error.
+2. The prompt requires a function that counts sequences where the first element is unrestricted (any positive integer up to m) and subsequent elements must be at least twice the previous element. The current approach using "prev // 2 + 1" is not in accord with the constraint.
+3. The code incorrectly makes use of an index (i) and uses "prev * 2 + 1" for the upper bound of the range. Instead, for a valid step, if the previous element is x, the next candidate should range from 2*x (inclusive) to m (inclusive).
+
+To correct these issues:
+• Initialize the recursion without using None for prev. Instead, check if we are choosing the first element. If so, iterate over the range from 1 through m.
+• For subsequent choices, iterate from (2 * previous) through m.
+• Remove the unnecessary index and adjust the recursion to count sequences of length n.
+
+Repaired Code:
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        # If this is the first element, choose any positive integer between 1 and m.
+        if prev is None:
+            start = 1
+        else:
+            start = 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+# Example test cases:
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        # If this is the first element, choose any positive integer between 1 and m.
+        if prev is None:
+            start = 1
+        else:
+            start = 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+# Example test cases:
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly uses a None value for the initial previous value (“prev”) and subsequently tries to compute “prev // 2”, causing the error “unsupported operand type(s) for //: 'NoneType' and 'int'”. The first element of a sequence should not depend on any previous value; instead, you need to iterate through all possible starting values (from 1 to m).
+2. The prompt specifies that every subsequent element in the sequence must be at least twice the previous element and at most m. The generated code mistakenly computes the lower bound as “prev // 2 + 1” and computes an upper bound using “prev * 2 + 1”. The correct lower bound for a non-initial element should be “2 * prev” and the upper bound should be m.
+3. The helper function’s parameters include an unused “i” and an unnecessarily complicated approach. It is clearer to use one parameter (for the current sequence length) and the previous element’s value.
+4. The corrected code uses a DFS (depth-first search) approach where:
+   - If there is no previous element (i.e., the first element is being chosen), the candidate values range from 1 to m.
+   - Otherwise, the candidate numbers range from 2 * previous_element to m.
+   - Once the sequence reaches the required length (n), it returns 1 (counting a valid sequence).
+
+Repaired Code:
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, start from 1; else, new element must be at least twice the previous element
+        start = 1 if prev is None else 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Example test cases
+if __name__ == "__main__":
+    assert get_total_number_of_sequences(10, 4) == 4
+    assert get_total_number_of_sequences(5, 2) == 6
+    assert get_total_number_of_sequences(16, 3) == 84
+    print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, start from 1; else, new element must be at least twice the previous element
+        start = 1 if prev is None else 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Example test cases
+if __name__ == "__main__":
+    assert get_total_number_of_sequences(10, 4) == 4
+    assert get_total_number_of_sequences(5, 2) == 6
+    assert get_total_number_of_sequences(16, 3) == 84
+    print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The code erroneously initializes the recursion with prev as None and then immediately attempts arithmetic operations (using "//") on it. Instead, the first level of recursion should iterate over all possible starting values (from 1 to m). 
+2. The doubling rule is implemented incorrectly. The prompt requires that for each element (after the first), the next element should be at least twice the previous element (i.e. current ≥ 2 * previous) but not greater than m. Instead of trying to compute the range using "prev //2 + 1" and "prev * 2 + 1", the proper way is to define:
+   - If no number has been chosen yet, use the full range [1, m].
+   - Otherwise, for a given previous element x, iterate over numbers in the range [2*x, m].
+3. The extra parameter "i" in the inner function is unnecessary since seq_len alone tracks the progress.
+4. The recursive DFS should count sequences of exactly length n and therefore when seq_len equals n it should return 1.
+
+Below is the corrected code.
+
+Repaired Code:
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        # If we've built a sequence of length n, count it as 1 valid sequence.
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, choose from 1 to m.
+        # For subsequent elements, the lower bound is twice the previous element.
+        lower_bound = 1 if seq_len == 0 else 2 * prev
+        for num in range(lower_bound, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Testing the function with the given test case:
+assert get_total_number_of_sequences(10, 4) == 4
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        # If we've built a sequence of length n, count it as 1 valid sequence.
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, choose from 1 to m.
+        # For subsequent elements, the lower bound is twice the previous element.
+        lower_bound = 1 if seq_len == 0 else 2 * prev
+        for num in range(lower_bound, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Testing the function with the given test case:
+assert get_total_number_of_sequences(10, 4) == 4
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly computes the lower bound for the next element by using “prev // 2 + 1”. According to the prompt, if the previous element is x then the next element must be at least 2*x. Therefore, the correct lower bound should be “2 * prev”, not “prev // 2 + 1”.
+2. The code tries to handle the initialization (when prev is None) inside the same loop. Instead, when there is no previous element (i.e. on the first call), we should allow any positive integer from 1 to m.
+3. The extra parameter “i” is unnecessary. We can simply use a counter for current sequence length.
+4. The DFS recursion should iterate from the proper lower bound (1 when prev is None, or 2*prev otherwise) up to m (inclusive).
+
+Repaired Code:
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(curr_length, prev):
+        if curr_length == n:
+            return 1
+        count = 0
+        # Determine starting value for the next element.
+        start = 1 if prev is None else 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(curr_length + 1, num)
+        return count
+
+    return dfs(0, None)
+
+# Test cases
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(curr_length, prev):
+        if curr_length == n:
+            return 1
+        count = 0
+        # Determine starting value for the next element.
+        start = 1 if prev is None else 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(curr_length + 1, num)
+        return count
+
+    return dfs(0, None)
+
+# Test cases
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The major error in the generated code is that the DFS is started with prev=None. In the recursive calls, the code attempts to compute "prev // 2" even when prev is None. This causes a type error.
+2. The prompt specifies that for the first element (when no previous element exists) the allowed range should be any positive integer from 1 up to m. For subsequent elements, the new number must be at least 2 times the previous number (i.e. new ≥ 2 * previous) and at most m.
+3. The generated code incorrectly computes the next range using "range(prev // 2 + 1, min(m + 1, prev * 2 + 1))" whereas the condition for subsequent elements should be: for each previous value “prev”, the valid next numbers are those in the range [prev * 2, m] (inclusive). The use of "prev // 2 + 1" is incorrect.
+4. The auxiliary parameter “i” is unnecessary since seq_len already conveys the current sequence length.
+5. The DFS should begin by iterating over all numbers from 1 to m for the first element when prev is None before proceeding with the doubling condition.
+
+Repaired Code:
+[PYTHON] 
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        # If the sequence is of the required length, count it as one valid sequence.
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, choose any number in the range [1, m].
+        if prev is None:
+            for num in range(1, m + 1):
+                count += dfs(seq_len + 1, num)
+        else:
+            # For subsequent elements, choose numbers from prev*2 up to m.
+            for num in range(prev * 2, m + 1):
+                count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Simple tests
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        # If the sequence is of the required length, count it as one valid sequence.
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, choose any number in the range [1, m].
+        if prev is None:
+            for num in range(1, m + 1):
+                count += dfs(seq_len + 1, num)
+        else:
+            # For subsequent elements, choose numbers from prev*2 up to m.
+            for num in range(prev * 2, m + 1):
+                count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, None)
+
+
+# Simple tests
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly initializes the recursion by passing prev=None. As a result, when performing arithmetic (prev // 2) it results in a TypeError. A proper initialization would either loop over all valid starting choices (i.e., from 1 to m) or start the recursive function with a known value such as 0.
+2. The constraint in the prompt requires that every subsequent number in the sequence must be at least twice the previous element. However, the generated code incorrectly computes the lower bound for the next number as (prev // 2 + 1) instead of (2 * prev). This logic is flawed.
+3. The variable "i" is not actually needed since the recursive depth can be tracked by the sequence length.
+4. The code structure needs to be modified to start with all possible positive integers (from 1 to m) as the first element since there is no previous element constraint on the first element (other than being positive and <= m). Alternatively, one can start with a dummy prev value (like 0) so that the lower bound for the first element becomes max(1, 2*0)=1.
+
+Repaired Code:
+Below is the corrected version of the function that adheres to the prompt's requirements.
+
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, prev will be 0, so we start at 1.
+        lower_bound = 1 if prev == 0 else 2 * prev
+        for num in range(lower_bound, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, 0)
+
+
+# Test cases
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(seq_len, prev):
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, prev will be 0, so we start at 1.
+        lower_bound = 1 if prev == 0 else 2 * prev
+        for num in range(lower_bound, m + 1):
+            count += dfs(seq_len + 1, num)
+        return count
+
+    return dfs(0, 0)
+
+
+# Test cases
+assert get_total_number_of_sequences(10, 4) == 4
+assert get_total_number_of_sequences(5, 2) == 6
+assert get_total_number_of_sequences(16, 3) == 84
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly initializes the first call with prev as None, causing an error when trying to perform arithmetic (i.e. None // 2). Instead, the function should treat the first element differently – for the first element, any integer from 1 to m is allowed.
+2. The range used in the loop is incorrect. According to the prompt, after the first element is chosen, every subsequent element must be at least twice its predecessor and cannot exceed m. Thus, for subsequent elements the loop should use range(2 * prev, m + 1).
+3. The unnecessary parameter “i” in the helper function is not needed; instead, a parameter tracking the current sequence length (or count of elements chosen) suffices.
+
+Repaired Code:
+Below is the corrected Python code formatted as requested.
+
+[PYTHON] 
+def get_total_number_of_sequences(m, n):
+    def dfs(prev, count):
+        # If the sequence has reached the required length, count one sequence.
+        if count == n:
+            return 1
+        total = 0
+        # For the first element (when no previous element exists), consider all numbers from 1 to m.
+        if count == 0:
+            for num in range(1, m + 1):
+                total += dfs(num, count + 1)
+        else:
+            # For subsequent elements, choose numbers from 2*prev to m (inclusive).
+            for num in range(2 * prev, m + 1):
+                total += dfs(num, count + 1)
+        return total
+
+    return dfs(0, 0)
+
+# Example Test
+assert get_total_number_of_sequences(10, 4) == 4
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def get_total_number_of_sequences(m, n):
+    def dfs(prev, count):
+        # If the sequence has reached the required length, count one sequence.
+        if count == n:
+            return 1
+        total = 0
+        # For the first element (when no previous element exists), consider all numbers from 1 to m.
+        if count == 0:
+            for num in range(1, m + 1):
+                total += dfs(num, count + 1)
+        else:
+            # For subsequent elements, choose numbers from 2*prev to m (inclusive).
+            for num in range(2 * prev, m + 1):
+                total += dfs(num, count + 1)
+        return total
+
+    return dfs(0, 0)
+
+# Example Test
+assert get_total_number_of_sequences(10, 4) == 4
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The original code mistakenly initializes the DFS with prev set to None. In the DFS function, the first use of “prev” is in the expression “prev // 2 + 1,” which fails when prev is None.
+2. The range of valid numbers for each subsequent element is computed incorrectly. According to the prompt, for the first element any number from 1 to m is valid, but for subsequent elements the next number must be at least twice the previous element (i.e. lower bound = 2 * previous) and at most m. The generated code uses “prev // 2 + 1” and “min(m + 1, prev * 2 + 1),” which does not reflect the intended condition.
+3. The unnecessary parameter “i” in the DFS function is not used in a meaningful way. It can be removed.
+
+To fix the errors:
+• For the first element (when there is no previous value), we simply loop over the range 1 to m.
+• For subsequent elements, we loop from 2 * prev to m.
+• Remove the “i” parameter.
+
+Repaired Code:
+[PYTHON]
+def get_total_number_of_sequences(m, n):
+    def dfs(prev, seq_len):
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, prev is None, so allow numbers from 1 to m,
+        # otherwise, the next number must be at least 2*prev.
+        start = 1 if prev is None else 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(num, seq_len + 1)
+        return count
+
+    return dfs(None, 0)
+[/PYTHON]
+Repaired Code:
+
+def get_total_number_of_sequences(m, n):
+    def dfs(prev, seq_len):
+        if seq_len == n:
+            return 1
+        count = 0
+        # For the first element, prev is None, so allow numbers from 1 to m,
+        # otherwise, the next number must be at least 2*prev.
+        start = 1 if prev is None else 2 * prev
+        for num in range(start, m + 1):
+            count += dfs(num, seq_len + 1)
+        return count
+
+    return dfs(None, 0)
+
+Code execution: SUCCESS
+Test Results:
+assert get_total_number_of_sequences(10, 4) == 4 => Passed
+assert get_total_number_of_sequences(5, 2) == 6 => Passed
+assert get_total_number_of_sequences(16, 3) == 84 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

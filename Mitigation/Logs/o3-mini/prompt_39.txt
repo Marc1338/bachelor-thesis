@@ -1,0 +1,471 @@
+Prompt 39:
+Prompt text: """
+Write a function to find the depth of a dictionary.
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The original code mistakenly inverts the logic. The if–else conditions are reversed. The intention is to check if the current dictionary contains any nested dictionaries. If it does, we should recursively compute the maximum depth among them and add one; otherwise, we should return 1. In the provided code, the if clause (using “if not any(…)”) tries to do the recursive part, while the else clause unconditionally returns 1, which is incorrect.
+
+Additionally, using max(map(lambda ...)) results in unnecessary complexity. A simpler approach is to use a generator expression that computes the depth for each nested dictionary and then returns 1 plus the maximum of these values. Also, we handle the case where no nested dictionaries exist by simply returning 1.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    # For an empty dictionary or a dictionary with no nested dictionaries, depth is 1.
+    if not any(isinstance(v, dict) for v in d.values()):
+        return 1
+    # Otherwise, add 1 to the maximum depth found in the nested dictionaries.
+    return 1 + max(dict_depth(v) for v in d.values() if isinstance(v, dict))
+
+# Test cases
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a':1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    # For an empty dictionary or a dictionary with no nested dictionaries, depth is 1.
+    if not any(isinstance(v, dict) for v in d.values()):
+        return 1
+    # Otherwise, add 1 to the maximum depth found in the nested dictionaries.
+    return 1 + max(dict_depth(v) for v in d.values() if isinstance(v, dict))
+
+# Test cases
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a':1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code contains several issues:
+1. The conditional logic is reversed. It checks if no value in the dictionary is a dict, and then proceeds to compute the recursive depth. However, if there is any dictionary as a value, the function immediately returns 1, completely ignoring the nested dictionaries.
+2. The recursion is placed in the wrong branch of the condition. The code should always compute the depth as 1 plus the maximum depth from any nested dictionaries. When the dictionary has no nested dictionaries, it should return 1.
+3. There's an unnecessary use of lambda and map, which complicates the logic and makes it error prone.
+
+A corrected approach is to:
+- Verify that the input is a dictionary.
+- Recursively compute the depth of every nested dictionary found in its values.
+- Return 1 plus the maximum depth among those values, defaulting to 0 when there are no further nested dictionaries.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    if not isinstance(d, dict):
+        return 0
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Test cases
+assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    if not isinstance(d, dict):
+        return 0
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Test cases
+assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+1. The error arises from the logic in the if/else block. The generated code checks if there are no nested dictionaries (using “if not any(...)”) and, if true, returns 1 plus the maximum recursive depth from nested dictionaries. However, if nested dictionaries exist, it just returns 1. This logic is reversed. It should return 1 when no nested dictionaries exist and, when nested dictionaries are found, return 1 plus the maximum depth obtained from them.
+2. The use of “or [0]” and the map with “default=0” is unnecessary and complicates the logic.
+3. The correct approach is to always return 1 + the maximum depth recursively computed for any nested dictionaries (using a generator and a default value of 0 when no nested dictionaries exist).
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The main issue is with the logic used in the code. The condition used in the if statement is reversed. In a dictionary without nested dictionaries, the function should return 1. If there are nested dictionaries, it should return 1 plus the maximum depth of those nested dictionaries.
+2. The provided code incorrectly evaluates the condition:
+   - It checks if there are no nested dictionaries with “if not any(…)” and then attempts to compute the depth recursively. This branch should instead be used as the base case for when there are no nested dictionaries.
+   - The else branch incorrectly returns 1 even when nested dictionaries exist, which results in a constant value of 1.
+3. The recursion should be done on every nested dictionary, and if none exist, the depth should be 1; otherwise, return 1 + max(depths of nested dictionaries).
+
+Repaired Code:
+[PYTHON] 
+def dict_depth(d):
+    # Find all nested dictionaries in the current dictionary.
+    depths = [dict_depth(v) for v in d.values() if isinstance(v, dict)]
+    # If there are no nested dictionaries, the depth is 1.
+    if not depths:
+        return 1
+    # Otherwise, add 1 for the current dictionary and return the max depth found.
+    return 1 + max(depths)
+
+# Test cases:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3
+[/PYTHON]
+Repaired Code:
+ 
+def dict_depth(d):
+    # Find all nested dictionaries in the current dictionary.
+    depths = [dict_depth(v) for v in d.values() if isinstance(v, dict)]
+    # If there are no nested dictionaries, the depth is 1.
+    if not depths:
+        return 1
+    # Otherwise, add 1 for the current dictionary and return the max depth found.
+    return 1 + max(depths)
+
+# Test cases:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The logic in the provided code is inverted. The function checks “if not any(isinstance(v, dict) for v in d.values())” to decide whether to perform a recursive call, but then in the else branch it simply returns 1. This means that when the dictionary contains nested dictionaries, the else branch is executed, which incorrectly returns 1 instead of computing the deeper nested level.
+2. The recursion should be structured so that the function always starts with a base depth of 1 (the dictionary’s own level) and then looks for nested dictionaries among its values. For each nested dictionary, the function should compute the depth recursively and take the maximum depth found, adding 1 for the current level.
+3. Using a generator expression and Python’s built-in max function (plus a default value of 0 when no nested dictionaries are found) is a good approach.
+4. The correct approach is to iterate over the values of the dictionary, and if the value is a dictionary, compute its depth recursively. Then update the depth to be 1 plus the maximum depth among these nested dictionaries.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    # Assume the input is a dictionary and that an empty dictionary has depth 1.
+    current_depth = 1
+    for v in d.values():
+        if isinstance(v, dict):
+            # Recursively compute depth for nested dictionary and update maximum depth.
+            current_depth = max(current_depth, 1 + dict_depth(v))
+    return current_depth
+
+# Test cases:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a':1, 'b': {'c':'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}}) == 3
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    # Assume the input is a dictionary and that an empty dictionary has depth 1.
+    current_depth = 1
+    for v in d.values():
+        if isinstance(v, dict):
+            # Recursively compute depth for nested dictionary and update maximum depth.
+            current_depth = max(current_depth, 1 + dict_depth(v))
+    return current_depth
+
+# Test cases:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a':1, 'b': {'c':'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}}) == 3
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code has several issues:
+1. The if condition logic is reversed. It incorrectly checks for the absence of nested dictionaries (using “if not any(…)”) and then tries to compute depth recursively, which is the opposite of what is needed.
+2. When there are no nested dictionaries, the depth should simply be 1 (since the current dictionary itself counts as depth 1). Instead, the code attempts to compute 1 + max(…) when no nested dictionaries exist.
+3. In the else clause, where nested dictionaries exist, the function simply returns 1, completely ignoring the nested dictionaries’ depths.
+4. The use of max with a lambda and the filter is unnecessarily complex compared to a simpler recursive approach.
+
+To fix the code:
+- Always count the current dictionary as depth 1.
+- Recursively compute the depth of nested dictionaries and add 1.
+- Use the Python “max” function with a generator expression and a default value of 0, so that if there are no nested dictionaries the start value remains 0.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    # Count the current dictionary as depth 1 and add the maximum depth of any nested dict values.
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Test cases
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a':1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    # Count the current dictionary as depth 1 and add the maximum depth of any nested dict values.
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Test cases
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a':1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code has the recursive logic inverted. It currently checks if none of the dictionary values is a dict (using “if not any(...):”), and only in that branch does it attempt to compute 1 + recursion, while in the “else” branch (when there is at least one dict) it simply returns 1. This produces a depth of 1 for all non‐empty dictionary cases containing nested dictionaries.
+2. The correct logic should check if there is any nested dictionary. If there is, the depth should be computed as 1 plus the maximum depth among all values that are dictionaries. If there is no nested dictionary, the depth should be 1.
+3. The use of the “or [0]” inside the max function is unnecessary because we already filter values by whether they are dictionaries and a default value of 0 is not needed when using correct recursion logic.
+4. The fix is to remove the inverted condition and to always compute the depth as 1 plus the maximum recursive depth found among nested dictionaries. If none are found, simply return 1.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    # If no value is a dict, then the depth is 1
+    if not any(isinstance(v, dict) for v in d.values()):
+        return 1
+    else:
+        return 1 + max(dict_depth(v) for v in d.values() if isinstance(v, dict))
+
+# Test cases
+if __name__ == "__main__":
+    assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+    assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+    assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    # If no value is a dict, then the depth is 1
+    if not any(isinstance(v, dict) for v in d.values()):
+        return 1
+    else:
+        return 1 + max(dict_depth(v) for v in d.values() if isinstance(v, dict))
+
+# Test cases
+if __name__ == "__main__":
+    assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+    assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+    assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The logic in the generated code is inverted. The intended behavior is to check if there is any nested dictionary inside the given dictionary. If there is at least one nested dictionary, the function should return 1 plus the maximum depth found among all nested dictionaries; otherwise, if there are no nested dictionaries, the depth should be 1.
+2. The generated code reversed this logic: when no nested dictionaries exist it attempts to compute the recursive depth (resulting in 1), while in the case that there is at least one nested dictionary it immediately returns 1 without recursion.
+3. There is also an unnecessarily complex use of map and lambda. The code can be simplified using a generator expression with max() and a default value.
+4. The corrected logic is to always compute the depth as 1 plus the maximum depth from any nested dictionaries (with 0 as the default when there are none).
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Example test cases:
+assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Example test cases:
+assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code contains several issues:
+1. Incorrect condition logic: The generated code checks if there are no dictionary values in the current dictionary and then attempts to recurse. In other words, it recurses only if there are no nested dictionaries while immediately returning 1 if there is any nested dictionary. This is reversed; we should always check for nested dictionaries and recursively compute their depth.
+2. Incorrect use of "any" and conditional logic: In the current code, the branch with "if not any(...)" returns 1 plus the maximum depth found among nested dictionaries. However, if there are no nested dictionaries, the "max" call will operate on an empty list (handled with "or [0]") which is confusing and unnecessary.
+3. The "else" branch incorrectly returns 1 when there are nested dictionaries, ignoring the nested structure's depth.
+
+To correct these issues, the function should:
+- Begin with the assumption that each dictionary contributes a depth of 1.
+- Recursively compute and take the maximum depth among all nested dictionaries (if any), using 0 as a default if there are no nested dictionaries.
+- Return the sum of 1 and that maximum depth.
+
+A corrected version can be implemented by iterating over the dictionary values and, for each value that is also a dictionary, recursively calculating its depth. The final depth is 1 (for the current dictionary) plus the maximum of the depths from any nested dictionaries.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    # For a dictionary d, add 1 for the current level and compute the max depth of nested dictionaries.
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Test cases:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4, f"Expected 4, got {dict_depth({'a':1, 'b': {'c': {'d': {}}}})}"
+assert dict_depth({'a':1, 'b': {'c':'python'}}) == 2, f"Expected 2, got {dict_depth({'a':1, 'b': {'c':'python'}})}"
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}}) == 3, f"Expected 3, got {dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})}"
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    # For a dictionary d, add 1 for the current level and compute the max depth of nested dictionaries.
+    return 1 + max((dict_depth(v) for v in d.values() if isinstance(v, dict)), default=0)
+
+# Test cases:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}}) == 4, f"Expected 4, got {dict_depth({'a':1, 'b': {'c': {'d': {}}}})}"
+assert dict_depth({'a':1, 'b': {'c':'python'}}) == 2, f"Expected 2, got {dict_depth({'a':1, 'b': {'c':'python'}})}"
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}}) == 3, f"Expected 3, got {dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})}"
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. Logical Error in the Condition:  
+ The generated code begins with a condition using "if not any(isinstance(v, dict) for v in d.values()):". This means if there are no dictionary values the function recurses, which is the opposite of what we want. We actually need to check if there are any dictionary values, and if there are we should recursively compute the depth.
+
+2. Incorrect Recursion and Usage of max:  
+ The code incorrectly applies "1 + max(...)" even when there are no nested dictionaries, and the "default=0" in max is misused. We need to ensure that if a dictionary has at least one nested dictionary, we return its depth as 1 plus the maximum depth of its children. Otherwise, if a dictionary doesn’t contain any nested dictionaries, we return 1.
+
+3. Fixing the Recursion:  
+ The proper approach is to iterate over the dictionary values, recursively compute the depth for those that are dictionaries, and then return 1 + the maximum of these depths (or just 1 if there are no nested dictionaries).
+
+Below is the corrected code that implements these improvements.
+
+Repaired Code:
+[PYTHON]
+def dict_depth(d):
+    # Base case: If d is not a dictionary, return 0, though this path shouldn't be needed if the input is always a dict.
+    if not isinstance(d, dict):
+        return 0
+    # Collect depths for nested dictionaries.
+    child_depths = [dict_depth(v) for v in d.values() if isinstance(v, dict)]
+    # If there are nested dictionaries, add 1 (for the current level) to the maximum depth found.
+    if child_depths:
+        return 1 + max(child_depths)
+    # If no nested dictionaries exist, the depth is 1.
+    return 1
+
+# Testing the function with the provided test cases.
+if __name__ == "__main__":
+    assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+    assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+    assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+    print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def dict_depth(d):
+    # Base case: If d is not a dictionary, return 0, though this path shouldn't be needed if the input is always a dict.
+    if not isinstance(d, dict):
+        return 0
+    # Collect depths for nested dictionaries.
+    child_depths = [dict_depth(v) for v in d.values() if isinstance(v, dict)]
+    # If there are nested dictionaries, add 1 (for the current level) to the maximum depth found.
+    if child_depths:
+        return 1 + max(child_depths)
+    # If no nested dictionaries exist, the depth is 1.
+    return 1
+
+# Testing the function with the provided test cases.
+if __name__ == "__main__":
+    assert dict_depth({'a': 1, 'b': {'c': {'d': {}}}}) == 4
+    assert dict_depth({'a': 1, 'b': {'c': 'python'}}) == 2
+    assert dict_depth({1: 'Sun', 2: {3: {4: 'Mon'}}}) == 3
+    print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert dict_depth({'a':1, 'b': {'c': {'d': {}}}})==4 => Passed
+assert dict_depth({'a':1, 'b': {'c':'python'}})==2 => Passed
+assert dict_depth({1: 'Sun', 2: {3: {4:'Mon'}}})==3 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

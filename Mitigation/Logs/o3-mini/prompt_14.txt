@@ -1,0 +1,290 @@
+Prompt 14:
+Prompt text: """
+Write a function to find the maximum absolute product between numbers in pairs of tuples within a given list.
+assert max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)] )==36
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code correctly computes the maximum absolute product from each tuple in the list. However, the test cases are using the function math.isclose to compare the results, and the error “name 'math' is not defined” indicates that the math module was not imported. To fix this, add an import statement for the math module before any other code.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. The function logic is correct – it correctly computes the maximum absolute product for pairs of numbers. 
+2. The error in the test cases “name 'math' is not defined” occurs because the testing code uses math.isclose without importing the math module. To resolve this, you should import the math module in the script.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The generated function correctly calculates the maximum absolute product from the pairs within the list. However, the test cases use math.isclose for floating-point comparison, which raises an error because the math module was never imported in the generated code. To fix this, we simply need to add an import statement for math.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The logic of the function is correct. It correctly computes the maximum absolute product among pairs of numbers in the given list.
+2. The error shown in the test cases ("name 'math' is not defined") arises not from the logic of the function but from the fact that the math module is not imported in the generated code. The test assertions use math.isclose, which requires the math module.
+3. To correct the error, an import statement for the math module should be added at the beginning of the code.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The logic for computing the maximum absolute product is correct. The function iterates over each tuple, multiplies the numbers, takes the absolute value, and then returns the maximum value, which meets the prompt’s requirement.
+2. The error in the test cases ("name 'math' is not defined") is due to the tests using the math.isclose() function without importing the math module. Although our function does not need to use math directly, the tests expect that math is available. The fix is to import the math module.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code properly computes the maximum absolute product for a list of tuple pairs. However, the test cases use math.isclose from the math module, and the error indicates that math has not been imported. To fix this, we simply need to include an "import math" statement at the top of the code. The logic of using max(abs(a * b) for a, b in tuple_list) is correct, so no changes to the function logic are needed.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code itself (the function max_product_tuple) is correct in logic for computing the maximum absolute product from tuple pairs.
+2. The error encountered in the tests ("name 'math' is not defined") is due to the tests using math.isclose to compare floats, but the math module was not imported in the generated code.
+3. To repair the code, simply add an "import math" statement at the beginning of the code. This will ensure that the math module is available when called within the tests.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The function itself is implemented correctly and meets the prompt requirements—it calculates the maximum absolute product from the pairs in the list.
+2. The error reported in the test cases, "name 'math' is not defined", is due to the testing code using math.isclose without importing the math module. Thus, the only required correction is to add “import math” at the beginning of the code.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The generated function correctly computes the maximum absolute product from the given list of tuples by iterating over them. However, the test cases use math.isclose for floating point comparisons, and the error message "name 'math' is not defined" indicates that the math module was not imported. To fix this, simply add an import statement for the math module at the top.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code correctly computes the maximum absolute product from pairs of numbers in the tuples. However, the test cases use math.isclose for assertion, and therefore the math module must be imported. Without “import math”, the test cases will raise an error indicating that math is not defined.
+2. No other logical or syntax errors are present in the function.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def max_product_tuple(tuple_list):
+    return max(abs(a * b) for a, b in tuple_list)
+
+Code execution: SUCCESS
+Test Results:
+assert math.isclose(max_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)]), 36, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(10,20), (15,2), (5,10)] ), 200, rel_tol=0.001) => Passed
+assert math.isclose(max_product_tuple([(11,44), (10,15), (20,5), (12, 9)] ), 484, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

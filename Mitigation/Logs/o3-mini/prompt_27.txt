@@ -1,0 +1,942 @@
+Prompt 27:
+Prompt text: """
+Write a function that takes an array and finds the maximum sum of a bitonic subsequence for the given array, where a sequence is bitonic if it is first increasing and then decreasing.
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code attempts to solve the problem by checking every contiguous subarray (a continuous slice of the array) and verifying if it is bitonic. However, the prompt asks for a bitonic subsequence – and in subsequences the selected elements do not have to be contiguous.
+2. The use of the helper function is_bitonic to check contiguous segments is not appropriate. The correct approach is to use dynamic programming: compute the maximum sum increasing subsequence (up to each index) and a maximum sum decreasing subsequence (starting at each index), then combine these results using the peak element (subtracting it once to avoid double counting).
+3. Additionally, computing every contiguous subarray will miss cases where the optimal bitonic subsequence is not contiguous in the original array.
+
+Repaired Code:
+Below is the corrected solution using a dynamic programming approach.
+
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # Calculate maximum sum increasing subsequence (MSIS) ending at each index.
+    inc = arr[:]  # inc[i] = maximum sum of an increasing subsequence ending at i.
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+                
+    # Calculate maximum sum decreasing subsequence (MSDS) starting at each index.
+    dec = arr[:]  # dec[i] = maximum sum of a decreasing subsequence starting at i.
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[i] > arr[j]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+                
+    # Combine: For each index i as the peak element, combine the two sequences.
+    max_bitonic = 0
+    for i in range(n):
+        # inc[i] + dec[i] includes arr[i] twice so subtract one arr[i]
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    return max_bitonic
+
+# Basic tests
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+
+if __name__ == "__main__":
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # Calculate maximum sum increasing subsequence (MSIS) ending at each index.
+    inc = arr[:]  # inc[i] = maximum sum of an increasing subsequence ending at i.
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+                
+    # Calculate maximum sum decreasing subsequence (MSDS) starting at each index.
+    dec = arr[:]  # dec[i] = maximum sum of a decreasing subsequence starting at i.
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[i] > arr[j]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+                
+    # Combine: For each index i as the peak element, combine the two sequences.
+    max_bitonic = 0
+    for i in range(n):
+        # inc[i] + dec[i] includes arr[i] twice so subtract one arr[i]
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    return max_bitonic
+
+# Basic tests
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+
+if __name__ == "__main__":
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code erroneously iterates only over contiguous subarrays (by taking slices arr[i:j+1]) rather than considering (non‐contiguous) subsequences. In our problem, a “bitonic subsequence” means we can choose elements from the array while preserving their order, even if they are not contiguous.
+2. The helper function is_bitonic checks a contiguous slice to see if it first increases then decreases. This approach fails to capture valid bitonic subsequences that are noncontiguous – for example, the sample solution [1,15,51,100,18,9] is noncontiguous.
+3. To solve the problem correctly, we should use dynamic programming. A standard approach for maximum-sum bitonic subsequence is to compute two arrays:
+   • msis[i] – the maximum sum of an increasing subsequence ending at index i.
+   • msds[i] – the maximum sum of a decreasing subsequence starting at index i.
+   Then for every index i, we consider it as the peak of the bitonic subsequence and combine the two: msis[i] + msds[i] – arr[i] (subtracting arr[i] as it is counted twice).
+4. This approach naturally handles the test cases provided, including arrays that are entirely increasing or entirely decreasing.
+
+Repaired Code:
+–––––––––––––––
+Below is the corrected Python code that implements the dynamic programming approach: 
+
+[PYTHON]
+def max_sum(arr):
+    if not arr:
+        return 0
+
+    n = len(arr)
+    # Compute maximum sum increasing subsequence (msis) for each element.
+    msis = [0] * n
+    for i in range(n):
+        msis[i] = arr[i]  # minimum subsequence is the element itself.
+        for j in range(i):
+            if arr[j] < arr[i]:
+                msis[i] = max(msis[i], msis[j] + arr[i])
+                
+    # Compute maximum sum decreasing subsequence (msds) for each element.
+    msds = [0] * n
+    for i in range(n - 1, -1, -1):
+        msds[i] = arr[i]
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                msds[i] = max(msds[i], msds[j] + arr[i])
+    
+    # Find the maximum sum of a bitonic subsequence by taking each element as the peak.
+    max_bitonic = 0
+    for i in range(n):
+        # subtract arr[i] because it is included in both msis and msds.
+        max_bitonic = max(max_bitonic, msis[i] + msds[i] - arr[i])
+    
+    return max_bitonic
+
+# Test cases to verify the solution
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194, f"Expected 194, got {max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9])}"
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210, f"Expected 210, got {max_sum([80, 60, 30, 40, 20, 10])}"
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138, f"Expected 138, got {max_sum([2, 3, 14, 16, 21, 23, 29, 30])}"
+
+print("All tests passed!")
+[/PYTHON]
+
+Explanation:
+• We first fill the msis list by iterating over each element and checking all previous elements that are smaller.
+• We then fill msds similarly, but iterating from right to left.
+• Finally, for each position, we compute the potential bitonic sum by using the element as the peak and subtract it once to avoid double counting.
+This code correctly accounts for non-contiguous subsequences and adheres to the prompt's requirements.
+Repaired Code:
+
+def max_sum(arr):
+    if not arr:
+        return 0
+
+    n = len(arr)
+    # Compute maximum sum increasing subsequence (msis) for each element.
+    msis = [0] * n
+    for i in range(n):
+        msis[i] = arr[i]  # minimum subsequence is the element itself.
+        for j in range(i):
+            if arr[j] < arr[i]:
+                msis[i] = max(msis[i], msis[j] + arr[i])
+                
+    # Compute maximum sum decreasing subsequence (msds) for each element.
+    msds = [0] * n
+    for i in range(n - 1, -1, -1):
+        msds[i] = arr[i]
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                msds[i] = max(msds[i], msds[j] + arr[i])
+    
+    # Find the maximum sum of a bitonic subsequence by taking each element as the peak.
+    max_bitonic = 0
+    for i in range(n):
+        # subtract arr[i] because it is included in both msis and msds.
+        max_bitonic = max(max_bitonic, msis[i] + msds[i] - arr[i])
+    
+    return max_bitonic
+
+# Test cases to verify the solution
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194, f"Expected 194, got {max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9])}"
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210, f"Expected 210, got {max_sum([80, 60, 30, 40, 20, 10])}"
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138, f"Expected 138, got {max_sum([2, 3, 14, 16, 21, 23, 29, 30])}"
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code attempts to solve the problem by iterating over every contiguous subarray and checking whether it is bitonic by a helper “is_bitonic” function. This approach has two main problems:
+
+1. It only considers contiguous segments of the array instead of subsequences. A bitonic subsequence is not necessarily contiguous. In our test, the maximum sum bitonic subsequence is [1, 15, 51, 100, 18, 9] (which skips some elements) rather than any contiguous subarray.
+
+2. The “is_bitonic” helper merely checks that the segment is first increasing and then decreasing. Even if it were applied to subsequences, this brute-force approach would be inefficient. Instead, a typical dynamic programming approach computes:
+   - For each index i, the maximum sum of an increasing subsequence ending at i.
+   - For each index i, the maximum sum of a decreasing subsequence starting at i.
+   The maximum sum bitonic subsequence with peak at i is then given by inc[i] + dec[i] − arr[i] (because the peak element is counted twice).
+
+The corrected version uses these DP arrays to efficiently compute the answer and consider non-contiguous subsequences. Below is the repaired code.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # Compute maximum sum increasing subsequence ending at each index
+    inc = arr[:]  # inc[i] is initially just the value at arr[i]
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i] and inc[j] + arr[i] > inc[i]:
+                inc[i] = inc[j] + arr[i]
+
+    # Compute maximum sum decreasing subsequence starting at each index
+    dec = arr[:]  # dec[i] is initially just the value at arr[i]
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i] and dec[j] + arr[i] > dec[i]:
+                dec[i] = dec[j] + arr[i]
+
+    # Combine both sides for the bitonic subsequence peak at each index.
+    max_bitonic = 0
+    for i in range(n):
+        # Subtract arr[i] because it is counted twice in inc and dec.
+        bitonic_sum = inc[i] + dec[i] - arr[i]
+        if bitonic_sum > max_bitonic:
+            max_bitonic = bitonic_sum
+
+    return max_bitonic
+
+# Test cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # Compute maximum sum increasing subsequence ending at each index
+    inc = arr[:]  # inc[i] is initially just the value at arr[i]
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i] and inc[j] + arr[i] > inc[i]:
+                inc[i] = inc[j] + arr[i]
+
+    # Compute maximum sum decreasing subsequence starting at each index
+    dec = arr[:]  # dec[i] is initially just the value at arr[i]
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i] and dec[j] + arr[i] > dec[i]:
+                dec[i] = dec[j] + arr[i]
+
+    # Combine both sides for the bitonic subsequence peak at each index.
+    max_bitonic = 0
+    for i in range(n):
+        # Subtract arr[i] because it is counted twice in inc and dec.
+        bitonic_sum = inc[i] + dec[i] - arr[i]
+        if bitonic_sum > max_bitonic:
+            max_bitonic = bitonic_sum
+
+    return max_bitonic
+
+# Test cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated solution incorrectly considers contiguous subarrays instead of subsequences. The prompt refers to a “bitonic subsequence,” which means the elements need not be consecutive in the array.
+2. The approach used (iterating over every contiguous segment and checking if it is bitonic) fails to consider non-contiguous subsequences which can yield a larger sum.
+3. The correct method is to use dynamic programming. We compute:
+   • inc[i]: the maximum sum of an increasing subsequence ending at element i.
+   • dec[i]: the maximum sum of a decreasing subsequence starting at element i.
+   Then, for each index i, the maximum bitonic subsequence sum with peak at arr[i] is inc[i] + dec[i] – arr[i] (subtract arr[i] because it is counted twice).
+4. Finally, the maximum value over all indices is returned as the result.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # DP for maximum sum increasing subsequence ending at each index
+    inc = [0] * n
+    for i in range(n):
+        inc[i] = arr[i]
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+    
+    # DP for maximum sum decreasing subsequence starting at each index
+    dec = [0] * n
+    for i in range(n - 1, -1, -1):
+        dec[i] = arr[i]
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+    
+    max_bitonic = 0
+    for i in range(n):
+        # subtract arr[i] since it's added twice (in inc and dec)
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    
+    return max_bitonic
+
+# Test cases:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # DP for maximum sum increasing subsequence ending at each index
+    inc = [0] * n
+    for i in range(n):
+        inc[i] = arr[i]
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+    
+    # DP for maximum sum decreasing subsequence starting at each index
+    dec = [0] * n
+    for i in range(n - 1, -1, -1):
+        dec[i] = arr[i]
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+    
+    max_bitonic = 0
+    for i in range(n):
+        # subtract arr[i] since it's added twice (in inc and dec)
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    
+    return max_bitonic
+
+# Test cases:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+The original code has two main issues:
+1. It considers only contiguous subarrays. The prompt asks for the maximum sum of a bitonic subsequence, which means the elements in the sequence do not have to be consecutive in the original array.
+2. The approach of checking every contiguous subsequence with a helper function (is_bitonic) is inefficient and does not reflect the dynamic programming (DP) solution typically used for the “Maximum Sum Bitonic Subsequence” problem. In the standard DP solution, we compute two arrays:
+  • One for the maximum sum increasing subsequence ending at each index.
+  • One for the maximum sum decreasing subsequence starting at each index.
+Then for each index i (serving as the peak), the maximum sum bitonic subsequence with peak i is inc[i] + dec[i] – arr[i]. The final answer is the maximum value among these.
+
+Below is the repaired code implementing the DP approach.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # DP array for maximum sum increasing subsequence ending at each index.
+    inc = arr[:]  # initialize with the element itself
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+
+    # DP array for maximum sum decreasing subsequence starting at each index.
+    dec = arr[:]  # initialize with the element itself
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+
+    # Combine both to get the maximum sum bitonic subsequence.
+    max_bitonic = float('-inf')
+    for i in range(n):
+        # inc[i] and dec[i] both include arr[i] once, so subtract it once.
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    return max_bitonic
+
+# Test cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # DP array for maximum sum increasing subsequence ending at each index.
+    inc = arr[:]  # initialize with the element itself
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+
+    # DP array for maximum sum decreasing subsequence starting at each index.
+    dec = arr[:]  # initialize with the element itself
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+
+    # Combine both to get the maximum sum bitonic subsequence.
+    max_bitonic = float('-inf')
+    for i in range(n):
+        # inc[i] and dec[i] both include arr[i] once, so subtract it once.
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    return max_bitonic
+
+# Test cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly tries to find a bitonic subsequence by checking all contiguous subarrays. In the standard maximum sum bitonic subsequence problem, a “subsequence” does not have to be contiguous (elements can be skipped), and the correct approach uses dynamic programming.
+2. The code’s helper function “is_bitonic” is used on contiguous slices, but that does not cover the possibility of nonadjacent elements, as required by the problem.
+3. The proper solution uses two DP arrays:
+   - One (let’s name it inc) to store the maximum sum of an increasing subsequence ending at each index.
+   - Another (dec) to store the maximum sum of a decreasing subsequence starting at each index.
+4. The final answer for each index i (as the “peak” of the bitonic subsequence) is given by inc[i] + dec[i] – arr[i] (subtracting the peak because it’s included twice). The overall answer is the maximum over all indices.
+5. This DP approach correctly captures the case when the subsequence is only increasing (or only decreasing), as seen in one of the test cases.
+
+Repaired Code:
+Below is the corrected Python code using the DP approach.
+
+[PYTHON]
+def max_sum(arr):
+    if not arr:
+        return 0
+    
+    n = len(arr)
+    # DP for maximum sum increasing subsequence ending at each index
+    inc = arr[:]  # at minimum, the subsequence ending at i is just arr[i].
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+                
+    # DP for maximum sum decreasing subsequence starting at each index.
+    # We build this by iterating from right to left.
+    dec = arr[:]  # at minimum, the subsequence starting at i is just arr[i].
+    for i in range(n - 2, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+    
+    # Combine the two parts. For each element as the peak, the bitonic sum is:
+    # inc[i] + dec[i] - arr[i] (subtract arr[i] because it is counted twice).
+    max_bitonic = 0
+    for i in range(n):
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    
+    return max_bitonic
+
+# Test cases
+if __name__ == "__main__":
+    assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194, f"Test case 1 failed: got {max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9])}"
+    assert max_sum([80, 60, 30, 40, 20, 10]) == 210, f"Test case 2 failed: got {max_sum([80, 60, 30, 40, 20, 10])}"
+    assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138, f"Test case 3 failed: got {max_sum([2, 3, 14, 16, 21, 23, 29, 30])}"
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    if not arr:
+        return 0
+    
+    n = len(arr)
+    # DP for maximum sum increasing subsequence ending at each index
+    inc = arr[:]  # at minimum, the subsequence ending at i is just arr[i].
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                inc[i] = max(inc[i], inc[j] + arr[i])
+                
+    # DP for maximum sum decreasing subsequence starting at each index.
+    # We build this by iterating from right to left.
+    dec = arr[:]  # at minimum, the subsequence starting at i is just arr[i].
+    for i in range(n - 2, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dec[i] = max(dec[i], dec[j] + arr[i])
+    
+    # Combine the two parts. For each element as the peak, the bitonic sum is:
+    # inc[i] + dec[i] - arr[i] (subtract arr[i] because it is counted twice).
+    max_bitonic = 0
+    for i in range(n):
+        max_bitonic = max(max_bitonic, inc[i] + dec[i] - arr[i])
+    
+    return max_bitonic
+
+# Test cases
+if __name__ == "__main__":
+    assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194, f"Test case 1 failed: got {max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9])}"
+    assert max_sum([80, 60, 30, 40, 20, 10]) == 210, f"Test case 2 failed: got {max_sum([80, 60, 30, 40, 20, 10])}"
+    assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138, f"Test case 3 failed: got {max_sum([2, 3, 14, 16, 21, 23, 29, 30])}"
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly searches for bitonic sequences using contiguous subarrays. However, the problem asks for a bitonic subsequence – a sequence that is not necessarily contiguous. In standard “maximum sum bitonic subsequence” problems the solution is obtained using dynamic programming.
+2. The correct approach is to compute two DP arrays: 
+  • One (inc) that records the maximum sum increasing subsequence ending at each index.
+  • Another (dec) that records the maximum sum decreasing subsequence starting at each index.
+3. Then, for each index i, the maximum sum bitonic subsequence that “peaks” at i is (inc[i] + dec[i] – arr[i]). (We subtract arr[i] once because it is added twice.)
+4. The generated code’s brute-force approach and helper function “is_bitonic” are thus both conceptually and logically incorrect.
+
+Below is the repaired code that uses a DP solution and returns the expected results for the given test cases.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # Compute maximum sum increasing subsequence (msis) ending at each index.
+    inc = arr.copy()
+    for i in range(1, n):
+        for j in range(i):
+            if arr[j] < arr[i] and inc[i] < inc[j] + arr[i]:
+                inc[i] = inc[j] + arr[i]
+
+    # Compute maximum sum decreasing subsequence (msds) starting at each index.
+    dec = arr.copy()
+    for i in range(n - 2, -1, -1):
+        for j in range(i + 1, n):
+            if arr[i] > arr[j] and dec[i] < dec[j] + arr[i]:
+                dec[i] = dec[j] + arr[i]
+
+    # The maximum sum bitonic subsequence is the maximum of (inc[i] + dec[i] - arr[i]) over all i.
+    max_bitonic = 0
+    for i in range(n):
+        candidate = inc[i] + dec[i] - arr[i]
+        if candidate > max_bitonic:
+            max_bitonic = candidate
+
+    return max_bitonic
+
+
+# Testing the function:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # Compute maximum sum increasing subsequence (msis) ending at each index.
+    inc = arr.copy()
+    for i in range(1, n):
+        for j in range(i):
+            if arr[j] < arr[i] and inc[i] < inc[j] + arr[i]:
+                inc[i] = inc[j] + arr[i]
+
+    # Compute maximum sum decreasing subsequence (msds) starting at each index.
+    dec = arr.copy()
+    for i in range(n - 2, -1, -1):
+        for j in range(i + 1, n):
+            if arr[i] > arr[j] and dec[i] < dec[j] + arr[i]:
+                dec[i] = dec[j] + arr[i]
+
+    # The maximum sum bitonic subsequence is the maximum of (inc[i] + dec[i] - arr[i]) over all i.
+    max_bitonic = 0
+    for i in range(n):
+        candidate = inc[i] + dec[i] - arr[i]
+        if candidate > max_bitonic:
+            max_bitonic = candidate
+
+    return max_bitonic
+
+
+# Testing the function:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly enumerates all contiguous subarrays and then checks if they are bitonic using the helper function is_bitonic. However, the prompt requests finding the maximum sum bitonic subsequence. A subsequence is not necessarily contiguous, and enumerating all contiguous subarrays misses valid non‐contiguous selections.
+2. The typical approach for a “maximum sum bitonic subsequence” problem is to use dynamic programming: one dp pass computes the maximum sum increasing subsequence ending at each index; a second pass computes the maximum sum decreasing subsequence starting at each index. Then, for each index, we combine these two values (subtracting the element at the peak once because it’s counted twice) and take the maximum.
+3. The errors include:
+   • Using a brute-force contiguous technique instead of the required DP solution that handles non-contiguous subsequences.
+   • The helper function is_bitonic and the nested loops approach lead to incorrect sums (as seen in test failures).
+   
+To correct this, we implement the DP solution as follows:
+- Create an array dp_inc where dp_inc[i] is the maximum sum of an increasing subsequence ending at index i.
+- Create an array dp_dec where dp_dec[i] is the maximum sum of a decreasing subsequence starting at index i.
+- For each index, the maximum sum of the bitonic subsequence peaking at that index is dp_inc[i] + dp_dec[i] - arr[i].
+- Finally, return the maximum value computed over all indices.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # dp_inc[i] will store the maximum sum of an increasing subsequence ending at i.
+    dp_inc = arr.copy()
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                dp_inc[i] = max(dp_inc[i], dp_inc[j] + arr[i])
+
+    # dp_dec[i] will store the maximum sum of a decreasing subsequence starting at i.
+    dp_dec = arr.copy()
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dp_dec[i] = max(dp_dec[i], dp_dec[j] + arr[i])
+
+    # Compute the best bitonic subsequence sum: combine increasing and decreasing parts.
+    max_bitonic_sum = 0
+    for i in range(n):
+        # Subtract arr[i] once because it is counted in both dp_inc[i] and dp_dec[i].
+        max_bitonic_sum = max(max_bitonic_sum, dp_inc[i] + dp_dec[i] - arr[i])
+    
+    return max_bitonic_sum
+
+# Test cases
+if __name__ == "__main__":
+    assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194, "Test case 1 failed"
+    assert max_sum([80, 60, 30, 40, 20, 10]) == 210, "Test case 2 failed"
+    assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138, "Test case 3 failed"
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # dp_inc[i] will store the maximum sum of an increasing subsequence ending at i.
+    dp_inc = arr.copy()
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                dp_inc[i] = max(dp_inc[i], dp_inc[j] + arr[i])
+
+    # dp_dec[i] will store the maximum sum of a decreasing subsequence starting at i.
+    dp_dec = arr.copy()
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[j] < arr[i]:
+                dp_dec[i] = max(dp_dec[i], dp_dec[j] + arr[i])
+
+    # Compute the best bitonic subsequence sum: combine increasing and decreasing parts.
+    max_bitonic_sum = 0
+    for i in range(n):
+        # Subtract arr[i] once because it is counted in both dp_inc[i] and dp_dec[i].
+        max_bitonic_sum = max(max_bitonic_sum, dp_inc[i] + dp_dec[i] - arr[i])
+    
+    return max_bitonic_sum
+
+# Test cases
+if __name__ == "__main__":
+    assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194, "Test case 1 failed"
+    assert max_sum([80, 60, 30, 40, 20, 10]) == 210, "Test case 2 failed"
+    assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138, "Test case 3 failed"
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly searches only for contiguous subarrays and then uses an “is_bitonic” helper to check if they are bitonic. However, the problem requires finding a bitonic subsequence (which is not necessarily contiguous) that has the maximum sum.
+2. The correct approach is to use dynamic programming. One common solution is to calculate two arrays:
+   - dp_inc[i]: the maximum sum of an increasing subsequence ending at index i.
+   - dp_dec[i]: the maximum sum of a decreasing subsequence starting at index i.
+3. Once these arrays are computed, a bitonic subsequence that peaks at index i will have sum = dp_inc[i] + dp_dec[i] − arr[i] (subtracting arr[i] since it is counted twice). The answer is the maximum value over all indices.
+4. The provided test cases fail because the contiguous subarray approach does not capture the possibility of non-adjacent elements contributing to a higher sum.
+
+Below is the repaired code that implements the dynamic programming solution.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # dp_inc[i] will be the maximum sum of an increasing subsequence ending at i.
+    dp_inc = arr[:]  # Initialize with the element itself.
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                dp_inc[i] = max(dp_inc[i], dp_inc[j] + arr[i])
+    
+    # dp_dec[i] will be the maximum sum of a decreasing subsequence starting at i.
+    dp_dec = arr[:]  # Initialize with the element itself.
+    for i in range(n-2, -1, -1):
+        for j in range(i+1, n):
+            if arr[j] < arr[i]:
+                dp_dec[i] = max(dp_dec[i], dp_dec[j] + arr[i])
+    
+    # Combine the two results. Subtract arr[i] since the peak is counted twice.
+    max_bitonic_sum = float('-inf')
+    for i in range(n):
+        max_bitonic_sum = max(max_bitonic_sum, dp_inc[i] + dp_dec[i] - arr[i])
+    
+    return max_bitonic_sum
+
+
+# Test cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # dp_inc[i] will be the maximum sum of an increasing subsequence ending at i.
+    dp_inc = arr[:]  # Initialize with the element itself.
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                dp_inc[i] = max(dp_inc[i], dp_inc[j] + arr[i])
+    
+    # dp_dec[i] will be the maximum sum of a decreasing subsequence starting at i.
+    dp_dec = arr[:]  # Initialize with the element itself.
+    for i in range(n-2, -1, -1):
+        for j in range(i+1, n):
+            if arr[j] < arr[i]:
+                dp_dec[i] = max(dp_dec[i], dp_dec[j] + arr[i])
+    
+    # Combine the two results. Subtract arr[i] since the peak is counted twice.
+    max_bitonic_sum = float('-inf')
+    for i in range(n):
+        max_bitonic_sum = max(max_bitonic_sum, dp_inc[i] + dp_dec[i] - arr[i])
+    
+    return max_bitonic_sum
+
+
+# Test cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The provided generated solution incorrectly interprets “subsequence” as contiguous subarrays, and then tests each such contiguous slice using an is_bitonic helper. However, the problem requires finding the maximum sum bitonic subsequence, where the subsequence elements are not necessarily contiguous.
+2. The standard approach for such problems is to use dynamic programming similar to the “Longest Bitonic Subsequence” problem, but here we maximize the sum. Specifically, we need:
+   • dp_inc[i]: the maximum sum of an increasing subsequence ending at index i.
+   • dp_dec[i]: the maximum sum of a decreasing subsequence starting at index i.
+   • Then for each index i (as the peak element), the candidate bitonic subsequence sum is dp_inc[i] + dp_dec[i] − arr[i] (since the peak is counted twice).
+3. The repaired code implements the above dynamic programming approach and returns the correct maximum sum.
+
+Repaired Code:
+[PYTHON]
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # dp_inc[i] is the maximum sum of an increasing subsequence ending at i.
+    dp_inc = arr[:]  # initialize with the element itself
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                dp_inc[i] = max(dp_inc[i], dp_inc[j] + arr[i])
+    
+    # dp_dec[i] is the maximum sum of a decreasing subsequence starting at i.
+    dp_dec = arr[:]  # initialize with the element itself
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[i] > arr[j]:
+                dp_dec[i] = max(dp_dec[i], arr[i] + dp_dec[j])
+    
+    # The maximum sum bitonic subsequence using arr[i] as peak.
+    max_bitonic = 0
+    for i in range(n):
+        max_bitonic = max(max_bitonic, dp_inc[i] + dp_dec[i] - arr[i])
+    
+    return max_bitonic
+
+# Example Test Cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def max_sum(arr):
+    n = len(arr)
+    if n == 0:
+        return 0
+
+    # dp_inc[i] is the maximum sum of an increasing subsequence ending at i.
+    dp_inc = arr[:]  # initialize with the element itself
+    for i in range(n):
+        for j in range(i):
+            if arr[j] < arr[i]:
+                dp_inc[i] = max(dp_inc[i], dp_inc[j] + arr[i])
+    
+    # dp_dec[i] is the maximum sum of a decreasing subsequence starting at i.
+    dp_dec = arr[:]  # initialize with the element itself
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
+            if arr[i] > arr[j]:
+                dp_dec[i] = max(dp_dec[i], arr[i] + dp_dec[j])
+    
+    # The maximum sum bitonic subsequence using arr[i] as peak.
+    max_bitonic = 0
+    for i in range(n):
+        max_bitonic = max(max_bitonic, dp_inc[i] + dp_dec[i] - arr[i])
+    
+    return max_bitonic
+
+# Example Test Cases
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210
+assert max_sum([2, 3, 14, 16, 21, 23, 29, 30]) == 138
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9]) == 194 => Passed
+assert max_sum([80, 60, 30, 40, 20, 10]) == 210 => Passed
+assert max_sum([2, 3 ,14, 16, 21, 23, 29, 30]) == 138 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

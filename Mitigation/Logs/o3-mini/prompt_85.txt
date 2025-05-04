@@ -1,0 +1,569 @@
+Prompt 85:
+Prompt text: """
+Write a function to put spaces between words starting with capital letters in a given string.
+assert capital_words_spaces("Python") == 'Python'
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. Incorrect Word Splitting: The code uses s.split() to divide the string into words using whitespace. However, the input string in the prompt ("PythonProgrammingExamples") does not contain spaces, so the splitting yields the entire string as one word.
+2. Incorrect Insertion of Spaces: The logic of checking if the first character of a word is uppercase does not address the need of inserting spaces at points where a capital letter (that is not the first character) starts a new word.
+3. Unnecessary Handling of Whitespace: The logic adds extra spaces around words and then attempts to replace double spaces. This approach is error-prone given the actual requirements.
+
+Correct approach:
+- Iterate through the string character by character and insert a space before every uppercase letter that is not at the beginning.
+- Alternatively, use a regular expression substitution with a lookahead/lookbehind approach.
+
+Repaired Code:
+[PYTHON]
+import re
+
+def capital_words_spaces(s):
+    # The regex pattern inserts a space before every uppercase letter that is not at the beginning
+    return re.sub(r'(?<!^)(?=[A-Z])', ' ', s)
+
+# Test cases
+print("Test 1:", "Passed" if capital_words_spaces("Python") == 'Python' else "Failed")
+print("Test 2:", "Passed" if capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' else "Failed")
+print("Test 3:", "Passed" if capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' else "Failed")
+[/PYTHON]
+Repaired Code:
+
+import re
+
+def capital_words_spaces(s):
+    # The regex pattern inserts a space before every uppercase letter that is not at the beginning
+    return re.sub(r'(?<!^)(?=[A-Z])', ' ', s)
+
+# Test cases
+print("Test 1:", "Passed" if capital_words_spaces("Python") == 'Python' else "Failed")
+print("Test 2:", "Passed" if capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' else "Failed")
+print("Test 3:", "Passed" if capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' else "Failed")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly uses s.split() to separate the input string into words based on whitespace. However, the input string does not contain spaces; the function is instead expected to insert spaces before capital letters.
+2. The loop iterates over words instead of individual characters, so it does not have access to the proper positioning of capital letters within a continuous string.
+3. Instead of checking character by character and inserting spaces before capital letters (except for the first character), the code simply pads words with spaces before and after, which is not the intended behavior.
+4. The code then attempts to clean up extra spaces when concatenating but fails to achieve the required output for examples like "PythonProgrammingExamples".
+
+To correct these issues:
+- Iterate over the characters of the string.
+- Initialize the result with the first character.
+- For each subsequent character, check if it is uppercase, and if so, insert a space before it.
+- Append each character to the result and finally return the modified string.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]
+    for char in s[1:]:
+        if char.isupper():
+            result += ' '
+        result += char
+    return result
+
+# Example usage:
+print(capital_words_spaces("Python"))  # Expected output: "Python"
+print(capital_words_spaces("PythonProgrammingExamples"))  # Expected: "Python Programming Examples"
+print(capital_words_spaces("GetReadyToBeCodingFreak"))  # Expected: "Get Ready To Be Coding Freak"
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]
+    for char in s[1:]:
+        if char.isupper():
+            result += ' '
+        result += char
+    return result
+
+# Example usage:
+print(capital_words_spaces("Python"))  # Expected output: "Python"
+print(capital_words_spaces("PythonProgrammingExamples"))  # Expected: "Python Programming Examples"
+print(capital_words_spaces("GetReadyToBeCodingFreak"))  # Expected: "Get Ready To Be Coding Freak"
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly uses s.split(), which is meant for splitting based on whitespace. Since the input does not contain spaces initially (e.g. "PythonProgrammingExamples"), the split returns the entire string as one word. This logic is not suitable for inserting spaces between concatenated capitalized words.
+2. The code then iterates over these "words" and applies a rule based only on the first character of each word. This is not sufficient since we need to detect every capital letter (except the first letter) in the string and insert a space before it.
+3. The logic attempts to insert extra spaces around each word and then uses a replace to fix “  ” (double-spaces), but this approach does not actually separate out the concatenated words correctly due to the use of s.split().
+
+To fix the code:
+- The function should iterate over each character of the string.
+- Always add the first character to the result.
+- For subsequent characters, if the character is uppercase, add a space before appending it.
+- Return the final constructed string.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]
+    for c in s[1:]:
+        if c.isupper():
+            result += ' ' + c
+        else:
+            result += c
+    return result
+
+# Simple test cases
+assert capital_words_spaces("Python") == "Python"
+assert capital_words_spaces("PythonProgrammingExamples") == "Python Programming Examples"
+assert capital_words_spaces("GetReadyToBeCodingFreak") == "Get Ready To Be Coding Freak"
+
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]
+    for c in s[1:]:
+        if c.isupper():
+            result += ' ' + c
+        else:
+            result += c
+    return result
+
+# Simple test cases
+assert capital_words_spaces("Python") == "Python"
+assert capital_words_spaces("PythonProgrammingExamples") == "Python Programming Examples"
+assert capital_words_spaces("GetReadyToBeCodingFreak") == "Get Ready To Be Coding Freak"
+
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code splits the string into words using s.split(), but the input string (e.g., "PythonProgrammingExamples") has no spaces. This means splitting returns the entire string as a single element, preventing any proper detection of word boundaries.
+2. The code adds spaces around each word that begins with a capital letter instead of inserting spaces between capital letters in the continuous string.
+3. The logic completely misses the required processing of the string on a per-character basis to insert a space before any capital letter that appears in a non-initial position.
+4. The code also does not handle correctly the first character since it should never be preceded by a space even if it is capitalized.
+
+A corrected approach is to iterate through the string character by character. Append the first character untouched. For every subsequent character, if it is uppercase, append a space before adding the character; otherwise, simply append the character.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]  # always include the first character as is
+    for char in s[1:]:
+        if char.isupper():
+            result += " " + char
+        else:
+            result += char
+    return result
+
+
+# Test Cases
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]  # always include the first character as is
+    for char in s[1:]:
+        if char.isupper():
+            result += " " + char
+        else:
+            result += char
+    return result
+
+
+# Test Cases
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code splits the input string by whitespace (using s.split()), but the input string does not contain spaces. This means the split does not separate concatenated capitalized words. For example, "PythonProgrammingExamples" remains a single word in the split list.
+2. The logic checks if the first letter of each word is uppercase and then blindly adds spaces before and after the word even if it is the first word. This is not in accordance with the prompt, which requires inserting spaces between words, not surrounding every word with spaces.
+3. The prompt requires detecting capital letters within a string (except possibly the first character) and inserting spaces before them. The generated code does not process the string character by character.
+4. The join and replace methodology used may accidentally insert extra spaces or fail to produce the desired output.
+
+To address these issues, the corrected solution should:
+- Iterate directly over the characters of the string.
+- For every character that is uppercase (except the first character), prepend a space.
+- Return the reconstructed string.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]
+    for ch in s[1:]:
+        if ch.isupper():
+            result += " " + ch
+        else:
+            result += ch
+    return result
+
+# Test cases
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    if not s:
+        return s
+    result = s[0]
+    for ch in s[1:]:
+        if ch.isupper():
+            result += " " + ch
+        else:
+            result += ch
+    return result
+
+# Test cases
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated solution incorrectly splits the input string using whitespace. However, the prompt implies that the string contains concatenated words starting with capital letters (e.g., "PythonProgrammingExamples") that need to be separated, so splitting by whitespace is not appropriate.
+2. The logic inside the loop checks only the first letter of already separated words. Because the input string is not pre-separated based on capital letters, the entire string is one word and no spacing is added at the proper boundaries.
+3. The approach of conditionally adding spaces around whole words does not address the problem of inserting a space before each capital letter (except the first one). Instead, the desired behavior is to iterate over characters and, if a character is uppercase and not at position 0, prepend a space.
+4. The extra replacement steps (.replace('  ', ' ')) are not necessary when the algorithm ensures proper spacing.
+
+Corrected Approach:
+- Iterate over each character in the string.
+- For each character, if it’s uppercase and not the first character, append a space before adding the character.
+- Finally, join the list of characters to form the correctly spaced string.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    # Build the result as a list of characters
+    result = []
+    for i, char in enumerate(s):
+        # Insert a space before uppercase letters that are not the first character
+        if i != 0 and char.isupper():
+            result.append(" ")
+        result.append(char)
+    return "".join(result)
+
+# Test cases
+assert capital_words_spaces("Python") == "Python"
+assert capital_words_spaces("PythonProgrammingExamples") == "Python Programming Examples"
+assert capital_words_spaces("GetReadyToBeCodingFreak") == "Get Ready To Be Coding Freak"
+print("All test cases passed.")
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    # Build the result as a list of characters
+    result = []
+    for i, char in enumerate(s):
+        # Insert a space before uppercase letters that are not the first character
+        if i != 0 and char.isupper():
+            result.append(" ")
+        result.append(char)
+    return "".join(result)
+
+# Test cases
+assert capital_words_spaces("Python") == "Python"
+assert capital_words_spaces("PythonProgrammingExamples") == "Python Programming Examples"
+assert capital_words_spaces("GetReadyToBeCodingFreak") == "Get Ready To Be Coding Freak"
+print("All test cases passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code incorrectly splits the input based on spaces (s.split()) and then checks the first character of each word, but the problem requires inserting spaces before every uppercase letter in a continuous string. This approach fails when there are no spaces in the input string (e.g., "PythonProgrammingExamples"). Additionally, the code conditionally inserts spaces around words rather than inserting one space just before each uppercase letter (except the first character).
+
+To fix these issues, we should iterate through the characters of the input string and, when an uppercase letter is found (and it isn’t the first character), insert a space before it. This approach will correctly create spaces between concatenated words.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    result = []
+    for i, char in enumerate(s):
+        if i > 0 and char.isupper():
+            result.append(' ')
+        result.append(char)
+    return ''.join(result)
+
+# Test cases 
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    result = []
+    for i, char in enumerate(s):
+        if i > 0 and char.isupper():
+            result.append(' ')
+        result.append(char)
+    return ''.join(result)
+
+# Test cases 
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly splits the string by whitespaces using s.split(), but the input "PythonProgrammingExamples" does not have spaces. This means the function fails to detect the boundaries between words.
+2. Instead of checking each character if it is uppercase to insert a space, the code only examines whole words. The logic simply wraps the word with extra spaces if it starts with an uppercase letter. This does not split characters properly.
+3. The expected functionality is to traverse the string and insert a space just before every uppercase letter (except possibly the first one) to separate concatenated words.
+
+To fix the code:
+• Traverse the input string.
+• Append the first character as it is.
+• For each subsequent character, check if it is uppercase, then insert a space before it.
+• Join the characters back to form the final string.
+
+Repaired Code:
+[PYTHON]
+def capital_words_spaces(s):
+    # if string is empty, just return it
+    if not s:
+        return s
+
+    # Initialize result with first character
+    result = s[0]
+    # Iterate through remaining characters and insert a space for every uppercase letter
+    for char in s[1:]:
+        if char.isupper():
+            result += " " + char
+        else:
+            result += char
+    return result
+
+# Test
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def capital_words_spaces(s):
+    # if string is empty, just return it
+    if not s:
+        return s
+
+    # Initialize result with first character
+    result = s[0]
+    # Iterate through remaining characters and insert a space for every uppercase letter
+    for char in s[1:]:
+        if char.isupper():
+            result += " " + char
+        else:
+            result += char
+    return result
+
+# Test
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code incorrectly splits the string on whitespace (s.split()), which assumes that the words are already separated by spaces. However, the prompt requires inserting spaces in a concatenated string where every new word starts with a capital letter. For example, in "PythonProgrammingExamples", there are no spaces to split on so the approach fails.
+
+Additionally, the logic inside the loop incorrectly appends extra spaces around the entire word if it begins with a capital letter rather than detecting capital letters within a single continuous string. The desired approach is to iterate over the string character by character, inserting a space before each capital letter (except for the first character).
+
+To fix the code:
+1. Start with an empty result string (or use a list for accumulation).
+2. Append the first character directly.
+3. For each subsequent character:
+   - If it's uppercase, append a space first and then the character.
+   - Otherwise, append the character normally.
+4. Return the final constructed string.
+
+Repaired Code:
+[PYTHON] 
+def capital_words_spaces(s):
+    if not s:
+        return s  # Return early if the string is empty
+
+    # Initialize the result with the first character.
+    result = s[0]
+    for char in s[1:]:
+        if char.isupper():
+            result += ' ' + char
+        else:
+            result += char
+    return result
+
+# Test cases
+print("Test 1:", capital_words_spaces("Python"))  # Expected: "Python"
+print("Test 2:", capital_words_spaces("PythonProgrammingExamples"))  # Expected: "Python Programming Examples"
+print("Test 3:", capital_words_spaces("GetReadyToBeCodingFreak"))  # Expected: "Get Ready To Be Coding Freak"
+[/PYTHON]
+Repaired Code:
+ 
+def capital_words_spaces(s):
+    if not s:
+        return s  # Return early if the string is empty
+
+    # Initialize the result with the first character.
+    result = s[0]
+    for char in s[1:]:
+        if char.isupper():
+            result += ' ' + char
+        else:
+            result += char
+    return result
+
+# Test cases
+print("Test 1:", capital_words_spaces("Python"))  # Expected: "Python"
+print("Test 2:", capital_words_spaces("PythonProgrammingExamples"))  # Expected: "Python Programming Examples"
+print("Test 3:", capital_words_spaces("GetReadyToBeCodingFreak"))  # Expected: "Get Ready To Be Coding Freak"
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code incorrectly splits the string using whitespace (s.split()) even though the input string is a concatenation of words with capital letters.
+2. The logic iterates over “words” that are based on whitespace splits rather than individual characters, so it never actually detects the internal capital letters within a single word.
+3. The approach of prepending and appending spaces to words is not aligned with the requirement. Instead, the space should be inserted immediately before each capital letter (except the first letter).
+4. A neat solution is to use a regular expression that inserts a space before any uppercase letter that isn’t at the start of the string.
+
+Below is the repaired code.
+
+Repaired Code:
+[PYTHON]
+import re
+
+def capital_words_spaces(s):
+    return re.sub(r'(?<!^)([A-Z])', r' \1', s)
+    
+# Test cases:
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+import re
+
+def capital_words_spaces(s):
+    return re.sub(r'(?<!^)([A-Z])', r' \1', s)
+    
+# Test cases:
+assert capital_words_spaces("Python") == 'Python'
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples'
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak'
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert capital_words_spaces("Python") == 'Python' => Passed
+assert capital_words_spaces("PythonProgrammingExamples") == 'Python Programming Examples' => Passed
+assert capital_words_spaces("GetReadyToBeCodingFreak") == 'Get Ready To Be Coding Freak' => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

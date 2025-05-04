@@ -1,0 +1,681 @@
+Prompt 45:
+Prompt text: """
+Write a function to find the maximum sum possible by using the given equation f(n) = max( (f(n/2) + f(n/3) + f(n/4) + f(n/5)), n).
+assert get_max_sum(60) == 106
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. Base Case Issue: The generated code uses “if n < 7: return n” as the base case. This cutoff is incorrect for the recurrence defined by f(n) = max(n, f(n//2)+f(n//3)+f(n//4)+f(n//5)). With the proper base condition (only f(0) = 0), we get the correct values. For example, using the classic "Bytelandian gold coins" recurrence, we find that get_max_sum(60) must evaluate to 106 when f(0)=0.
+2. Recursion and Memoization: Although the memoization method with a mutable default argument works in some cases, it is best practice to initialize the memo dictionary inside the function (by accepting memo=None) so that the function does not suffer from potential side effects across invocations.
+3. Recurrence Implementation: The recursive calls and the use of integer division (n//2, etc.) are correct. The only key change needed is to remove the "if n < 7:" check and add the proper base case to return 0 when n is 0.
+
+Fix:
+• Change the base case to “if n == 0: return 0”.
+• Update the memo parameter initialization.
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively compute the exchange value using integer division.
+    exchange = get_max_sum(n // 2, memo) + get_max_sum(n // 3, memo) + get_max_sum(n // 4, memo) + get_max_sum(n // 5, memo)
+    result = max(n, exchange)
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively compute the exchange value using integer division.
+    exchange = get_max_sum(n // 2, memo) + get_max_sum(n // 3, memo) + get_max_sum(n // 4, memo) + get_max_sum(n // 5, memo)
+    result = max(n, exchange)
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+1. Base Case: The generated code uses “if n < 7: return n”. This threshold is incorrect because with n = 60, the recursion yields 103 instead of the expected 106. In our recurrence, no arbitrary cutoff should be used; the recurrence is f(n) = max(n, f(n//2) + f(n//3) + f(n//4) + f(n//5)). The correct base case is when n == 0 should return 0. This way, all numbers are computed recursively and values like f(10) would be computed as max(10, f(5)+f(3)+f(2)+f(2)) = max(10, 5+3+2+2=12), and eventually the intended result for f(60) becomes 106.
+
+2. Memoization: While the code uses a default mutable dictionary for memoization (i.e. memo = {}), it is generally better practice to set the default to None and then create a new dictionary within the function to avoid issues if the function is called multiple times.
+
+Repaired Code:
+Below is the corrected Python code with the proper base condition and safe memoization practice.
+
+[PYTHON] 
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    # Base case: when n is zero, nothing can be broken down further.
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively compute the sum from breaking the number.
+    exchange = (get_max_sum(n // 2, memo) +
+                get_max_sum(n // 3, memo) +
+                get_max_sum(n // 4, memo) +
+                get_max_sum(n // 5, memo))
+    result = max(n, exchange)
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+ 
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    # Base case: when n is zero, nothing can be broken down further.
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively compute the sum from breaking the number.
+    exchange = (get_max_sum(n // 2, memo) +
+                get_max_sum(n // 3, memo) +
+                get_max_sum(n // 4, memo) +
+                get_max_sum(n // 5, memo))
+    result = max(n, exchange)
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+1. The primary error is the base case. In the generated code, the base case is defined as “if n < 7: return n”. This stops recursion too early – for example, for n=6 one should compute a breakdown:
+  f(6) = max(f(3)+f(2)+f(1)+f(1), 6) = max(3+2+1+1, 6) = 7,
+but the code returns 6 directly. In standard coin‐exchange problems (here extended with an extra term) the correct base case is to check if n is 0 (returning 0). This way, even small values get broken down if beneficial.
+
+2. Using a mutable default argument for memoization (memo = {}) is generally discouraged. However, in this context (a self-contained function for coin exchange), it is acceptable. If desired, one could use an inner helper function to avoid potential issues.
+
+3. The remainder of the function (the recursion and memoization) is implemented correctly once the base case is fixed.
+
+To correct the code, we change the base case to “if n == 0” and let the recursion handle small numbers. This leads to:
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo={}):
+    # Base case: For n=0, there is nothing to break down.
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+        
+    # Recurrence: choose the better option between no exchange or the sum of recursive breaks.
+    result = max(n, get_max_sum(n // 2, memo) + get_max_sum(n // 3, memo) 
+                    + get_max_sum(n // 4, memo) + get_max_sum(n // 5, memo))
+    memo[n] = result
+    return result
+[/PYTHON]
+
+This revised implementation produces get_max_sum(60) = 106 as required.
+Repaired Code:
+
+def get_max_sum(n, memo={}):
+    # Base case: For n=0, there is nothing to break down.
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+        
+    # Recurrence: choose the better option between no exchange or the sum of recursive breaks.
+    result = max(n, get_max_sum(n // 2, memo) + get_max_sum(n // 3, memo) 
+                    + get_max_sum(n // 4, memo) + get_max_sum(n // 5, memo))
+    memo[n] = result
+    return result
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. Base Case Issue – The generated code uses "if n < 7: return n" as the base case. This prevents beneficial splitting for numbers between 7 and 11. For example, f(10) computes as max( f(5)+f(3)+f(2)+f(2), 10 ) correctly yielding 12 only because f(5) is returned directly. However, for higher numbers the base case “n < 7” stops further recursion too soon, and for example f(60) becomes 103 instead of the expected 106. In similar coin exchange problems the proper stopping condition is to return 0 when n equals 0, letting the recursion work for all positive n.
+
+2. Passing the memo dictionary – While using a mutable default (memo={}) can work, it is best practice to set the default to None and then initialize the dictionary inside the function. This avoids unintended behavior if the function is used in multiple contexts.
+
+Repaired Code:
+Below is the corrected version that uses a proper base case and avoids the mutable default argument. In this version, if n==0 the function returns 0. Otherwise, it recursively computes the maximum sum as specified by the prompt.
+
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    # Base case: when n is 0, no further splitting is possible.
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively compute the sum from the four splits.
+    split_sum = (get_max_sum(n // 2, memo) +
+                 get_max_sum(n // 3, memo) +
+                 get_max_sum(n // 4, memo) +
+                 get_max_sum(n // 5, memo))
+    
+    result = max(split_sum, n)
+    memo[n] = result
+    
+    return result
+
+# Test Cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    # Base case: when n is 0, no further splitting is possible.
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively compute the sum from the four splits.
+    split_sum = (get_max_sum(n // 2, memo) +
+                 get_max_sum(n // 3, memo) +
+                 get_max_sum(n // 4, memo) +
+                 get_max_sum(n // 5, memo))
+    
+    result = max(split_sum, n)
+    memo[n] = result
+    
+    return result
+
+# Test Cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The base-case condition is incorrect. The generated code returns n for n < 7, but the proper behavior (as evident in the test cases and standard coin exchange problems) is to stop at n == 0. Using n == 0 as the base case allows recursion to accumulate a higher sum, and for input 60 produces the expected 106.
+2. The use of a mutable default argument (memo = {}) can lead to unexpected behavior between function calls. It is safer to use memo = None and initialize it inside the function.
+3. No other syntactic or logical issues are present.
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively calculate the maximum sum possible by breaking n into parts.
+    result = max(n, get_max_sum(n // 2, memo) + get_max_sum(n // 3, memo) +
+                    get_max_sum(n // 4, memo) + get_max_sum(n // 5, memo))
+    
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Recursively calculate the maximum sum possible by breaking n into parts.
+    result = max(n, get_max_sum(n // 2, memo) + get_max_sum(n // 3, memo) +
+                    get_max_sum(n // 4, memo) + get_max_sum(n // 5, memo))
+    
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The key problem with the generated code is its base condition. It returns n when n < 7, which stops the recursion too early. As a result, some values that could be increased by further breaking (like f(6)) are not computed correctly. For example, with n = 60 the correct recursive breakdown (using f(n) = max(n, f(n//2) + f(n//3) + f(n//4) + f(n//5))) should eventually yield 106 (when breaking down 60 into parts, the recursive calls for, say, 6 yield 7 instead of just 6). 
+
+To fix this, the proper base case is to check if n is 0 (since f(0) = 0) and then let the recursion proceed otherwise. This way even small values (like n = 6) are computed recursively (and f(6) ends up being 7).
+
+Also, although using a mutable default argument (memo = {}) is not ideal because of potential state issues between function calls, it works in this case. However, it is recommended to use memo = None and then initialize inside the function.
+
+Repaired Code:
+[PYTHON] 
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    result = max(
+        n,
+        get_max_sum(n // 2, memo) +
+        get_max_sum(n // 3, memo) +
+        get_max_sum(n // 4, memo) +
+        get_max_sum(n // 5, memo)
+    )
+    memo[n] = result
+    return result
+
+# Sample tests:
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    result = max(
+        n,
+        get_max_sum(n // 2, memo) +
+        get_max_sum(n // 3, memo) +
+        get_max_sum(n // 4, memo) +
+        get_max_sum(n // 5, memo)
+    )
+    memo[n] = result
+    return result
+
+# Sample tests:
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code incorrectly uses a base condition of "if n < 7: return n". With this cutoff, the recursive breakdown stops too early, leading to an underestimation for larger values. For example, with n = 60 the computation becomes:
+
+  f(60) = max(f(30) + f(20) + f(15) + f(12), 60)
+
+If we use "n < 7" as our base, then:
+  • f(6) returns 6, f(5) returns 5, etc.
+After computing these recursively, you end up with f(60) = 103, which is less than the expected 106.
+
+By contrast, using a base case of "if n <= 1: return n" allows the recursion to break down until n becomes 0 or 1. Then the recurrence:
+
+  f(n) = max(n, f(n//2) + f(n//3) + f(n//4) + f(n//5))
+
+correctly computes, for example:
+  • f(2) = max(2, f(1)+f(0)+f(0)+f(0)) = 2,
+  • f(10) = max(10, 5+3+2+2) = 12, and
+  • f(60) = max(60, 44+28+18+16) = 106.
+
+Thus, the error is the inappropriate base condition which stops recursion too early. In the repaired code, we adjust the base condition and ensure that the memoization dictionary is consistently passed to recursive calls.
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    # Base condition: for n == 0 or n == 1, no further breakdown is beneficial.
+    if n <= 1:
+        return n
+    if n in memo:
+        return memo[n]
+    
+    # Compute the sum of recursively exchanged parts
+    exchanged_sum = (
+        get_max_sum(n // 2, memo) +
+        get_max_sum(n // 3, memo) +
+        get_max_sum(n // 4, memo) +
+        get_max_sum(n // 5, memo)
+    )
+    
+    result = max(n, exchanged_sum)
+    memo[n] = result
+    return result
+
+# Sample test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+
+print("All test cases passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    # Base condition: for n == 0 or n == 1, no further breakdown is beneficial.
+    if n <= 1:
+        return n
+    if n in memo:
+        return memo[n]
+    
+    # Compute the sum of recursively exchanged parts
+    exchanged_sum = (
+        get_max_sum(n // 2, memo) +
+        get_max_sum(n // 3, memo) +
+        get_max_sum(n // 4, memo) +
+        get_max_sum(n // 5, memo)
+    )
+    
+    result = max(n, exchanged_sum)
+    memo[n] = result
+    return result
+
+# Sample test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+
+print("All test cases passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. Base Case Error: The generated code returns n when n < 7. This cutoff is too aggressive and does not correctly allow the function to exchange small numbers for potentially larger sums. In similar coin exchange problems, the correct base case is to simply return 0 when n is 0 (since breaking down 0 yields 0). With f(n)=max(n, f(n//2)+f(n//3)+f(n//4)+f(n//5)) and f(0)=0, the recursion properly computes f(n) for all n. Because of the premature base case (n<7), f(60) was computed incorrectly (103 instead of expected 106).
+
+2. Memoization Default: Although not an outright error, using a mutable default argument (memo={}) is not a best practice. It can lead to potential bugs if the function is called multiple times in different contexts. Switching to memo=None and initializing memo inside the function helps avoid this risk.
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    result = max(n, 
+                 get_max_sum(n // 2, memo) + 
+                 get_max_sum(n // 3, memo) + 
+                 get_max_sum(n // 4, memo) + 
+                 get_max_sum(n // 5, memo))
+    memo[n] = result
+    return result
+
+# Example tests
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    result = max(n, 
+                 get_max_sum(n // 2, memo) + 
+                 get_max_sum(n // 3, memo) + 
+                 get_max_sum(n // 4, memo) + 
+                 get_max_sum(n // 5, memo))
+    memo[n] = result
+    return result
+
+# Example tests
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The issue with the generated code is the incorrect base condition. It returns n when n < 7, which prevents the recursion from being carried out for numbers that should be “broken” further. For example, using f(6) with the current condition returns 6, whereas the correct computation should be:
+  f(6) = max(f(3) + f(2) + f(1) + f(1), 6) = max(3 + 2 + 1 + 1, 6) = 7.
+This underestimation causes the final sum f(60) to be too low (103 instead of 106). The proper approach is to compute the recursive breakdown for all n > 0; the only true base case is when n is 0 (return 0).
+
+In addition, although using a mutable default argument (memo = {}) often works in these recursion problems, it’s better practice to initialize the memo inside the function if not provided.
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Compute the value by recursively breaking down n.
+    result = max(n, get_max_sum(n // 2, memo) +
+                    get_max_sum(n // 3, memo) +
+                    get_max_sum(n // 4, memo) +
+                    get_max_sum(n // 5, memo))
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    # Compute the value by recursively breaking down n.
+    result = max(n, get_max_sum(n // 2, memo) +
+                    get_max_sum(n // 3, memo) +
+                    get_max_sum(n // 4, memo) +
+                    get_max_sum(n // 5, memo))
+    memo[n] = result
+    return result
+
+# Test cases
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. Incorrect Base Case – The generated code sets a base condition as “if n < 7: return n.” This cutoff stops the recursion too early. In the “coin exchange”‐style problem, the typical base case is when n == 0 (or sometimes n == 1) so that the recursion fully computes the optimal sum by breaking down the number into parts until reaching 0. Using “if n < 7” prevents beneficial exchanges from being selected and leads to a result of 103 for input 60 instead of the expected 106.
+2. Correct Recursion – With the proper base condition (if n == 0: return 0), the function will recursively compute:
+  f(60) = max(f(30) + f(20) + f(15) + f(12), 60)
+and so on. When computed with the proper base condition, f(60) becomes 106.
+3. Memoization – The use of a mutable default argument (memo = {}) is a common Python pitfall. Although it works for a single run during evaluation, it is advisable to pass the memo explicitly to recursive calls.
+
+Below is the repaired code that adheres to the prompt and returns the expected result.
+
+Repaired Code:
+[PYTHON]
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    result = max(get_max_sum(n // 2, memo) +
+                 get_max_sum(n // 3, memo) +
+                 get_max_sum(n // 4, memo) +
+                 get_max_sum(n // 5, memo), n)
+    memo[n] = result
+    return result
+
+# Test assertions
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def get_max_sum(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n == 0:
+        return 0
+    if n in memo:
+        return memo[n]
+    
+    result = max(get_max_sum(n // 2, memo) +
+                 get_max_sum(n // 3, memo) +
+                 get_max_sum(n // 4, memo) +
+                 get_max_sum(n // 5, memo), n)
+    memo[n] = result
+    return result
+
+# Test assertions
+assert get_max_sum(60) == 106
+assert get_max_sum(10) == 12
+assert get_max_sum(2) == 2
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert get_max_sum(60) == 106 => Passed
+assert get_max_sum(10) == 12 => Passed
+assert get_max_sum(2) == 2 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

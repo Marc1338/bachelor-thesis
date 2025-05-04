@@ -1,0 +1,48 @@
+
+Prompt 1, Sample Number: 1:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 2:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 3:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return tuple(set(list1) & set(list2))
+[/PYTHON]
+================================================================================
+
+Prompt 1, Sample Number: 4:
+Model input: """
+Write a function to find the shared elements from the given two lists.
+assert set(similar_elements((3, 4, 5, 6),(5, 7, 4, 10))) == set((4, 5))
+"""
+Response:
+ [PYTHON]
+def similar_elements(list1, list2):
+    return list(set(list1) & set(list2))
+[/PYTHON]
+================================================================================

@@ -1,0 +1,588 @@
+Prompt 79:
+Prompt text: """
+Write a function to calculate the wind chill index rounded to the next integer given the wind velocity in km/h and a temperature in celsius.
+assert wind_chill(120,35)==40
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses an incorrect formula. The correct formula for wind chill (in °C with wind speed in km/h) is:
+  wind_chill = 13.12 + 0.6215×T − 11.37×(v^0.16) + 0.3965×T×(v^0.16)
+  where T is the temperature in Celsius and v is the wind velocity in km/h.
+2. The code mistakenly uses linear and squared (and even more confusing) terms for the temperature and wind velocity instead of using v raised to the power of 0.16.
+3. The exponent term (v^0.16) is missing. Instead of multiplying by wind_velocity directly, the code should compute wind_velocity ** 0.16 and use it in the formula.
+4. The error-checks for the temperature and wind_velocity are acceptable aside from the formula errors.
+
+Below is the repaired code following the prompt and test expectations.
+
+Repaired Code:
+[PYTHON]
+def wind_chill(wind_velocity, temperature):
+    if temperature > 50 or temperature < -45:
+        raise ValueError("Temperature is out of range")
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill factor using the correct exponent term
+    factor = wind_velocity ** 0.16
+    chill = 13.12 + 0.6215 * temperature - 11.37 * factor + 0.3965 * temperature * factor
+    return round(chill)
+
+# Example test cases
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+[/PYTHON]
+Repaired Code:
+
+def wind_chill(wind_velocity, temperature):
+    if temperature > 50 or temperature < -45:
+        raise ValueError("Temperature is out of range")
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill factor using the correct exponent term
+    factor = wind_velocity ** 0.16
+    chill = 13.12 + 0.6215 * temperature - 11.37 * factor + 0.3965 * temperature * factor
+    return round(chill)
+
+# Example test cases
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code has several issues:
+1. Formula Error: The code uses an incorrect formula. The standard wind chill formula (for Celsius and km/h) is:
+  wind_chill = 13.12 + 0.6215 * T − 11.37 * (v ** 0.16) + 0.3965 * T * (v ** 0.16)
+The generated code instead uses inappropriate terms (for example, multiplying temperature and wind velocity with incorrect adjustments and using “**2” on expressions when we need v^(0.16)).
+2. Incorrect Operations: The code mistakenly calculates terms like 0.0017 * (temperature * -1) ** 2 and 0.00016 * (wind_velocity * -1) ** 2. These do not correspond to the required wind chill formula.
+3. Range Checks: While the code implements range checks for temperature and wind velocity, the prompt does not specify these constraints. They can be removed or adjusted unless they were explicitly desired.
+
+To fix the code:
+• Use the proper wind chill formula.
+• Remove the erroneous computations.
+• Return the rounded result based on standard rounding (which matches the expected outputs).
+
+Repaired Code:
+[PYTHON]
+def wind_chill(wind_velocity, temperature):
+    # Using the formula: 13.12 + 0.6215*T - 11.37*(v**0.16) + 0.3965*T*(v**0.16)
+    chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(chill)
+
+# Test cases for verification
+assert wind_chill(120,35)==40
+assert wind_chill(40,20)==19
+assert wind_chill(10,8)==6
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def wind_chill(wind_velocity, temperature):
+    # Using the formula: 13.12 + 0.6215*T - 11.37*(v**0.16) + 0.3965*T*(v**0.16)
+    chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(chill)
+
+# Test cases for verification
+assert wind_chill(120,35)==40
+assert wind_chill(40,20)==19
+assert wind_chill(10,8)==6
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+1. The provided code uses an incorrect formula for wind chill. The standard wind chill index formula (for temperatures in Celsius and wind velocity in km/h) is:  
+  wind_chill = 13.12 + 0.6215×T − 11.37×(v^0.16) + 0.3965×T×(v^0.16)  
+Instead of raising the wind velocity to the power 0.16, the code uses linear terms and erroneous expressions (e.g. (temperature * -1) ** 2).  
+2. The prompt does not specify temperature limits (the original temperature range check is extraneous), though a negative wind velocity check is sensible.  
+3. The prompt instructs to "calculate the wind chill index rounded to the next integer" with examples implying standard rounding (using Python’s round function gives the expected results).  
+4. To fix the code, we need to implement the correct formula and remove or adjust any unnecessary validations.
+
+Repaired Code:
+[PYTHON] 
+def wind_chill(wind_velocity, temperature):
+    # Validate wind velocity is not negative
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Compute the exponent for wind velocity needed for the formula:
+    wind_factor = wind_velocity ** 0.16
+    
+    # Correct wind chill formula:
+    chill = 13.12 + 0.6215 * temperature - 11.37 * wind_factor + 0.3965 * temperature * wind_factor
+    
+    return round(chill)
+
+# Test cases
+assert wind_chill(120,35) == 40
+assert wind_chill(40,20) == 19
+assert wind_chill(10,8) == 6
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+ 
+def wind_chill(wind_velocity, temperature):
+    # Validate wind velocity is not negative
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Compute the exponent for wind velocity needed for the formula:
+    wind_factor = wind_velocity ** 0.16
+    
+    # Correct wind chill formula:
+    chill = 13.12 + 0.6215 * temperature - 11.37 * wind_factor + 0.3965 * temperature * wind_factor
+    
+    return round(chill)
+
+# Test cases
+assert wind_chill(120,35) == 40
+assert wind_chill(40,20) == 19
+assert wind_chill(10,8) == 6
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+1. The primary error is that the function is not using the standard wind chill formula. The correct formula (for temperatures in Celsius and wind speeds in km/h) is:
+  wind_chill = 13.12 + 0.6215*temperature – 11.37*(wind_velocity**0.16) + 0.3965*temperature*(wind_velocity**0.16)
+The generated code instead uses an incorrect series of multiplications, additions, and squarings.
+
+2. The code incorrectly treats temperature and wind_velocity by squaring negative values rather than computing the wind_velocity to the power of 0.16. In the correct formula, wind_velocity should be raised to 0.16 (i.e., wind_velocity**0.16).
+
+3. The provided range check on temperature (rejecting values above 50 or below -45) is not specified in the prompt. Though the wind_velocity negative check is acceptable, the temperature check is unnecessary per the prompt and test cases.
+
+4. The rounding should follow standard rounding. The prompt states “rounded to the next integer” but based on the test cases (e.g. wind_chill(120,35)==40) the correct behavior is achieved by normal rounding (i.e., using round()).
+
+Repaired Code:
+[PYTHON] 
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill index using the accepted formula for Celsius and km/h
+    # wind_chill = 13.12 + 0.6215*T - 11.37*(V**0.16) + 0.3965*T*(V**0.16)
+    chill_value = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    
+    return round(chill_value)
+
+# Example tests
+assert wind_chill(120,35)==40
+assert wind_chill(40,20)==19
+assert wind_chill(10,8)==6
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+ 
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill index using the accepted formula for Celsius and km/h
+    # wind_chill = 13.12 + 0.6215*T - 11.37*(V**0.16) + 0.3965*T*(V**0.16)
+    chill_value = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    
+    return round(chill_value)
+
+# Example tests
+assert wind_chill(120,35)==40
+assert wind_chill(40,20)==19
+assert wind_chill(10,8)==6
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses an incorrect wind chill formula. The prompt (and test cases) imply that the Canadian wind chill formula should be used, which is:  
+  wind_chill = 13.12 + 0.6215 * T – 11.37 * (v ** 0.16) + 0.3965 * T * (v ** 0.16)  
+  where T is temperature in Celsius and v is wind velocity in km/h.
+2. Instead of applying the exponent of 0.16 to the wind velocity (v ** 0.16), the generated code uses terms like 0.3965 * wind_velocity and even raises modified temperature and velocity to the power of 2. These terms (with "* -1" and squared terms) do not follow the correct formula.
+3. The generated code unnecessarily includes conditions for temperature out of range (temperature > 50 or temperature < -45) which are not mentioned in the prompt.
+4. The prompt says "rounded to the next integer." However, based on the expected test results, using the regular round() function gives the correct outputs. (Note: "rounded to the next integer" may be ambiguous, but the provided test case assert wind_chill(120,35)==40 confirms that normal rounding is expected here.)
+5. The code should only check for negative wind velocities (if desired), as negative wind velocity is physically nonsensical.
+
+Repaired Code:
+Below is the corrected version that implements the proper Canadian wind chill formula and returns the result rounded to the nearest integer.
+
+[PYTHON] 
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Compute the wind velocity raised to the power 0.16 as in the Canadian wind chill formula.
+    velocity_factor = wind_velocity ** 0.16
+    
+    # Calculate the wind chill using the correct formula:
+    chill = 13.12 + 0.6215 * temperature - 11.37 * velocity_factor + 0.3965 * temperature * velocity_factor
+    
+    # Return the wind chill rounded to the nearest integer.
+    return round(chill)
+
+# Test cases:
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+ 
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Compute the wind velocity raised to the power 0.16 as in the Canadian wind chill formula.
+    velocity_factor = wind_velocity ** 0.16
+    
+    # Calculate the wind chill using the correct formula:
+    chill = 13.12 + 0.6215 * temperature - 11.37 * velocity_factor + 0.3965 * temperature * velocity_factor
+    
+    # Return the wind chill rounded to the nearest integer.
+    return round(chill)
+
+# Test cases:
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+1. The formula used in the generated code is incorrect. The standard wind chill formula in Celsius (and used in the provided test cases) is: 
+   • wind_chill = 13.12 + 0.6215 * temperature – 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+   The generated code mistakenly uses terms involving wind_velocity directly and misuses exponentiation (e.g., using (temperature * -1) ** 2 instead of wind_velocity**0.16).
+
+2. The conditions for temperature (e.g., if temperature > 50 or < -45) are not required by the prompt. While it's acceptable to have validations, they are not part of the stated requirement and complicate the solution unnecessarily.
+
+3. The corrected code should compute wind_velocity raised to the power of 0.16 and then use that factor properly in the formula.
+
+4. Finally, the function should return the wind chill value rounded to the nearest integer (using the default rounding behavior of Python’s round function) which agrees with the expectation in the test cases.
+
+Repaired Code:
+[PYTHON]
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind velocity factor raised to the exponent 0.16
+    factor = wind_velocity ** 0.16
+    # Compute the wind chill using the correct formula
+    chill = 13.12 + 0.6215 * temperature - 11.37 * factor + 0.3965 * temperature * factor
+    return round(chill)
+
+# Test cases
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+[/PYTHON]
+Repaired Code:
+
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind velocity factor raised to the exponent 0.16
+    factor = wind_velocity ** 0.16
+    # Compute the wind chill using the correct formula
+    chill = 13.12 + 0.6215 * temperature - 11.37 * factor + 0.3965 * temperature * factor
+    return round(chill)
+
+# Test cases
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+1. The formula used in the generated code is incorrect. The standard wind chill index formula (for temperatures in Celsius and wind velocity in km/h) is:
+  wind_chill = 13.12 + 0.6215 * temperature – 11.37 * (wind_velocity**0.16) + 0.3965 * temperature * (wind_velocity**0.16)
+This formula gives the expected results for the provided test cases.
+
+2. The generated code mistakenly adds a term with "0.3965 * wind_velocity" and incorrect squared terms that do not belong in the wind chill formula. In addition, it uses expressions like (temperature * -1) ** 2 which yield incorrect results.
+
+3. The rounding should be applied to the computed wind chill value using the built-in round() function; note that although the prompt says “rounded to the next integer,” based on the tests we are using standard rounding (round to the nearest integer).
+
+4. The validation checks for temperature being greater than 50 or less than -45, and for wind velocity being negative, are not specified in the prompt. It is reasonable to check that the wind velocity is not negative; however, the temperature range check might not be necessary. We can include the negative wind velocity check for robustness.
+
+With these points in mind, the corrected code replaces the incorrect formula with the correct wind chill formula and uses round() to produce the expected value.
+
+Repaired Code:
+[PYTHON]
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity cannot be negative")
+    
+    # Compute the wind chill using the formula:
+    # wind_chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity**0.16) + 0.3965 * temperature * (wind_velocity**0.16)
+    wind_chill_value = (13.12 
+                        + 0.6215 * temperature 
+                        - 11.37 * (wind_velocity ** 0.16) 
+                        + 0.3965 * temperature * (wind_velocity ** 0.16))
+    
+    return round(wind_chill_value)
+
+# Test cases
+if __name__ == "__main__":
+    assert wind_chill(120, 35) == 40, f"wind_chill(120,35) returned {wind_chill(120,35)}"
+    assert wind_chill(40, 20) == 19, f"wind_chill(40,20) returned {wind_chill(40,20)}"
+    assert wind_chill(10, 8) == 6, f"wind_chill(10,8) returned {wind_chill(10,8)}"
+    print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity cannot be negative")
+    
+    # Compute the wind chill using the formula:
+    # wind_chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity**0.16) + 0.3965 * temperature * (wind_velocity**0.16)
+    wind_chill_value = (13.12 
+                        + 0.6215 * temperature 
+                        - 11.37 * (wind_velocity ** 0.16) 
+                        + 0.3965 * temperature * (wind_velocity ** 0.16))
+    
+    return round(wind_chill_value)
+
+# Test cases
+if __name__ == "__main__":
+    assert wind_chill(120, 35) == 40, f"wind_chill(120,35) returned {wind_chill(120,35)}"
+    assert wind_chill(40, 20) == 19, f"wind_chill(40,20) returned {wind_chill(40,20)}"
+    assert wind_chill(10, 8) == 6, f"wind_chill(10,8) returned {wind_chill(10,8)}"
+    print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+1. The generated code uses an incorrect formula for the wind chill calculation. The accepted formula for wind chill index is:
+  wind_chill = 13.12 + 0.6215 * T – 11.37 * v^(0.16) + 0.3965 * T * v^(0.16)
+ where T is the temperature (in Celsius) and v is the wind velocity (in km/h). The generated code instead mixes terms incorrectly (e.g. multiplying wind_velocity directly, squaring negative values, etc.).
+
+2. The term (wind_velocity * -1) ** 2 and similarly for temperature is used incorrectly, which does not correspond to any wind chill model.
+
+3. The prompt states that the value should be rounded to the next integer. The test case outcomes indicate regular rounding to the nearest integer, which is accomplished using Python’s round() function.
+
+4. The input checks for temperature and wind velocity are acceptable, but they are not mandated by the prompt. They can be retained if necessary, but the incorrect mathematical model must be corrected.
+
+Repaired Code:
+[PYTHON]
+def wind_chill(wind_velocity, temperature):
+    # Optional validations based on known physical ranges
+    if temperature > 50 or temperature < -45:
+        raise ValueError("Temperature is out of range")
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill using the standard formula:
+    # wind_chill = 13.12 + 0.6215*T - 11.37*v^(0.16) + 0.3965*T*v^(0.16)
+    chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(chill)
+
+# Test cases
+if __name__ == "__main__":
+    assert wind_chill(120, 35) == 40
+    assert wind_chill(40, 20) == 19
+    assert wind_chill(10, 8) == 6
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def wind_chill(wind_velocity, temperature):
+    # Optional validations based on known physical ranges
+    if temperature > 50 or temperature < -45:
+        raise ValueError("Temperature is out of range")
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill using the standard formula:
+    # wind_chill = 13.12 + 0.6215*T - 11.37*v^(0.16) + 0.3965*T*v^(0.16)
+    chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(chill)
+
+# Test cases
+if __name__ == "__main__":
+    assert wind_chill(120, 35) == 40
+    assert wind_chill(40, 20) == 19
+    assert wind_chill(10, 8) == 6
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+1. The formula implemented in the generated code is incorrect. The standard wind chill formula for Celsius and km/h is:
+  Wind Chill = 13.12 + 0.6215 × T − 11.37 × (v^0.16) + 0.3965 × T × (v^0.16)
+  where T is temperature in Celsius and v is wind velocity in km/h. The generated code incorrectly uses a linear term for wind velocity and adds extraneous squared terms which do not belong to the formula.
+2. The prompt specifies “rounded to the next integer” and the given test cases imply that normal rounding (rounding to the nearest integer) is intended. The generated code uses round(), but the rest of the computation is incorrect.
+3. Additional checks for temperature range (temperature > 50 or temperature < -45) are not mentioned in the prompt and can be removed unless explicitly required.
+
+Repaired Code:
+[PYTHON]
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill using the standard formula
+    chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(chill)
+
+# Test cases
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate the wind chill using the standard formula
+    chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(chill)
+
+# Test cases
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+1. The primary error is that the generated code uses an incorrect formula. The standard wind chill index formula (in Celsius and km/h) is:
+  wind_chill = 13.12 + 0.6215×temperature – 11.37×(wind_velocity^0.16) + 0.3965×temperature×(wind_velocity^0.16)
+The generated code instead adds incorrect terms (e.g. adding 0.3965*wind_velocity and incorrect squared expressions).
+
+2. The exponent for wind velocity must be 0.16, not squaring (or any manipulation with negative values).
+
+3. The prompt requires rounding to the next integer. The test cases suggest that we should round normally (using round()) rather than always rounding upward (ceiling). The built-in round() is appropriate here.
+
+4. There is an extra temperature range check in the generated code that is not specified in the prompt. It’s acceptable to remove it unless required, but keeping a check for negative wind velocities is reasonable.
+
+To fix the code, we change the wind chill calculation to use the correct formula.
+
+Repaired Code:
+[PYTHON] 
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate wind chill using the standard formula
+    # wind_chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    wc = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(wc)
+
+# Testing the function:
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+print("All test cases passed.")
+[/PYTHON]
+Repaired Code:
+ 
+def wind_chill(wind_velocity, temperature):
+    if wind_velocity < 0:
+        raise ValueError("Wind velocity can't be negative")
+    
+    # Calculate wind chill using the standard formula
+    # wind_chill = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    wc = 13.12 + 0.6215 * temperature - 11.37 * (wind_velocity ** 0.16) + 0.3965 * temperature * (wind_velocity ** 0.16)
+    return round(wc)
+
+# Testing the function:
+assert wind_chill(120, 35) == 40
+assert wind_chill(40, 20) == 19
+assert wind_chill(10, 8) == 6
+print("All test cases passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert wind_chill(120,35)==40 => Passed
+assert wind_chill(40,20)==19 => Passed
+assert wind_chill(10,8)==6 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

@@ -1,0 +1,283 @@
+Prompt 52:
+Prompt text: """
+Write a function to find the median length of a trapezium.
+assert median_trapezium(15,25,35)==20
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt asks for a function that computes the median length of a trapezium. In geometry, the median (or midline) of a trapezium is defined as the average of the lengths of the two parallel bases. Based on the provided test cases, the function should compute the value (a+b)/2, using the first two parameters (which represent the bases), and the third parameter is ignored.
+
+The generated code incorrectly computes the median by sorting the three parameters and selecting the middle one. This logic is flawed because, for example, for median_trapezium(15,25,35) it returns 25 (the second element after sorting) instead of the intended (15+25)/2 = 20.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt expects the function to compute the median length (or mid‐segment) of a trapezium. Geometrically, the mid‐segment of a trapezium is the average of its two parallel sides (bases). In the provided test cases, the first two parameters represent the bases, and the third parameter represents the lateral side which is not used for computing the median. For example, for median_trapezium(15,25,35), the expected result is (15+25)/2 = 20.
+
+The generated code mistakenly sorts all three input numbers and returns the middle (median) value in the sorted order. This approach produces:
+• For (15,25,35): sorted → [15,25,35] and returns 25 instead of the required 20.
+• For (10,20,30): returns 20 instead of 15.
+• For (6,9,4): returns 6 instead of 7.5.
+
+The correction is to ignore the third argument and return the average of the first two parameters.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code attempts to compute the median by sorting the three numbers and returning the middle element. However, based on the prompt and the provided test cases, the intended behavior is different. The test cases indicate that the function should calculate the median length of a trapezium as the average of the top two inputs (i.e. (a+b)/2), while the third argument is irrelevant to this calculation. For example:
+• For median_trapezium(15,25,35), the expected value is (15+25)/2 = 20.
+• For median_trapezium(10,20,30), the expected value is (10+20)/2 = 15.
+• For median_trapezium(6,9,4), the expected value is (6+9)/2 = 7.5.
+Thus, the error is a logical one: using sorting to pick the middle element is inappropriate for these requirements. The correction is to simply compute and return (a+b)/2.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt clearly expects the function to compute the median (or mid‐segment) of a trapezium, which by definition is the average of the lengths of the two parallel sides (the bases). According to the test cases, the first two parameters (a and b) represent the lengths of the bases, while the third parameter (c) is irrelevant for the median computation. However, the generated code mistakenly sorts all three values and returns the middle element, which leads to incorrect results. For example, median_trapezium(15,25,35) should be (15+25)/2 = 20, but the current code returns 25. 
+
+To fix the issue, we simply need to compute the average of a and b and ignore c.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt expects the median length of a trapezium to be computed as shown by the tests. Although the function header takes three parameters, the tests indicate that the median (which is usually defined as the mid‐line in a trapezium) should be calculated as the average of the first two parameters. For example, with input (15, 25, 35), the expected output is 20 because (15 + 25) / 2 equals 20. 
+
+The generated code is incorrect because it simply sorts the three values and returns the middle element. This gives 25 for (15, 25, 35) instead of 20, and similarly produces wrong results for the other test cases.
+
+To correct the errors, we only need to compute (a + b) / 2 and ignore the third parameter.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code attempts to return the statistical median of three numbers by sorting them and selecting the middle value. However, the prompt actually requires the function to compute the median (mid-segment) of a trapezium. In a trapezium the median (or mid-segment) is defined as the average of the two bases. Based on the provided test cases, it is clear that the two bases to be used are the first two parameters (a and b). For example:
+• median_trapezium(15,25,35) should compute (15+25)/2 = 20,
+• median_trapezium(10,20,30) should compute (10+20)/2 = 15,
+• median_trapezium(6,9,4) should compute (6+9)/2 = 7.5.
+Thus, the error in the generated code is that it incorrectly sorts all three parameters and returns the middle (statistical median) instead of using the correct formula: (a + b) / 2.
+
+Repaired Code:
+[PYTHON] 
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+ 
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+The original code attempts to compute the median value by sorting the three inputs and returning the middle element. However, the problem actually asks for the median (mid-segment) length of a trapezium. In geometry, the median of a trapezium is the average of its two parallel sides (the bases). Based on the given test cases, the first two parameters represent these parallel sides. For example:
+• median_trapezium(15,25,35) should return (15+25)/2 = 20,
+• median_trapezium(10,20,30) should return (10+20)/2 = 15,
+• median_trapezium(6,9,4) should return (6+9)/2 = 7.5.
+Thus, the code should compute and return (a + b)/2 while ignoring the third parameter.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code attempts to return the “median” by sorting all three values and picking the middle one. However, the problem statement (and test cases) imply that the trapezium’s median (or mid-segment) is computed as the average of its two parallel sides (the bases). In the test cases, the first two parameters (a and b) represent the lengths of the two bases, and the third parameter (c) is irrelevant for calculating the median. For example, with inputs (15, 25, 35), the expected median is (15 + 25) / 2 = 20. The generated code instead picks the middle value of the sorted list (which would be 25), causing the failure. To fix the issue, the code should simply calculate and return (a + b) / 2.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code computes the median of the three numbers by sorting and returning the middle value. However, the intended functionality (based on the test cases) is to compute the trapezium’s median length, which geometrically is defined as the average of the parallel sides (i.e. the bases). Here the test cases imply that the first two parameters are the bases (for example, with inputs 15, 25, 35, the median is (15+25)/2 = 20). The third parameter is irrelevant in calculating the median length. To fix this, we need to compute (a + b) / 2 and ignore c.
+
+Repaired Code:
+[PYTHON] 
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+# Test cases
+assert median_trapezium(15,25,35) == 20
+assert median_trapezium(10,20,30) == 15
+assert median_trapezium(6,9,4) == 7.5
+print("All tests passed!") 
+[/PYTHON]
+Repaired Code:
+ 
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+# Test cases
+assert median_trapezium(15,25,35) == 20
+assert median_trapezium(10,20,30) == 15
+assert median_trapezium(6,9,4) == 7.5
+print("All tests passed!") 
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt requires computing the “median” length of a trapezium. In geometry, the median (or midline) of a trapezium is defined as the average of the two parallel sides (the bases). The test cases show that the function should average the first two input values (e.g., for input (15,25,35), (15+25)/2 equals 20). The generated code, however, sorts all three numbers and returns the middle value, which is the statistical median—not the trapezium median—and does not match the expected output for the provided test cases.
+
+To correct the code, we need to ignore the third parameter (which would typically be the leg) and return the average of the first two parameters.
+
+Repaired Code:
+[PYTHON]
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+[/PYTHON]
+Repaired Code:
+
+def median_trapezium(a, b, c):
+    return (a + b) / 2
+
+Code execution: SUCCESS
+Test Results:
+assert median_trapezium(15,25,35)==20 => Passed
+assert median_trapezium(10,20,30)==15 => Passed
+assert median_trapezium(6,9,4)==7.5 => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000

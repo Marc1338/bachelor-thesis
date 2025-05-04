@@ -1,0 +1,389 @@
+Prompt 15:
+Prompt text: """
+Write a function to get the angle of a complex number.
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001)
+"""
+
+
+Results of 10 samples:
+--- Sample 1: FAILED ---
+LLM Analysis:
+Analysis:
+1. The prompt requires a function that calculates the angle (or phase) of a complex number. The expected input is a single complex number, not separate real and imaginary parts.
+2. The generated code defines the function with two parameters (real and imag) and then calls math.atan2(imag, real). However, the test cases pass a complex number directly (e.g., 1j), leading to an error because math.atan2 expects real number arguments.
+3. To fix the code, the function must accept a single complex number argument (say "z") and then compute the angle using z.real and z.imag. This correctly computes the phase of the complex number.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+Sample result: FAILED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The original generated code defined the function as:
+  def angle_complex(real, imag):
+    return math.atan2(imag, real)
+
+The error arises because the test cases pass a complex number for the “imag” parameter (e.g., 1j or 2j). The math.atan2 function requires real numbers (floats) for both parameters, but instead it receives a complex type for “imag.” Since 1j is a complex number (even though its imaginary part is 1), math.atan2 raises an error.
+
+To fix the issue, we need to extract the actual imaginary component (a real number) from the complex parameter if it is passed as a complex number. For example, if imag is 1j, then its imaginary component is obtained via imag.imag, which is 1. This modification will allow math.atan2 to receive two real numbers and compute the angle of the corresponding complex number (constructed as real + imag.imag * 1j).
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(real, imag):
+    # If imag is complex, extract its imaginary component.
+    if isinstance(imag, complex):
+        imag = imag.imag
+    return math.atan2(imag, real)
+    
+# Sample test cases:
+assert math.isclose(angle_complex(0, 1j), 1.5707963267948966, rel_tol=0.001)
+assert math.isclose(angle_complex(2, 1j), 0.4636476090008061, rel_tol=0.001)
+assert math.isclose(angle_complex(0, 2j), 1.5707963267948966, rel_tol=0.001)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(real, imag):
+    # If imag is complex, extract its imaginary component.
+    if isinstance(imag, complex):
+        imag = imag.imag
+    return math.atan2(imag, real)
+    
+# Sample test cases:
+assert math.isclose(angle_complex(0, 1j), 1.5707963267948966, rel_tol=0.001)
+assert math.isclose(angle_complex(2, 1j), 0.4636476090008061, rel_tol=0.001)
+assert math.isclose(angle_complex(0, 2j), 1.5707963267948966, rel_tol=0.001)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 3: FAILED ---
+LLM Analysis:
+Analysis:
+The prompt requires a function to get the angle (or argument) of a complex number. However, the generated code defines the function with two parameters (real and imag) and then directly passes them to math.atan2. The test cases pass values like 0 and 1j so that the second argument (1j) is a complex number instead of a real number. As math.atan2 expects real numbers, this leads to an error (“must be real number, not complex”). 
+
+The correct approach is to have the function accept a single complex number as input. Then the function can use the built‐in attributes .real and .imag to extract the corresponding parts and pass those to math.atan2. 
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+Sample result: FAILED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code does not match the intended behavior. The prompt asks for a function to get the angle of a complex number. However, the tests call the function with two parameters where the second argument is given as a complex literal (for example, 1j). Math’s atan2 expects real numeric arguments, so passing 1j directly causes a type error. In other words, the code is not prepared to handle the scenario when the imaginary part is passed as a complex number.
+
+To fix this, we need to transform the imaginary argument when it is given as a complex value. Since 1j, 2j, etc. are complex numbers whose imaginary part holds the intended float (e.g. 1j.imag is 1), we can check if the imag parameter is complex and, if it is, replace it with its imaginary part before computing the angle with math.atan2.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(real, imag):
+    # If 'imag' is a complex number, extract its imaginary component.
+    if isinstance(imag, complex):
+        imag = imag.imag
+    return math.atan2(imag, real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(real, imag):
+    # If 'imag' is a complex number, extract its imaginary component.
+    if isinstance(imag, complex):
+        imag = imag.imag
+    return math.atan2(imag, real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code defines the function as accepting two parameters (real and imag) and then calls math.atan2(imag, real). However, the test cases call the function with a real number as the first argument and a complex number (e.g. 1j or 2j) as the second. This causes the error “must be real number, not complex” because math.atan2 expects both arguments to be real numbers. 
+
+There are two options to correct this issue:
+• Either change the function to accept a single complex number and compute its phase (using, for example, cmath.phase) or
+• Modify the two-parameter function to handle cases where either parameter might be a complex number. In the test cases the “imag” argument is provided as a complex literal (like 1j), and its imaginary part (e.g. 1 for 1j) should be used.
+
+Since the test cases call the function with two arguments (e.g. angle_complex(0, 1j), angle_complex(2, 1j), angle_complex(0, 2j)), the second approach is preferred. We can check if either argument is of type complex and, if so, extract the appropriate part (for the second argument, use its imaginary part; for the first argument, use its real part if necessary). Then use math.atan2 with these real numbers.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(real, imag):
+    # If 'real' is complex, use its real part.
+    if isinstance(real, complex):
+        r = real.real
+    else:
+        r = real
+        
+    # If 'imag' is complex, use its imaginary part.
+    if isinstance(imag, complex):
+        i = imag.imag
+    else:
+        i = imag
+        
+    return math.atan2(i, r)
+    
+# Test Cases
+assert math.isclose(angle_complex(0, 1j), 1.5707963267948966, rel_tol=0.001)
+assert math.isclose(angle_complex(2, 1j), 0.4636476090008061, rel_tol=0.001)
+assert math.isclose(angle_complex(0, 2j), 1.5707963267948966, rel_tol=0.001)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(real, imag):
+    # If 'real' is complex, use its real part.
+    if isinstance(real, complex):
+        r = real.real
+    else:
+        r = real
+        
+    # If 'imag' is complex, use its imaginary part.
+    if isinstance(imag, complex):
+        i = imag.imag
+    else:
+        i = imag
+        
+    return math.atan2(i, r)
+    
+# Test Cases
+assert math.isclose(angle_complex(0, 1j), 1.5707963267948966, rel_tol=0.001)
+assert math.isclose(angle_complex(2, 1j), 0.4636476090008061, rel_tol=0.001)
+assert math.isclose(angle_complex(0, 2j), 1.5707963267948966, rel_tol=0.001)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+--- Sample 6: FAILED ---
+LLM Analysis:
+Analysis:
+The generated code defines the function with two parameters (real and imag) and calls math.atan2(imag, real). However, the prompt expects a function that receives a single complex number as an argument (e.g. 1j for 0+1j). The test cases call the function with complex arguments like angle_complex(0, 1j), which causes errors because math.atan2 requires real numbers. 
+
+To correct this:
+• Change the function signature to accept one complex number parameter (commonly named z).
+• Extract the real and imaginary parts from the complex number using z.real and z.imag.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+Sample result: FAILED
+
+
+--- Sample 7: FAILED ---
+LLM Analysis:
+Analysis:
+• The prompt requires a function that computes the angle (or phase) of a complex number. However, the generated function is defined with two parameters (real, imag) even though the tests pass a single complex number.
+• The test calls are written like angle_complex(0,1j), but that causes an error because 1j is a complex value. The intended function should accept one argument (a complex number) and then extract its real and imaginary parts.
+• To fix this, we must define angle_complex(z) (with one parameter) and then use z.real and z.imag as input to math.atan2.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+Sample result: FAILED
+
+
+--- Sample 8: FAILED ---
+LLM Analysis:
+Analysis:
+1. The prompt expects the function to take a complex number as input and compute its argument (angle) rather than taking separate real and imaginary parts. However, the generated code is written with two parameters (real and imag).
+2. The test cases pass a complex number as the second argument (e.g., angle_complex(0, 1j)), causing a type error when passing a complex value to math.atan2.
+3. The correction is to change the function’s signature so that it accepts a single complex number argument, then use its .real and .imag attributes with math.atan2 to compute the angle.
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+Sample result: FAILED
+
+
+--- Sample 9: FAILED ---
+LLM Analysis:
+Analysis:
+The generated code defines the function as taking two parameters (real and imag) and then computes the angle using math.atan2(imag, real). However, the prompt and the test cases indicate that the function should accept a single complex number as input. For example, the test call is written as angle_complex(0, 1j), which causes Python to pass 0 as the first argument and 1j (a complex literal) as the second. Since math.atan2 expects real numbers for its parameters, providing a complex number results in the “must be real number, not complex” error. 
+
+To fix the code:
+• Change the function definition to accept a single parameter (e.g., z) that represents a complex number.
+• Use z.real and z.imag to extract the real and imaginary parts.
+• Compute the angle using math.atan2(z.imag, z.real).
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(z):
+    return math.atan2(z.imag, z.real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Error: angle_complex() takes 1 positional argument but 2 were given
+Sample result: FAILED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code defines the function with two parameters “real” and “imag” and immediately passes them to math.atan2. However, the test cases pass the imaginary part as a complex number (e.g. 1j or 2j) instead of a float. In Python, math.atan2 requires both arguments to be real numbers; passing a complex value produces an error. To fix this, we need to extract the imaginary component from the complex number before calling math.atan2.
+
+A correct approach is as follows:
+• Check if the parameter “imag” is a complex number (using isinstance) and, if it is, extract its imaginary part using imag.imag.
+• Then compute the angle using math.atan2(imag_part, real).
+
+Repaired Code:
+[PYTHON]
+import math
+
+def angle_complex(real, imag):
+    # If imag is provided as a complex number, extract its imaginary part.
+    if isinstance(imag, complex):
+        imag = imag.imag
+    return math.atan2(imag, real)
+[/PYTHON]
+Repaired Code:
+
+import math
+
+def angle_complex(real, imag):
+    # If imag is provided as a complex number, extract its imaginary part.
+    if isinstance(imag, complex):
+        imag = imag.imag
+    return math.atan2(imag, real)
+
+Code execution: SUCCESS
+Test Results:
+import math => Passed
+assert math.isclose(angle_complex(0,1j), 1.5707963267948966, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(2,1j), 0.4636476090008061, rel_tol=0.001) => Passed
+assert math.isclose(angle_complex(0,2j), 1.5707963267948966, rel_tol=0.001) => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 0.4000
+   pass@3: 0.8333
+   pass@5: 0.9762

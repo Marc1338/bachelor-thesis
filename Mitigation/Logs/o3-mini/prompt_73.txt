@@ -1,0 +1,402 @@
+Prompt 73:
+Prompt text: """
+Write a function which takes a tuple of tuples and returns the average value for each tuple as a list.
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25]
+"""
+
+
+Results of 10 samples:
+--- Sample 1: PASSED ---
+LLM Analysis:
+Analysis:
+The prompt requires that we compute the average value for each column across all inner tuples, not the average of each individual tuple. For the example provided, the first element of the result (30.5) is the average of the first elements of all tuples, the second element (34.25) is the average of the second elements, and so on. The generated code instead computes the average for each inner tuple, i.e., row-wise averages. 
+
+To fix this, the function must loop over the indices of the inner tuples and compute the sum of that column across all tuples, then divide by the number of tuples. This change aligns the code with the prompt and test case expectations.
+
+Repaired Code:
+[PYTHON] 
+def average_tuple(tuple_of_tuples):
+    if not tuple_of_tuples:
+        return []
+        
+    num_rows = len(tuple_of_tuples)
+    # Assume all inner tuples are of the same length.
+    num_cols = len(tuple_of_tuples[0])
+    averages = []
+    
+    for i in range(num_cols):
+        col_sum = sum(inner[i] for inner in tuple_of_tuples)
+        averages.append(col_sum / num_rows)
+        
+    return averages
+
+# Example usage:
+if __name__ == "__main__":
+    print(average_tuple(((10, 10, 10, 12), 
+                         (30, 45, 56, 45), 
+                         (81, 80, 39, 32), 
+                         (1, 2, 3, 4))))
+# Expected output: [30.5, 34.25, 27.0, 23.25]
+[/PYTHON]
+Repaired Code:
+ 
+def average_tuple(tuple_of_tuples):
+    if not tuple_of_tuples:
+        return []
+        
+    num_rows = len(tuple_of_tuples)
+    # Assume all inner tuples are of the same length.
+    num_cols = len(tuple_of_tuples[0])
+    averages = []
+    
+    for i in range(num_cols):
+        col_sum = sum(inner[i] for inner in tuple_of_tuples)
+        averages.append(col_sum / num_rows)
+        
+    return averages
+
+# Example usage:
+if __name__ == "__main__":
+    print(average_tuple(((10, 10, 10, 12), 
+                         (30, 45, 56, 45), 
+                         (81, 80, 39, 32), 
+                         (1, 2, 3, 4))))
+# Expected output: [30.5, 34.25, 27.0, 23.25]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 2: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code calculates the average for each inner tuple (i.e., each row) instead of the average for each column (i.e., the corresponding elements from each tuple). The test cases indicate that we need the column-wise average. For example, given ((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)), the expected first output 30.5 is the average of the first elements (10, 30, 81, 1), not the average of the first tuple. 
+
+To correct this, we can use the built-in zip() function with unpacking (*) to group the elements column-wise and then compute each column's average accordingly.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    return [sum(col) / len(col) for col in zip(*tuple_of_tuples)]
+    
+# Sample Test
+print(average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))))
+# Expected output: [30.5, 34.25, 27.0, 23.25]
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    return [sum(col) / len(col) for col in zip(*tuple_of_tuples)]
+    
+# Sample Test
+print(average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))))
+# Expected output: [30.5, 34.25, 27.0, 23.25]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 3: PASSED ---
+LLM Analysis:
+Analysis:
+The provided code calculates the average for each inner tuple (i.e. row-wise) instead of computing the average for each element position across tuples (i.e. column-wise). For example, given the input ((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)), the function returns averages of the four tuples (10.5, 44.0, 58.0, 2.5), while the expected output requires the average of the first elements of each tuple, the second elements, etc. That is, the expected output is calculated by “zipping” the tuples together so that:
+• the first average is (10 + 30 + 81 + 1) / 4 = 30.5,
+• the second average is (10 + 45 + 80 + 2) / 4 = 34.25, etc.
+Therefore, the code should use zip(*tuple_of_tuples) to iterate column-wise and compute the average.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    # Zip the tuples to get columns, then compute the average for each column.
+    return [sum(column) / len(column) for column in zip(*tuple_of_tuples)]
+
+# Test case
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    # Zip the tuples to get columns, then compute the average for each column.
+    return [sum(column) / len(column) for column in zip(*tuple_of_tuples)]
+
+# Test case
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 4: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code computes the average of each inner tuple (i.e. row averages), but according to the test case, the expected result is the average of each column. For example, for the input
+  ((10, 10, 10, 12),
+   (30, 45, 56, 45),
+   (81, 80, 39, 32),
+   (1, 2, 3, 4)),
+the expected first element is 30.5, which is the average of the first elements of each inner tuple (10, 30, 81, 1) rather than the average of (10, 10, 10, 12) which is 10.5.
+To fix this, the code should first transpose the tuple of tuples (using zip(*tuple_of_tuples)) and then compute the average for each resulting tuple (i.e. for each column).
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    # Transpose the tuple of tuples to get columns
+    columns = zip(*tuple_of_tuples)
+    # Compute the average for each column
+    return [sum(col) / len(col) for col in columns]
+    
+# Example test case
+if __name__ == "__main__":
+    result = average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))
+    print(result)  # Expected: [30.5, 34.25, 27.0, 23.25]
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    # Transpose the tuple of tuples to get columns
+    columns = zip(*tuple_of_tuples)
+    # Compute the average for each column
+    return [sum(col) / len(col) for col in columns]
+    
+# Example test case
+if __name__ == "__main__":
+    result = average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))
+    print(result)  # Expected: [30.5, 34.25, 27.0, 23.25]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 5: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code computes the average of each inner tuple (i.e. row) by looping directly over the input tuple. However, the prompt requires computing the average for each column position. For example, given the input:
+  ((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))
+the expected output is:
+  [30.5, 34.25, 27.0, 23.25]
+This is because:
+  • The first average is computed from the first elements of each tuple: (10+30+81+1)/4 = 30.5.
+  • The second average is computed from the second elements, and so on.
+To obtain the columns, we can "transpose" the tuple using Python’s zip function with unpacking (i.e., zip(*tuple_of_tuples)). Then, iterate over the transposed columns to calculate each average.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    return [sum(column) / len(column) for column in zip(*tuple_of_tuples)]
+
+# Example test:
+if __name__ == "__main__":
+    assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+    print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    return [sum(column) / len(column) for column in zip(*tuple_of_tuples)]
+
+# Example test:
+if __name__ == "__main__":
+    assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+    print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 6: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code calculates the average of each row instead of each column. According to the prompt, we need to compute the average value for each column when the tuples represent rows of a matrix. In the example provided, the expected output is computed using the column values (for instance, the first element 30.5 is the average of the first elements of each tuple). To fix this issue, we can use the zip(*) function to unpack the rows and group the column values together, then calculate the average for each column.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    # Use zip(*) to group the column values, then compute their averages
+    return [sum(col) / len(col) for col in zip(*tuple_of_tuples)]
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    # Use zip(*) to group the column values, then compute their averages
+    return [sum(col) / len(col) for col in zip(*tuple_of_tuples)]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 7: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code calculates the average of each inner tuple (i.e., row-wise) rather than computing the average of the elements from corresponding positions across tuples (i.e., column-wise). For example, the first tuple (10, 10, 10, 12) produces an average of 10.5, but the expected result requires the average of the first elements of all tuples (10, 30, 81, 1), which is 30.5. To correct this, the code should iterate over the indices (columns) of the inner tuples and compute the average for each column across all tuples.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    if not tuple_of_tuples:
+        return []
+    num_tuples = len(tuple_of_tuples)
+    # Assuming all tuples are of equal length.
+    num_elements = len(tuple_of_tuples[0])
+    # Compute the average for each column.
+    return [sum(t[i] for t in tuple_of_tuples) / num_tuples for i in range(num_elements)]
+
+# Example tests
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3))) == [25.5, -18.0, 3.75]
+assert average_tuple(((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40))) == [305.0, 342.5, 270.0, 232.5]
+print("All tests passed!")
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    if not tuple_of_tuples:
+        return []
+    num_tuples = len(tuple_of_tuples)
+    # Assuming all tuples are of equal length.
+    num_elements = len(tuple_of_tuples[0])
+    # Compute the average for each column.
+    return [sum(t[i] for t in tuple_of_tuples) / num_tuples for i in range(num_elements)]
+
+# Example tests
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3))) == [25.5, -18.0, 3.75]
+assert average_tuple(((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40))) == [305.0, 342.5, 270.0, 232.5]
+print("All tests passed!")
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 8: PASSED ---
+LLM Analysis:
+Analysis:
+The error in the generated code is that it calculates the average for each inner tuple (row average) rather than the average for the corresponding elements across the tuples (column average). According to the prompt and test case results, the goal is to compute the average for each “column” (i.e., the first elements across all tuples, then the second elements, etc.) in the tuple of tuples. The current code iterates over each tuple directly, which results in incorrect averages.
+
+To fix the error, we should use the zip function with unpacking (zip(*tuple_of_tuples)) to “transpose” the tuple of tuples. Then, we can compute the average for each column using the sum and len functions.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    return [sum(col) / len(col) for col in zip(*tuple_of_tuples)]
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    return [sum(col) / len(col) for col in zip(*tuple_of_tuples)]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 9: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code calculates the average of each inner tuple (i.e., row averages) rather than computing the average for each column across the tuples. For example, for the input ((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)), the expected output [30.5, 34.25, 27.0, 23.25] represents the average of the first elements, the second elements, and so on. To correct this, we should use zip(*) to group elements by their column positions and then compute the averages of these groups.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    # Transpose the rows to columns using zip(*...)
+    columns = zip(*tuple_of_tuples)
+    # Compute the average for each column
+    return [sum(column) / len(column) for column in columns]
+    
+# Example test
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    # Transpose the rows to columns using zip(*...)
+    columns = zip(*tuple_of_tuples)
+    # Compute the average for each column
+    return [sum(column) / len(column) for column in columns]
+    
+# Example test
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+--- Sample 10: PASSED ---
+LLM Analysis:
+Analysis:
+The generated code erroneously calculates the average of each individual tuple (row) instead of computing the average for each corresponding position (column) across all tuples. The prompt and test cases indicate that we need to calculate the average of the first elements of all inner tuples, then the second elements, and so on. This can be accomplished by transposing the tuple of tuples (e.g., using zip(*tuple_of_tuples)) and then calculating the average for each resulting column.
+
+Repaired Code:
+[PYTHON]
+def average_tuple(tuple_of_tuples):
+    # Transpose the tuple of tuples to group corresponding elements together
+    transposed = zip(*tuple_of_tuples)
+    # Compute and return the average for each column as a list
+    return [sum(col) / len(col) for col in transposed]
+
+# Test cases to verify the function output:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3))) == [25.5, -18.0, 3.75]
+assert average_tuple(((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40))) == [305.0, 342.5, 270.0, 232.5]
+print("All tests passed.")
+[/PYTHON]
+Repaired Code:
+
+def average_tuple(tuple_of_tuples):
+    # Transpose the tuple of tuples to group corresponding elements together
+    transposed = zip(*tuple_of_tuples)
+    # Compute and return the average for each column as a list
+    return [sum(col) / len(col) for col in transposed]
+
+# Test cases to verify the function output:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4))) == [30.5, 34.25, 27.0, 23.25]
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3))) == [25.5, -18.0, 3.75]
+assert average_tuple(((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40))) == [305.0, 342.5, 270.0, 232.5]
+print("All tests passed.")
+
+Code execution: SUCCESS
+Test Results:
+assert average_tuple(((10, 10, 10, 12), (30, 45, 56, 45), (81, 80, 39, 32), (1, 2, 3, 4)))==[30.5, 34.25, 27.0, 23.25] => Passed
+assert average_tuple(((1, 1, -5), (30, -15, 56), (81, -60, -39), (-10, 2, 3)))== [25.5, -18.0, 3.75] => Passed
+assert average_tuple( ((100, 100, 100, 120), (300, 450, 560, 450), (810, 800, 390, 320), (10, 20, 30, 40)))==[305.0, 342.5, 270.0, 232.5] => Passed
+Sample result: PASSED
+
+
+Pass@k results for this prompt:
+   pass@1: 1.0000
+   pass@3: 1.0000
+   pass@5: 1.0000
